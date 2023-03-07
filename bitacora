@@ -1,0 +1,39 @@
+CREANDO LIBRERIA.
+----------------
+https://medium.com/@maoznir/creating-a-svelte-components-library-b2134884735f
+
+1. npx degit nirmaoz/svelte-component-library-template my-new-component
+2. npm install
+npm init  y completar datos para actualizar package.json
+
+crear los componentes e importarlos en el index.js
+
+los test JEST deben escribirse en directorio /test
+npm run test
+
+para interactuar con el componente.
+npm run storybook.
+
+si sale error:
+opensslErrorStack: [ 'error:03000086:digital envelope routines::initialization error' ],
+  library: 'digital envelope routines',
+  reason: 'unsupported',
+  code: 'ERR_OSSL_EVP_UNSUPPORTED'
+
+activar legacy openssl
+
+LINUX, MAC:
+export NODE_OPTIONS=--openssl-legacy-provider
+
+WINDOWS:
+set NODE_OPTIONS=--openssl-legacy-provider
+
+POWERSHELL:
+$env:NODE_OPTIONS = "--openssl-legacy-provider"
+
+luego npm run storybook nuevamente y levantara la vista de storybook.
+
+Ya puedes empezar!
+
+para publicar en NPM
+npm publish
