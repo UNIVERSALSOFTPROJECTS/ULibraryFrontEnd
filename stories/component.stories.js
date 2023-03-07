@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions';
-import Component from '../src/index';
+import {Component} from '../src/index';
 
 export default {
   title: 'Component',
@@ -13,6 +13,12 @@ export const Text = () => ({
 });
 
 export const Emoji = () => ({
+  Component: Component,
+  props: { name: '😀 😎', buttonText: '👍 💯' },
+  on: { click: action('clicked') },
+});
+
+export const Drink = () => ({
   Component: Component,
   props: { name: '😀 😎', buttonText: '👍 💯' },
   on: { click: action('clicked') },
