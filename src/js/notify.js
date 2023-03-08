@@ -1,6 +1,9 @@
-import EventManager from "./EventManager";
-
+//import EventManager from "./EventManager";
+let EventManager;
 export default {
+    setEM:(em)=>{
+        EventManager = em;
+    },    
     success:(msg)=>{
         EventManager.publish("notify",{mode:'success', msg});
     },
