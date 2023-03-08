@@ -39,6 +39,7 @@
            }
            else data.tipo=='T_NO_ENCONTRADA' ? notify.error("Codigo Incorrecto") : notify.error("Error Desconocido al procesar deposito");
         } catch (e) {
+            console.log("00000 ",e);
             onDepositError(e);
             //e es un JSON que tiene el mensaje de porque no se pudo procesar
             //puedes hacer un IF para mostrar el error de que se trata.
