@@ -11,8 +11,8 @@
     let name="";
     let document="";
     
-    export let onRetiroOK;
-    export let onRetiroError;
+    export let onOK=()=>{};
+    export let onError=()=>{};
 
     const closeModal = () => {
         console.log("cerrando modal");
@@ -26,7 +26,7 @@
             data = await ServerConnection.user.getBalance(user.agregatorToken);
             user.balance = data.balance
         } catch (error) {
-            onRetiroError(error);
+            onError(error);
             let msg = "Error al hacer retiro";
             if(error.errorCode && error.errorCode == 'PENDING_WITHDRAWAL' ) msg = error.message
             notify.error(msg)

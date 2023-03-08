@@ -5,8 +5,8 @@
 
     export let open;
     export let user;
-    export let onDepositoOK=()=>{};
-    export let onDepositoError=()=>{};
+    export let onDepositOK=()=>{};
+    export let onDepositError=()=>{};
     let bankDeposit = {}
     bankDeposit.reference ='';
     bankDeposit.amount = '20';
@@ -31,7 +31,7 @@
     const depositRetail=async()=>{
         try {
            let data = await ServerConnection.wallet.depositRetail(user.token,depositRetailCode);
-           onDepositoOK(data);
+           onDepositOK(data);
            if(data.resp=='ok'){ 
             user.balance=data.saldo;
             notify.success(`La recarga fue un éxito!, Tu saldo actual es: ${user.balance}`);
@@ -39,7 +39,7 @@
            }
            else data.tipo=='T_NO_ENCONTRADA' ? notify.error("Codigo Incorrecto") : notify.error("Error Desconocido al procesar deposito");
         } catch (e) {
-            onDepositoError(e);
+            onDepositError(e);
             //e es un JSON que tiene el mensaje de porque no se pudo procesar
             //puedes hacer un IF para mostrar el error de que se trata.
             alert(`Error al procesar deposito`);
