@@ -1,7 +1,7 @@
 <script>
     import ServerConnection from "./js/server"
     import notify from './js/notify'
-    import moment from "moment";
+    import {moment} from "moment";
 
     export let open;
     export let user;

@@ -11,8 +11,8 @@
     let name="";
     let document="";
     
-    export let onRetiroOK=()=>{};
-    export let onRetiroError=()=>{};
+    export let onRetiroOK;
+    export let onRetiroError;
 
     const closeModal = () => {
         console.log("cerrando modal");
