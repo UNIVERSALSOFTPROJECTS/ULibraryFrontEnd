@@ -43,6 +43,19 @@ const ServerConnection = (() => {
             //return axios.get(url,{headers}) ;
         }
     }
+    const game = {
+        getBrandList:(category)=>{
+            let mode = util.isMoble()?"mb":"wb";
+            var url=conf.API+`/brands?m=${mode}`;
+            url += category != "all" ? "&c="+category : "" 
+            //https://lobby-test.apiusoft.com/brands?c=slot
+            return new Promise( (result, reject)=>{ fetch(url, {method:"GET",headers} )
+                .then(response => response.json())
+                .then( data =>{result(data)})   
+                .catch( (e)=>{ reject(e) } )
+            } )
+        }
+    }
     return {setConfig, wallet,user }
     
 })()
