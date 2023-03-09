@@ -12,43 +12,34 @@ const ServerConnection = (() => {
     }
     
     const wallet = {
-        checkPreviewWithdrawal:(token)=>{
+        checkPreviewWithdrawal:async(token)=>{
             var url=conf.API+`/checkRetailWithdrawal/${token}`;
-            return axios.get(url,{headers});
+            return await axios.get(url,{headers});
         },
-        retailWithdrawal:(token, amount)=>{
+        duplicateSession:()=>{
+            alert("SESION ABIERTA EN OTRO DISPOSITIVO");
+            location.reload();
+            return ;
+        },
+        retailWithdrawal:async(token, amount)=>{
             var url=conf.API+"/retailWithdrawal";
             var payload = {token, amount}
-            let resp = axios.post( url,JSON.stringify(payload),{headers} );
-            if(resp.errorCode){
-                let data = checkReject(resp);
-                return data
-            } 
-            else return resp;
-
+            return await axios.post( url,JSON.stringify(payload),{headers} );            
         },
-        depositRetail:(token, cod)=>{
+        depositRetail:async(token, cod)=>{
             var url=conf.API+"/wallet/depositRetail";
             var payload = {token, cod}
             return axios.post( url,JSON.stringify(payload),{headers} );
         },
-        withdrawal_w :(token, amount, bank, account, info)=>{
+        withdrawal_w :async(token, amount, bank, account, info)=>{
             let payload = {token, amount, bank, account, info}
             let url = conf.API+"/withdrawal";
-            return axios.post( url,JSON.stringify(payload),{headers} );
+            return await axios.post( url,JSON.stringify(payload),{headers} );
         },
-        bankDeposit:(token,bankDeposit )=>{
+        bankDeposit:async (token,bankDeposit )=>{
             let payload = {...bankDeposit, token}
             let url = conf.API+"/wallet/bankDeposit";
-            return axios.post( url,JSON.stringify(payload),{headers} );
-        },
-        checkReject:(data)=>{
-            if(data.errorCode!='OLD_TOKEN' ) return data
-            else{
-            alert("SESION ABIERTA EN OTRO DISPOSITIVO");
-            location.reload();
-            return;
-            }
+            return await axios.post( url,JSON.stringify(payload),{headers} );
         }
          
     }

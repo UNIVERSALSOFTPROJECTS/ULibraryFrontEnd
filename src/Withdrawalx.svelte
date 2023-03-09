@@ -15,18 +15,27 @@
 
     const cashout = async()=>{
         try {
-            // retiro retail X
-            //  
-            //  token user string , monto float  -> para retail
-            
-            let data = await ServerConnection.wallet.retailWithdrawal(user.token, amount);
-            data = await ServerConnection.wallet.checkPreviewWithdrawal(user.token);
-            pendingWhitdrawall=data;
-            data = await ServerConnection.user.getBalance(user.agregatorToken);
-            user.balance = data.balance
-        } catch (error) {
+            let resp_withdrawal = null;
+            let resp_pending=null;
+
+            try {
+                resp_withdrawal = await ServerConnection.wallet.retailWithdrawal(user.token, amount);
+            } catch (e_withdrawal) {
+                if(e_withdrawal.response.data.message != 'RET_PEND') notify.error(e_withdrawal.response.data.message)
+            }
+            try {
+                resp_pending = await ServerConnection.wallet.checkPreviewWithdrawal(user.token);
+                if(resp_pending.data.monto) pendingWhitdrawall = resp_pending.data; // si tiene monto quiere decir que tiene un retiro pendiente
+            } catch (e_pending) {
+                if(e_pending.response.data.errorCode=='OLD_TOKEN') ServerConnection.wallet.duplicateSession();
+            }
+            let resp_blc  = await ServerConnection.user.getBalance(user.agregatorToken);
+            user.balance = resp_blc.data.balance
+        } catch (e) {
+            e =error.response.data;
             let msg = "Error al hacer retiro";
-            if(error.errorCode && error.errorCode == 'PENDING_WITHDRAWAL' ) msg = error.message
+            if(e.errorCode && e.errorCode != 'OLD_TOKEN') msg = e.message
+            else ServerConnection.wallet.duplicateSession();
             notify.error(msg)
             pendingWhitdrawall = null;
         }
@@ -42,15 +51,9 @@
         else if(isNumber && amount.length >= 4) notify.error("El monto no debe exceder los 2000");
     };
 
-    const validateData = () =>{
-        let amount_= Number(amount);
-        if(!amount || amount ==="") notify.error("Ingrese el monto a retirar") 
-        //if(amount_ < 50 || amount_ > 2000) {EventManager.publish("notify", {mode:"error", msg:"El monto debe estar entre 50 y 2000"}); return;}
-        //if(!name || name === "") {EventManager.publish("notify", {mode:"error", msg:"Ingrese su nombre"}); return;}
-        //if(!document || document === "") {EventManager.publish("notify", {mode:"error", msg:"Ingrese su documento de identidad"}); return;}
-        //if(!bankName || bankName === "") {EventManager.publish("notify", {mode:"error", msg:"Ingrese el nombre del banco"}); return;}
-        //if(!accountNumber || accountNumber === "") {EventManager.publish("notify", {mode:"error", msg:"Ingrese el número de cuenta"}); return;}
-        cashout();
+    const validateData = async() =>{
+        if(!amount) notify.error("Ingrese el monto a retirar") 
+        await cashout();
     }
 
 </script>
@@ -83,36 +86,9 @@
         <div class="u-content-info">
             <span>INGRESE EL MONTO A RETIRAR:</span>
             <input class="u-input-pay" bind:value={amount} type="text" on:keypress|preventDefault={(e)=>validateAmount(e)} placeholder="Ingrese el monto">
-            <!--<span>Saldo Disponible: {user.balance} {user.currency}</span>
-            <span>Retiro mínimo de 50 {user.currency} y máximo de 2000 {user.currency}</span-->
 
         </div>
-        <!--<div class="g-data-bank-wrapp">
-            <div class="g-data-bank">
-                <div class="u-info u-destination-account">
-                    <span>Nombre completo:</span>
-                    <input type="text" maxlength="40" bind:value={name} on:keydown={validateName} placeholder="Ingrese su nombre">
-                </div>
-                <div class="u-info u-destination-account">
-                    <span>Documento de identidad:</span>
-                    <input type="text" bind:value={document} on:keypress|preventDefault={(e)=>validateDocument(e)} placeholder="Ingrese su documento de identidad">
-                </div>
-                <div class="u-info u-input-bank">
-                    <span>Nombre de Banco:</span>
-                    <input type="text" maxlength="40" bind:value={bankName} on:keypress={validateBankName} placeholder="Ingrese el nombre de su banco (BCP, BBVA, Etc.)">
-                </div>
-                <div class="u-info u-destination-account">
-                    <span>Número de cuenta:</span>
-                    <input type="text" maxlength="20" bind:value={accountNumber} on:keypress|preventDefault={(e)=>validateAccountNumber(e)} placeholder="Ingrese el número de cuenta">
-                </div>
-                <div class="u-info u-info-txt">
-                    <span>Información adicional</span>
-                    <input type="text" bind:value={info} placeholder="Ingrese información adicional">
-                </div>
-            </div>
-        </div-->
         <div class="gb-process">
-            <!--<span>Horario de retiro: Lunes a Viernes de 09:00am a 05:00pm </span-->
             <span>Al solicitar su retiro usted esta aceptando los términos y condiciones</span>
             <button class="u-button-pay" on:click={validateData}>SOLICITAR RETIRO</button>
         </div>
