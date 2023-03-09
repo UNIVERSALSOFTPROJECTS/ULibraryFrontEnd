@@ -1,4 +1,5 @@
 import axios from "axios"
+import utils from './util'
 
 let conf
 let headers = {}
@@ -45,18 +46,13 @@ const ServerConnection = (() => {
     }
     const game = {
         getBrandList:(category)=>{
-            let mode = util.isMoble()?"mb":"wb";
+            let mode = utils.isMobile()?"mb":"wb";
             var url=conf.API+`/brands?m=${mode}`;
             url += category != "all" ? "&c="+category : "" 
-            //https://lobby-test.apiusoft.com/brands?c=slot
-            return new Promise( (result, reject)=>{ fetch(url, {method:"GET",headers} )
-                .then(response => response.json())
-                .then( data =>{result(data)})   
-                .catch( (e)=>{ reject(e) } )
-            } )
+            return axios.get(url,{headers}) ;
         }
     }
-    return {setConfig, wallet,user }
+    return {setConfig, wallet,user,game }
     
 })()
 

@@ -13,6 +13,7 @@
     
   
     onMount(() => {
+      console.log("-- ",items);
       if (value) {
         let item = items.find((e) => e.id == value);
         onSelectItem(item);

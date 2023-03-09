@@ -2,16 +2,22 @@ import { action } from '@storybook/addon-actions';
 import { BrandsDropDown } from '../src/index';
 import ServerConnection from '../src/js/server'
 
-let items = ServerConnection;
+ServerConnection.setConfig({API:"https://lobby-bff.apiusoft.com",CLIENT_AUTH:"FORT2023FORTUNEUSOFFORTUNEBET12",CLIENT_CODE:"FORT"})
+let items=[]
+const onDepositOK=async ()=>{
+  let data = await ServerConnection.game.getBrandList('all');
+  items = data.filter(e=>e.name!='Proveedores');
+}
+
 let name = "";
 let onSelectItem = {};
 
 export default {
-  title: 'Notifier',
+  title: 'BrandsDropDown',
   component: BrandsDropDown,
 };
 
-export const Notify = () => ({
-  Component: Notifier,
+export const ShowBrands = () => ({
+  Component: BrandsDropDown,
   props: { name, items,onSelectItem }
 });
