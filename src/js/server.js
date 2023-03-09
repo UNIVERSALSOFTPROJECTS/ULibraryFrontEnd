@@ -19,7 +19,12 @@ const ServerConnection = (() => {
         retailWithdrawal:(token, amount)=>{
             var url=conf.API+"/retailWithdrawal";
             var payload = {token, amount}
-            return axios.post( url,JSON.stringify(payload),{headers} );
+            let resp = axios.post( url,JSON.stringify(payload),{headers} );
+            if(resp.errorCode){
+                let data = checkReject(resp);
+                return data
+            } 
+            else return resp;
 
         },
         depositRetail:(token, cod)=>{
@@ -36,7 +41,16 @@ const ServerConnection = (() => {
             let payload = {...bankDeposit, token}
             let url = conf.API+"/wallet/bankDeposit";
             return axios.post( url,JSON.stringify(payload),{headers} );
+        },
+        checkReject:(data)=>{
+            if(data.errorCode!='OLD_TOKEN' ) return data
+            else{
+            alert("SESION ABIERTA EN OTRO DISPOSITIVO");
+            location.reload();
+            return;
+            }
         }
+         
     }
     const user = {
         getBalance:(userToken)=>{

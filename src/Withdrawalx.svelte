@@ -20,7 +20,6 @@
             //  token user string , monto float  -> para retail
             
             let data = await ServerConnection.wallet.retailWithdrawal(user.token, amount);
-            notify.success("Correcto")
             data = await ServerConnection.wallet.checkPreviewWithdrawal(user.token);
             pendingWhitdrawall=data;
             data = await ServerConnection.user.getBalance(user.agregatorToken);
