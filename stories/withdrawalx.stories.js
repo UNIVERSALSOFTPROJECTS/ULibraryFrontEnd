@@ -10,15 +10,9 @@ export default {
   component: Withdrawalx,
 };
 
-const onDepositoOK=()=>{
-  alert('ok');
-}
-const onDepositoError=()=>{
-  alert('Error');
-}
 
 export const withdrawal = () => ({
   Component: Withdrawalx,
-  props: { user, open:true, onDepositoOK,onDepositoError }
+  props: { user, open:true }
 });
 
