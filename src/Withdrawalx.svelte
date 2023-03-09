@@ -20,7 +20,6 @@
             //  token user string , monto float  -> para retail
             
             let data = await ServerConnection.wallet.retailWithdrawal(user.token, amount);
-            notify.succ;
             notify.success("Correcto")
             data = await ServerConnection.wallet.checkPreviewWithdrawal(user.token);
             pendingWhitdrawall=data;
@@ -70,7 +69,7 @@
             <div class="u-info2-retail">
                 <p>Código:</p>
                 <span>{pendingWhitdrawall.codigo}</span>
-                <p>Cantidad:</p>
+                <p>Cantidad:</p>export
                 <span>{pendingWhitdrawall.monto}</span>
             </div>
             <div class="w-100">Acercate a nuestras sucursales, para proceder con el retiro.</div>
