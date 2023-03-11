@@ -1,6 +1,5 @@
 <script>
     import ServerConnection from "./js/server";
-    import notify from "./js/notify";
     import { onMount } from 'svelte';
 
     export let open;
