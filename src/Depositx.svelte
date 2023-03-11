@@ -40,6 +40,7 @@
            }
            else data.tipo=='T_NO_ENCONTRADA' ? onDepositError("BAD_CODE") : onDepositError("UNKNOW_ERROR");
         } catch (e) {
+            console.log("ERROR",e);
             //e es un JSON que tiene el mensaje de porque no se pudo procesar
             //puedes hacer un IF para mostrar el error de que se trata.
             alert(`Error al procesar deposito`);
