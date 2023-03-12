@@ -7,6 +7,9 @@
     export let user;
     export let pendingWhitdrawall;
 
+    export let onWithdrawalxOk;
+    export let onWithdrawalxError;
+
     let amount = "";
     
     const closeModal = () => {
@@ -20,16 +23,21 @@
 
             try {
                 resp_withdrawal = await ServerConnection.wallet.retailWithdrawal(user.token, amount);
+                onWithdrawalxOk({type:'withdrawalxok',data:resp_withdrawal})
             } catch (e_withdrawal) {
                 if(e_withdrawal.response.data.message != 'RET_PEND') notify.error(e_withdrawal.response.data.message)
+                onWithdrawalxError({type:'withdrawalxerror',data:e_withdrawal.response.data})
             }
             try {
                 resp_pending = await ServerConnection.wallet.checkPreviewWithdrawal(user.token);
+                onWithdrawalxOk({type:'preview_withdrawalxok',data:resp_pending.data})
                 if(resp_pending.data.monto) pendingWhitdrawall = resp_pending.data; // si tiene monto quiere decir que tiene un retiro pendiente
             } catch (e_pending) {
                 if(e_pending.response.data.errorCode=='OLD_TOKEN') ServerConnection.wallet.duplicateSession();
+                onWithdrawalxError({type:'preview_withdrawalxerror',data:e_pending.response.data})
             }
             let resp_blc  = await ServerConnection.user.getBalance(user.agregatorToken);
+            onWithdrawalxOk({type:'balance_withdrawalxok',data:resp_blc.data})
             user.balance = resp_blc.data.balance
         } catch (e) {
             e =error.response.data;

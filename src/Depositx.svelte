@@ -5,7 +5,7 @@
 
     export let open;
     export let user;
-    export let onDepositOK;
+    export let onDepositOk;
     export let onDepositError;
     let bankDeposit = {}
     bankDeposit.reference ='';
@@ -34,15 +34,14 @@
            let {data} = await ServerConnection.wallet.depositRetail(user.token,depositRetailCode);
            if(data.resp=='ok'){ 
             user.balance=data.saldo;
-            onDepositOK(data)
-            //notify.success(`La recarga fue un éxito!, Tu saldo actual es: ${user.balance}`);
-            //depositRetailCode = '';
+            onDepositOk(data)
            }
            else data.tipo=='T_NO_ENCONTRADA' ? onDepositError("BAD_CODE") : onDepositError("UNKNOW_ERROR");
         } catch (e) {
             //e es un JSON que tiene el mensaje de porque no se pudo procesar
             //puedes hacer un IF para mostrar el error de que se trata.
-            alert(`Error al procesar deposito`);
+            // alert(`Error al procesar deposito`);
+            onDepositError('Error al procesar deposito')
         }
     }
     //getPayMethods();
