@@ -16,11 +16,6 @@ const ServerConnection = (() => {
             var url=conf.API+`/checkRetailWithdrawal/${token}`;
             return await axios.get(url,{headers});
         },
-        duplicateSession:()=>{
-            alert("SESION ABIERTA EN OTRO DISPOSITIVO");
-            location.reload();
-            return ;
-        },
         retailWithdrawal:async(token, amount)=>{
             var url=conf.API+"/retailWithdrawal";
             var payload = {token, amount}

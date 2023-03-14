@@ -10,15 +10,15 @@ export default {
   component: Depositx,
 };
 
-const onDepositOK=()=>{
+const onOk=()=>{
   alert('ok');
 }
-const onDepositError=()=>{
+const onError=()=>{
   alert('Error');
 }
 
 export const DepositX = () => ({
   Component: Depositx,
-  props: { user, open:true, onDepositOK,onDepositError }
+  props: { user, open:true, onOk,onError }
 });
 

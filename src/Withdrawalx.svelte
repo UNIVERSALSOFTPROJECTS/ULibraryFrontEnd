@@ -1,68 +1,62 @@
 <script>
     import ServerConnection from "./js/server"
-    import notify from './js/notify'
     import moment from "moment";
 
     export let open;
+    export let minAmount;
     export let user;
     export let pendingWhitdrawall;
 
-    export let onWithdrawalxOk;
-    export let onWithdrawalxError;
+    export let onOk;
+    export let onError;
 
     let amount = "";
     
     const closeModal = () => {
         open = false;
     };
+    const setPreview = async(token) => {
+        let resp_pending = await ServerConnection.wallet.checkPreviewWithdrawal(token);
+        if(resp_pending.data.monto) pendingWhitdrawall = resp_pending.data; // si tiene monto quiere decir que tiene un retiro pendiente
+    };
+    const duplicateSession=()=>{
+        alert("SESION ABIERTA EN OTRO DISPOSITIVO");
+        location.reload();
+        return ;
+    };
 
     const cashout = async()=>{
+        if(!amount) return onError("INVALID_AMOUNT")
         try {
             let resp_withdrawal = null;
-            let resp_pending=null;
-
-            try {
+            await setPreview(user.token)
+            if(!pendingWhitdrawall){
                 resp_withdrawal = await ServerConnection.wallet.retailWithdrawal(user.token, amount);
-                onWithdrawalxOk({type:'withdrawalxok',data:resp_withdrawal})
-            } catch (e_withdrawal) {
-                if(e_withdrawal.response.data.message != 'RET_PEND') notify.error(e_withdrawal.response.data.message)
-                onWithdrawalxError({type:'withdrawalxerror',data:e_withdrawal.response.data})
+                await setPreview(user.token)
             }
-            try {
-                resp_pending = await ServerConnection.wallet.checkPreviewWithdrawal(user.token);
-                onWithdrawalxOk({type:'preview_withdrawalxok',data:resp_pending.data})
-                if(resp_pending.data.monto) pendingWhitdrawall = resp_pending.data; // si tiene monto quiere decir que tiene un retiro pendiente
-            } catch (e_pending) {
-                if(e_pending.response.data.errorCode=='OLD_TOKEN') ServerConnection.wallet.duplicateSession();
-                onWithdrawalxError({type:'preview_withdrawalxerror',data:e_pending.response.data})
-            }
-            let resp_blc  = await ServerConnection.user.getBalance(user.agregatorToken);
-            onWithdrawalxOk({type:'balance_withdrawalxok',data:resp_blc.data})
-            user.balance = resp_blc.data.balance
-        } catch (e) {
-            e =error.response.data;
-            let msg = "Error al hacer retiro";
-            if(e.errorCode && e.errorCode != 'OLD_TOKEN') msg = e.message
-            else ServerConnection.wallet.duplicateSession();
-            notify.error(msg)
-            pendingWhitdrawall = null;
+            let { data } = await ServerConnection.user.getBalance(user.agregatorToken);
+            user.balance = data.balance
+            onOk({type:'withdrawalxok',data:resp_withdrawal?resp_withdrawal:pendingWhitdrawall})
+        } catch (e_withdrawal) {
+            if(e_withdrawal.response.data.message != 'RET_PEND') onError(e_withdrawal.response.data.message)
+            else if(e_pending.response.data.errorCode=='OLD_TOKEN') duplicateSession()
+            else onError(e_withdrawal.response.data)
         }
+        pendingWhitdrawall=null
     };
 
     const validateAmount = (event) => {
         let isNumber = /\d/.test(event.key);
+        console.log("-========= ",isNumber);
         if(event.charCode === 45 || event.charCode === 43){ event.preventDefault(); return}
         let amountNumber = Number(amount);
         amountNumber += event.key;
-        if(amountNumber > 2000 ) event.preventDefault();
-        if (isNumber && amount.length < 4) amount += event.key;
-        else if(isNumber && amount.length >= 4) notify.error("El monto no debe exceder los 2000");
+        console.log("-========= ",Number(amountNumber));
+        if(Number(amountNumber) > minAmount ) event.preventDefault();
+        else amount += event.key;
+        // if (isNumber && amount.length < amountMin.length) amount += event.key;
+        // else if(isNumber && amount.length >= 4) onError("LOW_AMOUNT");
     };
-
-    const validateData = async() =>{
-        if(!amount) notify.error("Ingrese el monto a retirar") 
-        await cashout();
-    }
 
 </script>
 <div class="u-main-payments">
@@ -93,12 +87,12 @@
         <h2 class="u-title">RETIRAR SU SALDO</h2>
         <div class="u-content-info">
             <span>INGRESE EL MONTO A RETIRAR:</span>
-            <input class="u-input-pay" bind:value={amount} type="text" on:keypress|preventDefault={(e)=>validateAmount(e)} placeholder="Ingrese el monto">
+            <input data-testid="amount_input" class="u-input-pay" bind:value={amount} type="text" on:keypress|preventDefault={(e)=>validateAmount(e)} placeholder="Ingrese el monto a retirar">
 
         </div>
         <div class="gb-process">
             <span>Al solicitar su retiro usted esta aceptando los términos y condiciones</span>
-            <button class="u-button-pay" on:click={validateData}>SOLICITAR RETIRO</button>
+            <button class="u-button-pay" on:click={cashout}>SOLICITAR RETIRO</button>
         </div>
     </div>
     {/if}
