@@ -15,7 +15,7 @@ const onOk=()=>{
 const onError=()=>{
   alert('Error');
 }
-let pendingWhitdrawall=null}
+let pendingWhitdrawall=null
 
 export default {
   title: 'Withdrawal-x',
