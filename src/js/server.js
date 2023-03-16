@@ -42,6 +42,17 @@ const ServerConnection = (() => {
         getBalance:(userToken)=>{
             let url = conf.API+`/balance/${userToken}`;
             return axios.get(url,{headers}) ;
+        },
+        preRegister:(username, email, phone)=>{
+            var url=conf.API+"/user/preRegister";
+            console.log(conf);
+            var payload = {username,email,phone, org:conf.org}
+            return axios.post( url,payload,{headers} );
+        },
+        register: (username, name,country, phone, email, password, date, operatorId,smscode,usertype,  currency=conf.currency)=>{
+            var url=conf.API+"/user";
+            var payload = {username, name, phone:phone, email, currency, password, date, smscode,country, operatorId, doctype:"", document:"", birthday:date, domain:conf.domain, usertype, org:conf.org}
+            return axios.post( url,payload,{headers} );
         }
     }
     const game = {

@@ -1,12 +1,11 @@
 <script>
     // import EventManager from "../../../js/EventManager";
-    export let EventManager;
-    let display = false
+    export let EventManager=null;
+    export let display = false;
     //let errorCode
-    let message
-    let type
-
-    EventManager.subscribe("notify", (event) => {
+    export let message="";
+    export let type="success";
+    if(EventManager) EventManager.subscribe("notify", (event) => {
         //errorCode = event.errorCode
         message = event.msg
         type = event.mode||'success'
