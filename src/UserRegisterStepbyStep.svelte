@@ -19,7 +19,6 @@
   const getAge = (birthday) => {
 	var now = moment();
 	var birthday_ = moment(birthday);
-
 	var years = now.diff(birthday_, 'year');
   return years;
   }
@@ -134,7 +133,6 @@
   };
 
   const validateDate = () => {
-    console.log("user date: ",user.date);
     if (!user.date) return showNotify('error',"Ingrese su fecha de nacimiento");
     if(getAge(user.date) < 18) return showNotify('error',"Debe ser mayor de edad");
     active_section = userType=="X"?"codeAgent":"validateSMS";
@@ -146,19 +144,25 @@
       await ServerConnection.user.preRegister(user.username,user.email,countryCode+user.phone);
       active_section = "validateSMS";
     } catch (e) {
-      //let msg="Error desconocido";
+      console.log("error: ",e);
+      let messagge = "Error desconocido en Preregistro";
       if(e.response.data.message=='PHONE_FORMAT_FAILED'){
         active_section = "phone";
-        return showNotify('error',"Formato Telefono incorrecto"); 
+        messagge="Formato Telefono incorrecto";
       } 
       else if(e.response.data.message=='El telefono ya existe'){
         active_section = "phone";
-        return showNotify('error', e.response.data.message);
+        messagge=e.response.data.message;
       }
       else if(e.response.data.message=='El usuario  ya existe'){
         active_section = "user";
-        return showNotify('error', e.response.data.message);
+        messagge=e.response.data.message;
+      }else if(e=="ORG_MANDATORY"){
+        messagge="ORG es obligatorio";
       }
+
+      return showNotify('error',messagge); 
+     
     }
   }
 
