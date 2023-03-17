@@ -160,6 +160,10 @@
       }else if(e=="ORG_MANDATORY"){
         messagge="ORG es obligatorio";
       }
+      else if(e.response.data.message=='El usuario u correo ya existe'){
+        active_section = "email";
+        messagge=e.response.data.message;
+      }
 
       return showNotify('error',messagge); 
      
