@@ -1,7 +1,7 @@
 <script>
   import ServerConnection from "./js/server";
-    import Notifier from "./Notifier.svelte";
-  //import notify from "./js/notify";
+  import Notifier from "./Notifier.svelte";
+  import moment from "moment";
   
   export let logoUrl;
   export let open;
@@ -9,7 +9,6 @@
   export let userType;
   export let countryCode="+51";
   export let codeAgent=null;
-
   export let onRegisterOk;
 
   let notify={display:false, message:"",type:"success"};
@@ -17,11 +16,17 @@
   let active_section = "user";
   let conditions = false;
 
+  const getAge = (birthday) => {
+	var now = moment();
+	var birthday_ = moment(birthday);
+
+	var years = now.diff(birthday_, 'year');
+  return years;
+  }
+
   const welcome = () => {
     closeModal();
     onRegisterOk();
-    //document.getElementById("u-login-btn").click();
-    
   };
 
   const emailLow = (e) =>{
@@ -46,122 +51,92 @@
       );  
       console.log(data);
       if (data.message == "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}" || data.message == "{resp=Err, Id=2, Msg=El correo o el Usuario ya Exite}"){
-        notify={display:true,type:"error",message:"Este correo ya está en uso"};
-        //EventManager.publish("notify", {mode:"error", msg:"Este correo ya está en uso"});
         active_section = "email";
-        return;
+        return showNotify('error',"Este correo ya esta en uso");
       }else if(data.message == "{resp=Err, Id=1, Msg=Usuario ya Exite}" || data.message == "{resp=Err, Id=2, Msg=Usuario ya Exite}"){
-        notify={display:true,type:"error",message:"Este nombre de usuario ya existe"};
-        //EventManager.publish("notify", {mode:"error", msg:"Este nombre de usuario ya existe"});
         active_section = "user";
-        return;
+        return showNotify('error',"Este nombre de usuario ay existe");
       }
       else if(data.errorCode=='SMS_CODE_INVALID'){
         active_section = "validateSMS";
-        notify={display:true,type:"error",message:"Código SMS incorrecto"};
-        return;
-        //EventManager.publish("notify", { mode: "error",msg:"Código SMS incorrecto"});return;
+        return showNotify('error',"Código SMS incorrecto");
       }else if(data.errorCode=='CREATE_USER_FAILED'){
         active_section = "codeAgent";
-        notify={display:true,type:"error",message:"Código de agente incorrecto"};
-        return;
-        //EventManager.publish("notify", { mode: "error",msg:"Código de agente incorrecto"});return;
-      }else{
-        active_section = "welcome";
+        return showNotify('error',"Código de agente incorrecto");
       }
-      
+        active_section = "welcome";
+
     } catch (e) {
       console.log("registermsg",e);
-      notify={display:true,type:"error",message:"Error al crear usuario"};
-      
+      return showNotify('error',"Error al crear usuario");
     }
   };
+
+  const showNotify = (type, message) => {
+    notify={display:true,type,message};
+    setTimeout( ()=>{ notify.display=false },4000)
+  }
 
   const closeModal = () => {
     document.body.classList.remove("fixed-scroll");
     open = false;
-  };
-  const NextStepEnterEmail = (e) => {
-    if (e.charCode === 13) validateEmail();
-  };
-  const NextStepEnterName = (e) => {
-    if (e.charCode === 13) validateName();
-  };
-  const NextStepEnterUsername = (e) => {
-    if (e.charCode === 13) { validateUsername();}
-  };
-  const NextStepEnterPhone = (e) => {
-    if (e.charCode === 13) { validatePhone();}
-  };
-  const NextStepEnterPassword = (e) => {
-    if (e.charCode === 13) validatePassword();
-  };
-  //const NextStepEnterCurrency = (e) => {
-  //  if (e.charCode === 13) validateCurrency();
-  //};
-  const NextStepEnterDate = (e) => {
-    if (e.charCode === 13) validateDate();
-  };
-  const NextStepEnterCodeAgent = (e) => {
-    if (e.charCode === 13) validateCodeAgent();
-  };
-  const NextStepEnterValidateSMS = (e) => {
-    if (e.charCode === 13) validateSMS();
-  };
-  const NextStepEnterCondition = (e) => {
-    if (e.charCode === 13) validateCondition();
-  };
+  }
+  const NextStepEnterEmail = (e) => {if (e.charCode === 13) validateEmail();}
+  const NextStepEnterName = (e) => {if (e.charCode === 13) validateName();}
+  const NextStepEnterUsername = (e) => { if (e.charCode === 13)  validateUsername(); }
+  const NextStepEnterPhone = (e) => {if (e.charCode === 13)  validatePhone();}
+  const NextStepEnterPassword = (e) => { if (e.charCode === 13) validatePassword();}
+  const NextStepEnterDate = (e) => {if (e.charCode === 13) validateDate();}
+  const NextStepEnterCodeAgent = (e) => {if (e.charCode === 13) validateCodeAgent();}
+  const NextStepEnterValidateSMS = (e) => { if (e.charCode === 13) validateSMS();}
+  const NextStepEnterCondition = (e) => {if (e.charCode === 13) validateCondition();}
 
   const validateSpaceKey = (e) => {
     if (e.charCode === 32) {
       e.preventDefault();
-      notify={display:true,type:"error",message:"No se permite espacios en blanco"};
-     
-      return;
+      return showNotify('error',"No se permite espacios en blanco");
     }
   }
   const validateUsername = async (e) => {
-    let validatePatternUserName = /^[A-Za-z0-9_]*$/.test(user.username);
-    console.log("patron: ", validatePatternUserName)
-    if (!user.username || user.username === "") {
-      notify={display:true,type:"error",message:"Ingrese un nombre de usuario"};
-     
-    }else if(! validatePatternUserName){
-      e.preventDefault();
-      notify={display:true,type:"error",message:"Sólo letras, números y guión bajo"};
-    }
-    else {
-      active_section = "name";
-      return;
-    }
-  };
+    if (!user.username) return showNotify('error',"Ingrese un nombre de usuario"); 
+    else if(!/^[A-Za-z0-9_]+$/.test(user.username)) return showNotify('error',"Sólo letras, números y guión bajo")
+    
+    active_section = "name";
+  }
 
   const validateName = () => {
-    if (!user.name) return notify={display:true,type:"error",message:"Ingrese nombre y apellidos"};
+    if (!user.name) return showNotify('error',"Ingrese nombre y apellidos");
     active_section = "phone";
-  };
+  }
+
+  function phoneOnlyNumber(event) {
+    user.phone=user.phone||'';
+    if (/\d/.test(event.key) && user.phone.length < 9) user.phone += event.key;
+  }
+
   const validatePhone = () => {
-    if (!user.phone) return notify={display:true,type:"error",message:"Ingrese su número de teléfono"};
+    if (!user.phone) return showNotify('error',"Ingrese su numero de telefono");
+    else if(user.phone.length <6) return showNotify('error',"Telefono mayor a 6 digitos");
     active_section = "email";
   };
+
   const validateEmail = async () => {
     let isEmail = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(user.email);
-    if(!user.email) return notify={display:true,type:"error",message:"Ingrese un correo"};
-    if(!isEmail) return notify={display:true,type:"error",message:"Formato de e-mail incorrecto"};
+    if(!user.email)  return showNotify('error',"Ingrese un correo"); 
+    if(!isEmail) return showNotify('error',"Formato de email incorrecto"); 
     active_section = "password";
   };
+
   const validatePassword = () => {
-    if (!user.password) {
-      return notify={display:true,type:"error",message:"Ingrese una contraseña"};
-    } else if (user.password.length >= 6){
-      active_section = "date";
-    }else{
-      notify={display:true,type:"error",message:" Minimo 6 caracteres"};
-      return;
-    }
+    if (!user.password) return showNotify('error',"Ingrese una contraseña"); 
+    else if (user.password.length < 6) return showNotify('error',"Minimo 6 caracteres");
+    active_section = "date";
   };
+
   const validateDate = () => {
-    if (!user.date) return notify={display:true,type:"error",message:"Ingrese su fecha de nacimiento"};
+    console.log("user date: ",user.date);
+    if (!user.date) return showNotify('error',"Ingrese su fecha de nacimiento");
+    if(getAge(user.date) < 18) return showNotify('error',"Debe ser mayor de edad");
     active_section = userType=="X"?"codeAgent":"validateSMS";
     if( userType=="W" ){ preRegister() }
   };
@@ -174,60 +149,30 @@
       //let msg="Error desconocido";
       if(e.response.data.message=='PHONE_FORMAT_FAILED'){
         active_section = "phone";
-        return notify={display:true,type:"error",message:"Formato Telefono Incorrecto"};
+        return showNotify('error',"Formato Telefono incorrecto"); 
       } 
       else if(e.response.data.message=='El telefono ya existe'){
         active_section = "phone";
-        return notify={display:true,type:"error",message:e.response.data.message};
-        //EventManager.publish("notify", { mode: "error",msg:e.response.data.message});return;
+        return showNotify('error', e.response.data.message);
       }
       else if(e.response.data.message=='El usuario  ya existe'){
         active_section = "user";
-        return notify={display:true,type:"error",message:e.response.data.message};
-         
+        return showNotify('error', e.response.data.message);
       }
     }
   }
 
   const validateCodeAgent = async() => {
-    if (!user.codeAgent) return notify={display:true,type:"error",message:"Ingrese el código de agente"};
-    //validacion por medio del api de nego para3 corrorar el Pin enviado, si es correcto habilita el continuay de acepto term  condicions
+    if (!user.codeAgent) return showNotify('error',"Ingrese el codigo de agente");
     preRegister();
   };
   const validateSMS = () => {
-    if (!user.validateSMS) {
-      return notify={display:true,type:"error",message:"Ingrese el código SMS"};
-    }
-    //validacion por medio del api de nego para corrorar el Pin enviado, si es correcto habilita el continuay de acepto term  condicions
-    // else if (user.validateSMS.length == 6){
-    //  active_section = "conditions";
-    //}else{
-    //  EventManager.publish("notify", {
-    //    mode: "error",
-    //    msg: " Mínimo 6 caracteres",
-    //  });
-    //  return;
-    //}
+    if (!user.validateSMS) return showNotify('error',"Ingrese el codogo SMS");
     active_section = "conditions";
   };
 
-  //const validateCurrency = () => {
-  //  if (!active_currency) {
-  //    EventManager.publish("notify", {
-  //      mode: "error",
-  //      msg: "Escoja una modena",
-  //    });
-  //    return;
-  //  } else {
-  //    active_section = "conditions";
-  //  }
-  //};
-
   const validateCondition = () => {
-    if (!conditions) {
-      return notify={display:true,type:"error",message:"Acepte los terminos y condiciones"};
-    }
-
+    if (!conditions) return showNotify('error',"Acepte los términos y condiciones");
     register();
   };
 
@@ -319,7 +264,7 @@
           <div class="progress vertical">
             <div class="u-circle-final {active_section == 'welcome' ? 'u-category-select-final': ''}"/>
             <label class="form-check-label" for="flexCheckDefault"
-              >Bienvenido a 365 Fortuna</label>
+              >Bienvenido</label>
           </div>
         </div>
       </div>
@@ -340,7 +285,6 @@
               placeholder="Crear nombre de usuario"
               />
             <span>El nombre de usuario es obligatorio</span>
-            <span>Nombre que otros verán en 365 Fortuna</span>
             <span>Ejemplo: G4nadorDea</span>
             <span>Máximo 20 caracteres</span>
           </div>
@@ -392,8 +336,10 @@
               <input
                 class="u-input-email"
                 bind:value={user.phone}
+                on:keypress|preventDefault={(e)=>phoneOnlyNumber(e)}
                 on:keypress={NextStepEnterPhone}
                 placeholder="Ingrese número de teléfono"
+                maxlength="10"
                 />
             </div>
             <span>El número celular es obligatorio</span>
@@ -425,7 +371,7 @@
               placeholder="Ingrese su correo electrónico"
             />
             <span>El correo electrónico es obligatorio</span>
-            <span>Ejemplo: 365fortuna123@gmail.com</span>
+            <span>Ejemplo: usuario44@gmail.com</span>
             <span>Máximo 30 caracteres</span>
           </div>
           <div class="u-button-control">

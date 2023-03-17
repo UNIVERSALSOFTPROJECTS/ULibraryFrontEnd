@@ -37,3 +37,5 @@ Ya puedes empezar!
 
 para publicar en NPM
 npm publish
+
+Tambien se puede instalar usando directamente de github, usar esto para verificar.
