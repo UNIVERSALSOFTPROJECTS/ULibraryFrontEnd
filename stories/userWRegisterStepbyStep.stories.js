@@ -2,11 +2,11 @@
 import { UserRegisterStepbyStep, ServerConnection } from '../src/index';
 //import EventManager from '../src/js/EventManager'
 //import { notify } from '../src/index';
+let user = {token:"ajsbfjhsgfhjakugilusguwger",balance:12.21,currency:"USD"} ;
 ServerConnection.setConfig({API:"https://lobby-bff.apiusoft.com",CLIENT_AUTH:"GOLD21GOLDENBET4A19028GOLDENBET1",CLIENT_CODE:"GOLD", domain:"goldenbet.pe", currency:user.currency, org:"GB"})
 
 let logoUrl="https://d2zzz5z45zl95g.cloudfront.net/golden/logo.svg";
 let open=true;
-let user = {token:"ajsbfjhsgfhjakugilusguwger",balance:12.21,currency:"USD"} ;
 let userType="W";
 let countryCode ="+51"
 let currencies1=[{code:"USD", codeAgent:5664},{code:"PEN", codeAgent:5263}];
@@ -26,6 +26,6 @@ export const userWRegister1Currency = () => ({
 
 export const userWRegister2Currencies = () => ({
   Component: UserRegisterStepbyStep,
-  props: {logoUrl, open, user, userType,currencies:currencies2, countryCode,active_currency, onOk }
+  props: {logoUrl, open, user, userType,currencies:currencies2, countryCode, onOk }
 });
 
