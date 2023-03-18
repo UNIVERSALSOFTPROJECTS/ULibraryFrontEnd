@@ -7,13 +7,17 @@
   export let open;
   export let user = {};
   export let userType;
+  export let multiCurrency=false;
   export let countryCode="+51";
   export let codeAgent=null;
-  export let onRegisterOk;
+  export let onOk;
+  
+  let active_currency = "";
 
   let notify={display:false, message:"",type:"success"};
 
   let active_section = "user";
+  
   let conditions = false;
 
   const getAge = (birthday) => {
@@ -25,7 +29,7 @@
 
   const welcome = () => {
     closeModal();
-    onRegisterOk();
+    onOk();
   };
 
   const emailLow = (e) =>{
@@ -46,7 +50,8 @@
         user.date,
         user.codeAgent,
         user.validateSMS,
-        userType
+        userType,
+        active_currency,
       );  
       console.log(data);
       if (data.message == "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}" || data.message == "{resp=Err, Id=2, Msg=El correo o el Usuario ya Exite}"){
@@ -88,6 +93,7 @@
   const NextStepEnterDate = (e) => {if (e.charCode === 13) validateDate();}
   const NextStepEnterCodeAgent = (e) => {if (e.charCode === 13) validateCodeAgent();}
   const NextStepEnterValidateSMS = (e) => { if (e.charCode === 13) validateSMS();}
+  const NextStepEnterCurrency = (e) => {if (e.charCode === 13) validateCurrency();}
   const NextStepEnterCondition = (e) => {if (e.charCode === 13) validateCondition();}
 
   const validateSpaceKey = (e) => {
@@ -105,7 +111,8 @@
 
   const validateName = () => {
     if (!user.name) return showNotify('error',"Ingrese nombre y apellidos");
-    active_section = "phone";
+    if(multiCurrency) active_section = "currency";
+    else {active_section = "phone"}
   }
 
   function phoneOnlyNumber(event) {
@@ -176,7 +183,12 @@
   };
   const validateSMS = () => {
     if (!user.validateSMS) return showNotify('error',"Ingrese el codogo SMS");
-    active_section = "conditions";
+    active_section = "conditions"
+  };
+
+  const validateCurrency = () => {
+    if (!active_currency) return showNotify('error',"Escoja una moneda");
+    active_section = "phone";
   };
 
   const validateCondition = () => {
@@ -212,6 +224,16 @@
               >Nombre y apellidos</label
             >
           </div>
+          {#if multiCurrency}
+          <div class="progress vertical">
+            <div
+              class="u-circle {active_currency ? 'u-category-select' : ''}"
+            />
+            <label class="form-check-label" for="flexCheckDefault"
+              >Establece tu moneda</label
+            >
+          </div>
+          {/if}
           <div class="progress vertical">
             <div
               class="u-circle {user.phone ? 'u-category-select' : ''}"
@@ -261,6 +283,7 @@
               >Validación SMS</label
             >
           </div>
+          
           <div class="progress vertical">
             <div
               class="u-circle {conditions == true ? 'u-category-select' : ''}"
@@ -315,8 +338,6 @@
             <input
               class="u-input-email"
               type="text"
-              name=""
-              id=""
               bind:value={user.name}
               on:keypress={NextStepEnterName}
               placeholder="Ingrese nombre y apellidos"
@@ -369,8 +390,6 @@
             <input
               class="u-input-email"
               type="email"
-              name=""
-              id=""
               maxlength="30"
               bind:value={user.email}
               on:keypress={NextStepEnterEmail}
@@ -403,8 +422,6 @@
             <input
               class="u-input-email"
               type="password"
-              name=""
-              id=""
               maxlength="20"
               bind:value={user.password}
               on:keypress={NextStepEnterPassword}
@@ -433,8 +450,6 @@
             <input
               class="u-input-email"
               type="date"
-              name=""
-              id=""
               bind:value={user.date}
               on:keypress={NextStepEnterDate}
               placeholder="Ingresa tu fecha de nacimiento"
@@ -462,8 +477,6 @@
               <input
                 class="u-input-email"
                 type="number"
-                name=""
-                id=""
                 maxlength="8"
                 bind:value={user.codeAgent}
                 on:keypress={NextStepEnterCodeAgent}
@@ -490,8 +503,6 @@
             <input
               class="u-input-email"
               type="number"
-              name=""
-              id=""
               maxlength="6"
               bind:value={user.validateSMS}
               on:keypress={NextStepEnterValidateSMS}
@@ -509,6 +520,35 @@
       <!--Fin de componente user-->
     {/if}
 
+    {#if active_section == "currency"}
+        <!--Componente de moneda-->
+        <div class="u-date-new">
+          <div class="u-header">
+            <span>ESTABLECER MONEDA</span>
+          </div>
+          <div class="u-body u-currency">
+            <span>Monedas sugeridas</span>
+            <div class="u-coins" on:keypress={NextStepEnterCurrency}>
+              <button
+                class="u-button-coins {active_currency == '3'
+                  ? 'u-opt-select'
+                  : ''}"
+                on:click={() => {
+                  active_currency = "3";
+                }}>USD</button
+              >
+              <button class="u-button-coins {active_currency == '9'? 'u-opt-select': ''}"on:click={() => {active_currency = "9";}}>PEN</button>
+            </div>
+          </div>
+          <div class="u-button-control">
+            <button
+              class="u-button {active_currency ? 'u-active-button' : ''}"
+              on:click={validateCurrency}>CONTINUAR</button
+            >
+          </div>
+        </div>
+        <!--Fin de componente moneda-->
+      {/if}
 
       {#if active_section == "conditions"}
         <!--Componente terminos-->
