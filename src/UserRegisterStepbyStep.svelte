@@ -2,44 +2,41 @@
   import ServerConnection from "./js/server";
   import Notifier from "./Notifier.svelte";
   import moment from "moment";
+    import { onMount } from "svelte";
   
   export let logoUrl;
   export let open;
   export let user = {};
   export let userType;
-  export let multiCurrency=false;
   export let countryCode="+51";
-  export let codeAgent=null;
   export let onOk;
-  
+  export let currencies;
+  //TODO: cargar todas las menedas.
+  const CURRENCIES_ = {"USD":3, "PEN":9, "ARS":18};
+
   let active_currency = "";
-
   let notify={display:false, message:"",type:"success"};
-
   let active_section = "user";
-  
   let conditions = false;
 
   const getAge = (birthday) => {
-	var now = moment();
-	var birthday_ = moment(birthday);
-	var years = now.diff(birthday_, 'year');
-  return years;
+    var now = moment();
+    var birthday_ = moment(birthday);
+    var years = now.diff(birthday_, 'year');
+    return years;
   }
 
-  const welcome = () => {
-    closeModal();
-    onOk();
-  };
+  const welcome = () => { closeModal(); onOk(); };
 
-  const emailLow = (e) =>{
-    user.email = user.email.toLowerCase();
-  };
+  const emailLow = (e) =>{ user.email = user.email.toLowerCase();};
 
   const register = async () => {
-    if( userType=="W" && !codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
+    if( currencies.length==1) active_currency=currencies[0].code;
+    //if( userType=="W" && !codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
     try {
-      if(userType=="W") user.codeAgent=codeAgent;
+      //if(userType=="W") user.codeAgent=codeAgent;
+      user.codeAgent= currencies.find(e=>e.code == active_currency ).codeAgent;
+      if( !user.codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
       let {data} = await ServerConnection.user.register(
         user.username,
         user.name,
@@ -51,9 +48,9 @@
         user.codeAgent,
         user.validateSMS,
         userType,
-        active_currency,
+        CURRENCIES_[active_currency],
       );  
-      console.log(data);
+      console.log("DATA",data);
       if (data.message == "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}" || data.message == "{resp=Err, Id=2, Msg=El correo o el Usuario ya Exite}"){
         active_section = "email";
         return showNotify('error',"Este correo ya esta en uso");
@@ -76,15 +73,8 @@
     }
   };
 
-  const showNotify = (type, message) => {
-    notify={display:true,type,message};
-    setTimeout( ()=>{ notify.display=false },4000)
-  }
-
-  const closeModal = () => {
-    document.body.classList.remove("fixed-scroll");
-    open = false;
-  }
+  const showNotify = (type, message) => { notify={display:true,type,message}; setTimeout( ()=>{ notify.display=false },4000)}
+  const closeModal = () => { document.body.classList.remove("fixed-scroll"); open = false;}
   const NextStepEnterEmail = (e) => {if (e.charCode === 13) validateEmail();}
   const NextStepEnterName = (e) => {if (e.charCode === 13) validateName();}
   const NextStepEnterUsername = (e) => { if (e.charCode === 13)  validateUsername(); }
@@ -105,13 +95,12 @@
   const validateUsername = async (e) => {
     if (!user.username) return showNotify('error',"Ingrese un nombre de usuario"); 
     else if(!/^[A-Za-z0-9_]+$/.test(user.username)) return showNotify('error',"Sólo letras, números y guión bajo")
-    
     active_section = "name";
   }
 
   const validateName = () => {
     if (!user.name) return showNotify('error',"Ingrese nombre y apellidos");
-    if(multiCurrency) active_section = "currency";
+    if(currencies.length>1) active_section = "currency";
     else {active_section = "phone"}
   }
 
@@ -147,6 +136,7 @@
   };
 
   const preRegister=async()=>{
+    if(!currencies.length) return  showNotify('error',"Moneda no difinida"); 
     try {
       await ServerConnection.user.preRegister(user.username,user.email,countryCode+user.phone);
       active_section = "validateSMS";
@@ -224,14 +214,10 @@
               >Nombre y apellidos</label
             >
           </div>
-          {#if multiCurrency}
+          {#if currencies.length>1}
           <div class="progress vertical">
-            <div
-              class="u-circle {active_currency ? 'u-category-select' : ''}"
-            />
-            <label class="form-check-label" for="flexCheckDefault"
-              >Establece tu moneda</label
-            >
+            <div class="u-circle {active_currency ? 'u-category-select' : ''}"></div>
+            <label class="form-check-label">Establece tu moneda</label>
           </div>
           {/if}
           <div class="progress vertical">
@@ -529,22 +515,14 @@
           <div class="u-body u-currency">
             <span>Monedas sugeridas</span>
             <div class="u-coins" on:keypress={NextStepEnterCurrency}>
-              <button
-                class="u-button-coins {active_currency == '3'
-                  ? 'u-opt-select'
-                  : ''}"
-                on:click={() => {
-                  active_currency = "3";
-                }}>USD</button
-              >
-              <button class="u-button-coins {active_currency == '9'? 'u-opt-select': ''}"on:click={() => {active_currency = "9";}}>PEN</button>
+              {#each currencies as currency }
+              <button class="u-button-coins {active_currency == currency.code?'u-opt-select':''}"
+                on:click={() => { active_currency = currency.code;}}>{currency.code}</button>
+              {/each}
             </div>
           </div>
           <div class="u-button-control">
-            <button
-              class="u-button {active_currency ? 'u-active-button' : ''}"
-              on:click={validateCurrency}>CONTINUAR</button
-            >
+            <button class="u-button {active_currency ? 'u-active-button' : ''}"  on:click={validateCurrency}>CONTINUAR</button>
           </div>
         </div>
         <!--Fin de componente moneda-->

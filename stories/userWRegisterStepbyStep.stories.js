@@ -8,10 +8,10 @@ ServerConnection.setConfig({API:"https://lobby-bff.apiusoft.com",CLIENT_AUTH:"GO
 let userType="W";
 let open=true;
 let logoUrl="https://d2zzz5z45zl95g.cloudfront.net/golden/logo.svg";
-let codeAgent = 5263;
-let multiCurrency = true;
 let active_currency=""
 let countryCode ="+51"
+let currencies1=[{code:"USD", codeAgent:5664},{code:"PEN", codeAgent:5263}];
+let currencies2=[{code:"PEN", codeAgent:5263}];
 
 const onOk=()=>{
   alert("Registro correcto");
@@ -20,8 +20,13 @@ const onOk=()=>{
 export default {title: 'Registro Usuario W',component: UserRegisterStepbyStep,
 };
 
-export const userWRegister = () => ({
+export const userWRegister1Currency = () => ({
   Component: UserRegisterStepbyStep,
-  props: {logoUrl, open, user, userType,multiCurrency, countryCode,codeAgent,active_currency, onOk }
+  props: {logoUrl, open, user, userType,currencies:currencies1, countryCode,active_currency, onOk }
+});
+
+export const userWRegister2Currencies = () => ({
+  Component: UserRegisterStepbyStep,
+  props: {logoUrl, open, user, userType,currencies:currencies2, countryCode,active_currency, onOk }
 });
 
