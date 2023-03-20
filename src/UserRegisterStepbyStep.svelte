@@ -109,8 +109,9 @@
         user.codeAgent,
         user.validateSMS,
         userType,
+         platform,
         CURRENCIES_[active_currency],
-        platform
+       
       );
       console.log("DATA", data);
       if (
