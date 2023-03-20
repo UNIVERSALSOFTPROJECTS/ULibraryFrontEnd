@@ -3,7 +3,7 @@
   import Notifier from "./Notifier.svelte";
   import { onMount } from "svelte";
   import moment from "moment";
-  import "moment/locale/es" ;
+  import "moment/locale/es";
   export let dateString = null; //YYYY-MM-DD
 
   export let logoUrl;
@@ -19,7 +19,7 @@
 
   let active_currency = "";
   let notify = { display: false, message: "", type: "success" };
-  let active_section = "user";
+  let active_section = "date";
   let conditions = false;
   let days = [];
   let months = [""];
@@ -44,11 +44,10 @@
     }
     //TODO: cambiar fecha y devolver la nueva fecha en DateString.
     if (mode != "first") {
-
       dateString = moment(
         `${yearSelected}-${monthSelected}-${daySelected}`
       ).format("YYYY-MM-DD");
-      user.date =dateString;
+      user.date = dateString;
     }
   };
 
@@ -63,7 +62,9 @@
 
   onMount(() => {
     for (let i = 0; i < 12; i++) {
-      let month = moment().localeData("es").months(moment([0, i]), "");
+      let month = moment()
+        .localeData("es")
+        .months(moment([0, i]), "");
       months.push(month);
     }
     if (dateString && dateString.indexOf("-")) {
@@ -109,9 +110,8 @@
         user.codeAgent,
         user.validateSMS,
         userType,
-         platform,
-        CURRENCIES_[active_currency],
-       
+        platform,
+        CURRENCIES_[active_currency]
       );
       console.log("DATA", data);
       if (
@@ -452,7 +452,10 @@
           <div class="u-header"><span>NUMERO DE TELEFONO</span></div>
           <div class="u-body">
             <div style="display:flex;align-items: flex-end;">
-              <div class="u-input-email" style="margin-right:0.5rem;color:#909090"  >
+              <div
+                class="u-input-email"
+                style="margin-right:0.5rem;color:#909090"
+              >
                 {countryCode}
               </div>
               <input
@@ -538,16 +541,6 @@
         <!--Componente de correo-->
         <div class="u-date-new">
           <div class="u-header"><span>FECHA DE NACIMIENTO</span></div>
-          <!--div class="u-body" style="width: 386px;align-items: center;">
-            <input
-              class="u-input-email"
-              type="date"
-              bind:value={user.date}
-              on:keypress={NextStepEnterDate}
-              placeholder="Ingresa tu fecha de nacimiento"
-            />
-
-          </div-->
           <div class="select-date">
             <select bind:value={daySelected} on:change={onChangeDate}>
               {#each days as day}
@@ -716,182 +709,184 @@
 />
 
 <style>
+  :root {
+    --u-userregister-stepbystep-bg-menu: black;
+  }
   .u-wrapp-progress {
     color: white;
   }
-  @media only screen and (max-width: 1200px) {
-    .u-content-logo {
-      display: none;
-    }
-    input:focus-visible {
-      outline: 0;
-    }
-    .u-main-general {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-    }
-    .u-content-info {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-    }
-    .u-info {
-      display: none;
-    }
-    .u-text-title {
-      display: flex;
-      flex-direction: column;
-      color: #f1bf00;
-      font-weight: 300;
-      font-family: montserrat;
-      font-size: 0.8rem;
-      width: 7rem;
-    }
-    .u-date-new {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-color: rgb(255, 255, 255);
-      height: 100%;
-      padding-bottom: 1rem;
-      width: 100%;
-      border-bottom-left-radius: 0.5rem;
-      border-top-left-radius: 0.5rem;
-      border-bottom-right-radius: 0.5rem;
-      border-top-right-radius: 0.5rem;
-      margin-top: 1.5rem;
-    }
-    .u-header {
-      display: flex;
-      justify-content: center;
-      background-color: #dcd9d9;
-      width: 95%;
-      border-top-right-radius: 0.5rem;
-      border-top-left-radius: 0.5rem;
-      padding: 0.5rem;
-      color: black;
-    }
-    .u-body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 1rem;
-      height: 40%;
-      width: 90%;
-    }
-    .u-currency {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 1rem;
-      height: 100%;
-      gap: 1rem;
-    }
-    .u-terms-and-conditions {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 1rem;
-      height: 100%;
-      text-align: center;
-      color: black;
-    }
-    .u-welcome {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 1rem;
-      height: 100%;
-      font-size: 1rem;
-      font-weight: 700;
-      text-align: center;
-      color: rgb(122, 122, 122);
-    }
-    .u-coins {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      height: 3rem;
-      gap: 1rem;
-    }
-    .u-button-coins {
-      background-color: #f1f6f9;
-      border: none;
-      height: 100%;
-      width: 6rem;
-    }
-    .u-body span {
-      color: #9a9797;
-      font-size: 0.5rem;
-    }
-    .u-input-email {
-      height: 2rem;
-      margin-bottom: 0.5rem;
-      border: none;
-      font-size: 1rem;
-      letter-spacing: -1px;
-      border-bottom: 1px solid #727272;
-    }
-
-    .logo {
-      position: absolute;
-      left: 40%;
-      top: -20%;
-      width: 120px;
-      height: 80px;
-    }
-    .u-button-control {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-    }
-    .u-button {
-      width: 40%;
-      border: none;
-      height: 2rem;
-      border-radius: 0.2rem;
-      background-color: #f1bf00;
-      color: black;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .u-button-close {
-      position: absolute;
-      left: 90%;
-      top: 2%;
-    }
-    .u-close {
-      text-align: center;
-      border: none;
-      background: #bd992a;
-      color: black;
-      width: 24px;
-      height: 27px;
-      font-size: 28px;
-      font-weight: 800;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 2px;
-      cursor: pointer;
-    }
-    .u-opt-select {
-      background-color: #f1bf00;
-    }
-    .u-category-select {
-      background-color: white;
-    }
-    .u-category-select-final {
-      background-color: rgb(231, 238, 28);
-    }
+  .u-content-logo {
+    display: none;
   }
+  input:focus-visible {
+    outline: 0;
+  }
+  .u-main-general {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .u-content-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .u-info {
+    display: none;
+  }
+  .u-text-title {
+    display: flex;
+    flex-direction: column;
+    color: #f1bf00;
+    font-weight: 300;
+    font-family: montserrat;
+    font-size: 0.8rem;
+    width: 7rem;
+  }
+  .u-date-new {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(177, 22, 22);
+    height: 100%;
+    padding-bottom: 1rem;
+    width: 100%;
+    border-bottom-left-radius: 0.5rem;
+    border-top-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    margin-top: 1.5rem;
+  }
+  .u-header {
+    display: flex;
+    justify-content: center;
+    background-color: #dcd9d9;
+    width: 95%;
+    border-top-right-radius: 0.5rem;
+    border-top-left-radius: 0.5rem;
+    padding: 0.5rem;
+    color: black;
+  }
+  .u-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    height: 40%;
+    width: 90%;
+  }
+  .u-currency {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    height: 100%;
+    gap: 1rem;
+  }
+  .u-terms-and-conditions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    height: 100%;
+    text-align: center;
+    color: black;
+  }
+  .u-welcome {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    height: 100%;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    color: rgb(122, 122, 122);
+  }
+  .u-coins {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 3rem;
+    gap: 1rem;
+  }
+  .u-button-coins {
+    background-color: #f1f6f9;
+    border: none;
+    height: 100%;
+    width: 6rem;
+  }
+  .u-body span {
+    color: #9a9797;
+    font-size: 0.5rem;
+  }
+  .u-input-email {
+    height: 2rem;
+    margin-bottom: 0.5rem;
+    border: none;
+    font-size: 1rem;
+    letter-spacing: -1px;
+    border-bottom: 1px solid #727272;
+  }
+
+  .logo {
+    position: absolute;
+    left: 40%;
+    top: -20%;
+    width: 120px;
+    height: 80px;
+  }
+  .u-button-control {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  .u-button {
+    width: 40%;
+    border: none;
+    height: 2rem;
+    border-radius: 0.2rem;
+    background-color: #f1bf00;
+    color: black;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .u-button-close {
+    position: absolute;
+    left: 90%;
+    top: 2%;
+  }
+  .u-close {
+    text-align: center;
+    border: none;
+    background: #bd992a;
+    color: black;
+    width: 24px;
+    height: 27px;
+    font-size: 28px;
+    font-weight: 800;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .u-opt-select {
+    background-color: #f1bf00;
+  }
+  .u-category-select {
+    background-color: white;
+  }
+  .u-category-select-final {
+    background-color: rgb(231, 238, 28);
+  }
+
   @media only screen and (min-width: 1200px) {
     input:focus-visible {
       outline: 0;
@@ -917,7 +912,7 @@
       margin-top: 1rem;
     }
     .u-info {
-      background-color: black;
+      background-color: var(--u-userregister-stepbystep-bg-menu);
       width: 80%;
       padding: 1rem;
       display: flex;
