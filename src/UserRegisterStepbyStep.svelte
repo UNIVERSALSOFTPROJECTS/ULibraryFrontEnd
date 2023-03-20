@@ -49,8 +49,8 @@
         user.codeAgent,
         user.validateSMS,
         userType,
-        CURRENCIES_[active_currency],
         platform,
+        CURRENCIES_[active_currency],
       );  
       console.log("DATA",data);
       if (data.message == "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}" || data.message == "{resp=Err, Id=2, Msg=El correo o el Usuario ya Exite}"){
