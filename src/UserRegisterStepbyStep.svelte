@@ -11,6 +11,7 @@
   export let countryCode="+51";
   export let onOk;
   export let currencies;
+  export let platform;
   //TODO: cargar todas las menedas.
   const CURRENCIES_ = {"USD":3, "PEN":9, "ARS":18};
 
@@ -49,6 +50,7 @@
         user.validateSMS,
         userType,
         CURRENCIES_[active_currency],
+        platform,
       );  
       console.log("DATA",data);
       if (data.message == "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}" || data.message == "{resp=Err, Id=2, Msg=El correo o el Usuario ya Exite}"){
@@ -138,7 +140,7 @@
   const preRegister=async()=>{
     if(!currencies.length) return  showNotify('error',"Moneda no difinida"); 
     try {
-      await ServerConnection.user.preRegister(user.username,user.email,countryCode+user.phone);
+      await ServerConnection.user.preRegister(user.username,user.email,countryCode+user.phone, platform);
       active_section = "validateSMS";
     } catch (e) {
       console.log("error: ",e);
@@ -161,9 +163,7 @@
         active_section = "email";
         messagge=e.response.data.message;
       }
-
       return showNotify('error',messagge); 
-     
     }
   }
 

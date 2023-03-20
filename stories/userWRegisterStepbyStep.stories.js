@@ -11,6 +11,7 @@ let userType="W";
 let countryCode ="+51"
 let currencies1=[{code:"USD", codeAgent:5664},{code:"PEN", codeAgent:5263}];
 let currencies2=[{code:"PEN", codeAgent:5263}];
+let platform = "GoldenBet";
 
 const onOk=()=>{
   alert("Registro correcto");
@@ -21,11 +22,11 @@ export default {title: 'Registro Usuario W',component: UserRegisterStepbyStep,
 
 export const userWRegister1Currency = () => ({
   Component: UserRegisterStepbyStep,
-  props: {logoUrl, open, user, userType,currencies:currencies1, countryCode, onOk }
+  props: {logoUrl, open, user, userType,currencies:currencies1, countryCode, onOk, platform}
 });
 
 export const userWRegister2Currencies = () => ({
   Component: UserRegisterStepbyStep,
-  props: {logoUrl, open, user, userType,currencies:currencies2, countryCode, onOk }
+  props: {logoUrl, open, user, userType,currencies:currencies2, countryCode, onOk, platform}
 });
 

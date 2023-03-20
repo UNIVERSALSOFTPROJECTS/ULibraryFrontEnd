@@ -43,17 +43,17 @@ const ServerConnection = (() => {
             let url = conf.API+`/balance/${userToken}`;
             return axios.get(url,{headers}) ;
         },
-        preRegister:(username, email, phone)=>{
+        preRegister:(username, email, phone, platform)=>{
             var url=conf.API+"/user/preRegister";
             if(!conf.org) throw "ORG_MANDATORY";
-            var payload = {username,email,phone, org:conf.org}
+            var payload = {username,email,phone, org:conf.org, platform}
             return axios.post( url,payload,{headers} );
         },
-        register: (username, name,country, phone, email, password, date, operatorId,smscode,usertype,  currency=conf.currency)=>{
+        register: (username, name,country, phone, email, password, date, operatorId,smscode,usertype, platform, currency=conf.currency)=>{
             if(!conf.currency) throw "CURRENCY_MANDATORY";
             if(!conf.domain) throw "DOMAIN_MANDATORY";
             var url=conf.API+"/user";
-            var payload = {username, name, phone:phone, email, currency, password, date, smscode,country, operatorId, doctype:"", document:"", birthday:date, domain:conf.domain, usertype, org:conf.org}
+            var payload = {username, name, phone:phone, email, currency, password, date, smscode,country, operatorId, doctype:"", document:"", birthday:date, domain:conf.domain, usertype, platform, org:conf.org}
             return axios.post( url,payload,{headers} );
         }
     }
