@@ -1,48 +1,108 @@
 <script>
   import ServerConnection from "./js/server";
   import Notifier from "./Notifier.svelte";
-  import moment from "moment";
-    import { onMount } from "svelte";
-  
+  import { onMount } from "svelte";
+  import moment, { max } from "moment";
+  import "moment/locale/es" ;
+  export let dateString = null; //YYYY-MM-DD
+
   export let logoUrl;
   export let open;
   export let user = {};
   export let userType;
-  export let countryCode="+51";
+  export let countryCode = "+51";
   export let onOk;
   export let currencies;
   export let platform;
   //TODO: cargar todas las menedas.
-  const CURRENCIES_ = {"USD":3, "PEN":9, "ARS":18};
+  const CURRENCIES_ = { USD: 3, PEN: 9, ARS: 18 };
 
   let active_currency = "";
-  let notify={display:false, message:"",type:"success"};
+  let notify = { display: false, message: "", type: "success" };
   let active_section = "user";
   let conditions = false;
+  let days = [];
+  let months = [""];
+  let years = [];
+  let monthSelected = 1;
+  let yearSelected = null;
+  let daySelected = 1;
 
   const getAge = (birthday) => {
     var now = moment();
     var birthday_ = moment(birthday);
-    var years = now.diff(birthday_, 'year');
+    var years = now.diff(birthday_, "year");
     return years;
+  };
+  const onChangeDate = (mode) => {
+    let daysOfMonth = moment(
+      `${yearSelected}-${monthSelected}-01`
+    ).daysInMonth();
+    days = [];
+    for (let i = 1; i <= daysOfMonth; i++) {
+      days.push(i);
+    }
+    //TODO: cambiar fecha y devolver la nueva fecha en DateString.
+    if (mode != "first") {
+
+      dateString = moment(
+        `${yearSelected}-${monthSelected}-${daySelected}`
+      ).format("YYYY-MM-DD");
+      user.date =dateString;
+    }
+  };
+
+  const currentYear = Number(moment().format("YYYY"));
+  const adultYear = currentYear - 19;
+  const maxYear = currentYear - 80;
+  for (let i = adultYear; i >= maxYear; i--) {
+    years.push(i);
   }
+  yearSelected = years[0];
+  onChangeDate("first");
 
-  const welcome = () => { closeModal(); onOk(); };
+  onMount(() => {
+    for (let i = 0; i < 12; i++) {
+      let month = moment().localeData("es").months(moment([0, i]), "");
+      months.push(month);
+    }
+    if (dateString && dateString.indexOf("-")) {
+      let dates = dateString.split("-");
+      console.log(dates);
+      yearSelected = Number(dates[0]);
+      monthSelected = Number(dates[1]);
+      daySelected = Number(dates[2]);
+    } else if (dateString && dateString.indexOf("/")) {
+      let dates = dateString.split("/");
+      yearSelected = dates[2];
+      monthSelected = dates[1];
+      daySelected = dates[0];
+    }
+  });
 
-  const emailLow = (e) =>{ user.email = user.email.toLowerCase();};
+  const welcome = () => {
+    closeModal();
+    onOk();
+  };
+
+  const emailLow = (e) => {
+    user.email = user.email.toLowerCase();
+  };
 
   const register = async () => {
-    if( currencies.length==1) active_currency=currencies[0].code;
+    if (currencies.length == 1) active_currency = currencies[0].code;
     //if( userType=="W" && !codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
     try {
       //if(userType=="W") user.codeAgent=codeAgent;
-      user.codeAgent= currencies.find(e=>e.code == active_currency ).codeAgent;
-      if( !user.codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
-      let {data} = await ServerConnection.user.register(
+      user.codeAgent = currencies.find(
+        (e) => e.code == active_currency
+      ).codeAgent;
+      if (!user.codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
+      let { data } = await ServerConnection.user.register(
         user.username,
         user.name,
         countryCode,
-        countryCode+user.phone,
+        countryCode + user.phone,
         user.email,
         user.password,
         user.date,
@@ -50,148 +110,193 @@
         user.validateSMS,
         userType,
         CURRENCIES_[active_currency],
-        platform,
-      );  
-      console.log("DATA",data);
-      if (data.message == "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}" || data.message == "{resp=Err, Id=2, Msg=El correo o el Usuario ya Exite}"){
+        platform
+      );
+      console.log("DATA", data);
+      if (
+        data.message ==
+          "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}" ||
+        data.message == "{resp=Err, Id=2, Msg=El correo o el Usuario ya Exite}"
+      ) {
         active_section = "email";
-        return showNotify('error',"Este correo ya esta en uso");
-      }else if(data.message == "{resp=Err, Id=1, Msg=Usuario ya Exite}" || data.message == "{resp=Err, Id=2, Msg=Usuario ya Exite}"){
+        return showNotify("error", "Este correo ya esta en uso");
+      } else if (
+        data.message == "{resp=Err, Id=1, Msg=Usuario ya Exite}" ||
+        data.message == "{resp=Err, Id=2, Msg=Usuario ya Exite}"
+      ) {
         active_section = "user";
-        return showNotify('error',"Este nombre de usuario ay existe");
-      }
-      else if(data.errorCode=='SMS_CODE_INVALID'){
+        return showNotify("error", "Este nombre de usuario ay existe");
+      } else if (data.errorCode == "SMS_CODE_INVALID") {
         active_section = "validateSMS";
-        return showNotify('error',"Código SMS incorrecto");
-      }else if(data.errorCode=='CREATE_USER_FAILED'){
+        return showNotify("error", "Código SMS incorrecto");
+      } else if (data.errorCode == "CREATE_USER_FAILED") {
         active_section = "codeAgent";
-        return showNotify('error',"Código de agente incorrecto");
+        return showNotify("error", "Código de agente incorrecto");
       }
-        active_section = "welcome";
-
+      active_section = "welcome";
     } catch (e) {
-      console.log("registermsg",e);
-      return showNotify('error',"Error al crear usuario");
+      console.log("registermsg", e);
+      return showNotify("error", "Error al crear usuario");
     }
   };
 
-  const showNotify = (type, message) => { notify={display:true,type,message}; setTimeout( ()=>{ notify.display=false },4000)}
-  const closeModal = () => { document.body.classList.remove("fixed-scroll"); open = false;}
-  const NextStepEnterEmail = (e) => {if (e.charCode === 13) validateEmail();}
-  const NextStepEnterName = (e) => {if (e.charCode === 13) validateName();}
-  const NextStepEnterUsername = (e) => { if (e.charCode === 13)  validateUsername(); }
-  const NextStepEnterPhone = (e) => {if (e.charCode === 13)  validatePhone();}
-  const NextStepEnterPassword = (e) => { if (e.charCode === 13) validatePassword();}
-  const NextStepEnterDate = (e) => {if (e.charCode === 13) validateDate();}
-  const NextStepEnterCodeAgent = (e) => {if (e.charCode === 13) validateCodeAgent();}
-  const NextStepEnterValidateSMS = (e) => { if (e.charCode === 13) validateSMS();}
-  const NextStepEnterCurrency = (e) => {if (e.charCode === 13) validateCurrency();}
-  const NextStepEnterCondition = (e) => {if (e.charCode === 13) validateCondition();}
+  const showNotify = (type, message) => {
+    notify = { display: true, type, message };
+    setTimeout(() => {
+      notify.display = false;
+    }, 4000);
+  };
+  const closeModal = () => {
+    document.body.classList.remove("fixed-scroll");
+    open = false;
+  };
+  const NextStepEnterEmail = (e) => {
+    if (e.charCode === 13) validateEmail();
+  };
+  const NextStepEnterName = (e) => {
+    if (e.charCode === 13) validateName();
+  };
+  const NextStepEnterUsername = (e) => {
+    if (e.charCode === 13) validateUsername();
+  };
+  const NextStepEnterPhone = (e) => {
+    if (e.charCode === 13) validatePhone();
+  };
+  const NextStepEnterPassword = (e) => {
+    if (e.charCode === 13) validatePassword();
+  };
+  const NextStepEnterDate = (e) => {
+    if (e.charCode === 13) validateDate();
+  };
+  const NextStepEnterCodeAgent = (e) => {
+    if (e.charCode === 13) validateCodeAgent();
+  };
+  const NextStepEnterValidateSMS = (e) => {
+    if (e.charCode === 13) validateSMS();
+  };
+  const NextStepEnterCurrency = (e) => {
+    if (e.charCode === 13) validateCurrency();
+  };
+  const NextStepEnterCondition = (e) => {
+    if (e.charCode === 13) validateCondition();
+  };
 
   const validateSpaceKey = (e) => {
     if (e.charCode === 32) {
       e.preventDefault();
-      return showNotify('error',"No se permite espacios en blanco");
+      return showNotify("error", "No se permite espacios en blanco");
     }
-  }
+  };
   const validateUsername = async (e) => {
-    if (!user.username) return showNotify('error',"Ingrese un nombre de usuario"); 
-    else if(!/^[A-Za-z0-9_]+$/.test(user.username)) return showNotify('error',"Sólo letras, números y guión bajo")
+    if (!user.username)
+      return showNotify("error", "Ingrese un nombre de usuario");
+    else if (!/^[A-Za-z0-9_]+$/.test(user.username))
+      return showNotify("error", "Sólo letras, números y guión bajo");
     active_section = "name";
-  }
+  };
 
   const validateName = () => {
-    if (!user.name) return showNotify('error',"Ingrese nombre y apellidos");
-    if(currencies.length>1) active_section = "currency";
-    else {active_section = "phone"}
-  }
+    if (!user.name) return showNotify("error", "Ingrese nombre y apellidos");
+    if (currencies.length > 1) active_section = "currency";
+    else {
+      active_section = "phone";
+    }
+  };
 
   function phoneOnlyNumber(event) {
-    user.phone=user.phone||'';
+    user.phone = user.phone || "";
     if (/\d/.test(event.key) && user.phone.length < 9) user.phone += event.key;
   }
 
   const validatePhone = () => {
-    if (!user.phone) return showNotify('error',"Ingrese su numero de telefono");
-    else if(user.phone.length <6) return showNotify('error',"Telefono mayor a 6 digitos");
+    if (!user.phone)
+      return showNotify("error", "Ingrese su numero de telefono");
+    else if (user.phone.length < 6)
+      return showNotify("error", "Telefono mayor a 6 digitos");
     active_section = "email";
   };
 
   const validateEmail = async () => {
     let isEmail = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(user.email);
-    if(!user.email)  return showNotify('error',"Ingrese un correo"); 
-    if(!isEmail) return showNotify('error',"Formato de email incorrecto"); 
+    if (!user.email) return showNotify("error", "Ingrese un correo");
+    if (!isEmail) return showNotify("error", "Formato de email incorrecto");
     active_section = "password";
   };
 
   const validatePassword = () => {
-    if (!user.password) return showNotify('error',"Ingrese una contraseña"); 
-    else if (user.password.length < 6) return showNotify('error',"Minimo 6 caracteres");
+    if (!user.password) return showNotify("error", "Ingrese una contraseña");
+    else if (user.password.length < 6)
+      return showNotify("error", "Minimo 6 caracteres");
     active_section = "date";
   };
 
   const validateDate = () => {
-    if (!user.date) return showNotify('error',"Ingrese su fecha de nacimiento");
-    if(getAge(user.date) < 18) return showNotify('error',"Debe ser mayor de edad");
-    active_section = userType=="X"?"codeAgent":"validateSMS";
-    if( userType=="W" ){ preRegister() }
+    if (!user.date)
+      return showNotify("error", "Ingrese su fecha de nacimiento");
+    if (getAge(user.date) < 18)
+      return showNotify("error", "Debe ser mayor de edad");
+    active_section = userType == "X" ? "codeAgent" : "validateSMS";
+    if (userType == "W") {
+      preRegister();
+    }
   };
 
-  const preRegister=async()=>{
-    if(!currencies.length) return  showNotify('error',"Moneda no difinida"); 
+  const preRegister = async () => {
+    if (!currencies.length) return showNotify("error", "Moneda no difinida");
     try {
-      await ServerConnection.user.preRegister(user.username,user.email,countryCode+user.phone, platform);
+      await ServerConnection.user.preRegister(
+        user.username,
+        user.email,
+        countryCode + user.phone,
+        platform
+      );
       active_section = "validateSMS";
     } catch (e) {
-      console.log("error: ",e);
+      console.log("error: ", e);
       let messagge = "Error desconocido en Preregistro";
-      if(e.response.data.message=='PHONE_FORMAT_FAILED'){
+      if (e.response.data.message == "PHONE_FORMAT_FAILED") {
         active_section = "phone";
-        messagge="Formato Telefono incorrecto";
-      } 
-      else if(e.response.data.message=='El telefono ya existe'){
+        messagge = "Formato Telefono incorrecto";
+      } else if (e.response.data.message == "El telefono ya existe") {
         active_section = "phone";
-        messagge=e.response.data.message;
-      }
-      else if(e.response.data.message=='El usuario  ya existe'){
+        messagge = e.response.data.message;
+      } else if (e.response.data.message == "El usuario  ya existe") {
         active_section = "user";
-        messagge=e.response.data.message;
-      }else if(e=="ORG_MANDATORY"){
-        messagge="ORG es obligatorio";
-      }
-      else if(e.response.data.message=='El usuario u correo ya existe'){
+        messagge = e.response.data.message;
+      } else if (e == "ORG_MANDATORY") {
+        messagge = "ORG es obligatorio";
+      } else if (e.response.data.message == "El usuario u correo ya existe") {
         active_section = "email";
-        messagge=e.response.data.message;
+        messagge = e.response.data.message;
       }
-      return showNotify('error',messagge); 
+      return showNotify("error", messagge);
     }
-  }
+  };
 
-  const validateCodeAgent = async() => {
-    if (!user.codeAgent) return showNotify('error',"Ingrese el codigo de agente");
+  const validateCodeAgent = async () => {
+    if (!user.codeAgent)
+      return showNotify("error", "Ingrese el codigo de agente");
     preRegister();
   };
   const validateSMS = () => {
-    if (!user.validateSMS) return showNotify('error',"Ingrese el codogo SMS");
-    active_section = "conditions"
+    if (!user.validateSMS) return showNotify("error", "Ingrese el codogo SMS");
+    active_section = "conditions";
   };
 
   const validateCurrency = () => {
-    if (!active_currency) return showNotify('error',"Escoja una moneda");
+    if (!active_currency) return showNotify("error", "Escoja una moneda");
     active_section = "phone";
   };
 
   const validateCondition = () => {
-    if (!conditions) return showNotify('error',"Acepte los términos y condiciones");
+    if (!conditions)
+      return showNotify("error", "Acepte los términos y condiciones");
     register();
   };
-
 </script>
 
 <div class="u-main-content-general">
-  <div class="u-content-logo">
-    <img class="logo" src="{logoUrl}" alt="" />
-  </div>
+  <div class="u-content-logo"><img class="logo" src={logoUrl} alt="" /></div>
   <div class="u-main-general">
     <div class="u-content-info">
       <div class="u-info">
@@ -201,37 +306,37 @@
         </div>
         <div class="u-wrapp-progress">
           <div class="progress vertical">
-            <div class="u-circle u-star {user.username ? 'u-category-select' : ''}" />
+            <div
+              class="u-circle u-star {user.username ? 'u-category-select' : ''}"
+            />
             <label class="form-check-label" for="flexCheckDefault"
               >Nombre de usuario</label
             >
           </div>
           <div class="progress vertical">
-            <div
-              class="u-circle {user.name ? 'u-category-select' : ''}"
-            />
+            <div class="u-circle {user.name ? 'u-category-select' : ''}" />
             <label class="form-check-label" for="flexCheckDefault"
               >Nombre y apellidos</label
             >
           </div>
-          {#if currencies.length>1}
-          <div class="progress vertical">
-            <div class="u-circle {active_currency ? 'u-category-select' : ''}"></div>
-            <label class="form-check-label">Establece tu moneda</label>
-          </div>
+          {#if currencies.length > 1}
+            <div class="progress vertical">
+              <div
+                class="u-circle {active_currency ? 'u-category-select' : ''}"
+              />
+              <label class="form-check-label" for="flexCheckDefault"
+                >Establece tu moneda</label
+              >
+            </div>
           {/if}
           <div class="progress vertical">
-            <div
-              class="u-circle {user.phone ? 'u-category-select' : ''}"
-            />
+            <div class="u-circle {user.phone ? 'u-category-select' : ''}" />
             <label class="form-check-label" for="flexCheckDefault"
               >Número de télefono</label
             >
           </div>
           <div class="progress vertical">
-            <div
-              class="u-circle {user.email ? 'u-category-select' : ''}"
-            />
+            <div class="u-circle {user.email ? 'u-category-select' : ''}" />
             <label class="form-check-label" for="flexCheckDefault"
               >Ingresa tu correo</label
             >
@@ -244,22 +349,20 @@
             >
           </div>
           <div class="progress vertical">
-            <div
-              class="u-circle {user.date ? 'u-category-select' : ''}"
-            />
+            <div class="u-circle {user.date ? 'u-category-select' : ''}" />
             <label class="form-check-label" for="flexCheckDefault"
               >Fecha de nacimiento</label
             >
           </div>
-          {#if userType=="X"}
-          <div class="progress vertical">
-            <div
-              class="u-circle {user.codeAgent ? 'u-category-select' : ''}"
-            />
-            <label class="form-check-label" for="flexCheckDefault"
-              >Código de Agente</label
-            >
-          </div>
+          {#if userType == "X"}
+            <div class="progress vertical">
+              <div
+                class="u-circle {user.codeAgent ? 'u-category-select' : ''}"
+              />
+              <label class="form-check-label" for="flexCheckDefault"
+                >Código de Agente</label
+              >
+            </div>
           {/if}
           <div class="progress vertical">
             <div
@@ -269,7 +372,7 @@
               >Validación SMS</label
             >
           </div>
-          
+
           <div class="progress vertical">
             <div
               class="u-circle {conditions == true ? 'u-category-select' : ''}"
@@ -279,18 +382,21 @@
             >
           </div>
           <div class="progress vertical">
-            <div class="u-circle-final {active_section == 'welcome' ? 'u-category-select-final': ''}"/>
+            <div
+              class="u-circle-final {active_section == 'welcome'
+                ? 'u-category-select-final'
+                : ''}"
+            />
             <label class="form-check-label" for="flexCheckDefault"
-              >Bienvenido</label>
+              >Bienvenido</label
+            >
           </div>
         </div>
       </div>
-        {#if active_section == "user"}
+      {#if active_section == "user"}
         <!--Componente de user-->
         <div class="u-date-new">
-          <div class="u-header">
-            <span>NOMBRE DE USUARIO</span>
-          </div>
+          <div class="u-header"><span>NOMBRE DE USUARIO</span></div>
           <div class="u-body">
             <input
               class="u-input-email"
@@ -300,7 +406,7 @@
               on:keypress={NextStepEnterUsername}
               on:keypress={validateSpaceKey}
               placeholder="Crear nombre de usuario"
-              />
+            />
             <span>El nombre de usuario es obligatorio</span>
             <span>Ejemplo: G4nadorDea</span>
             <span>Máximo 20 caracteres</span>
@@ -308,7 +414,7 @@
           <div class="u-button-control">
             <button
               class="u-button {user.username ? 'u-active-button' : ''}"
-              on:click={validateUsername} >CONTINUAR</button
+              on:click={validateUsername}>CONTINUAR</button
             >
           </div>
         </div>
@@ -327,13 +433,13 @@
               bind:value={user.name}
               on:keypress={NextStepEnterName}
               placeholder="Ingrese nombre y apellidos"
-              />
+            />
             <span>El nombre y apellidos obligatorio</span>
           </div>
           <div class="u-button-control">
             <button
               class="u-button {user.name ? 'u-active-button' : ''}"
-              on:click={validateName} >CONTINUAR</button
+              on:click={validateName}>CONTINUAR</button
             >
           </div>
         </div>
@@ -342,27 +448,27 @@
       {#if active_section == "phone"}
         <!--Componente de user-->
         <div class="u-date-new">
-          <div class="u-header">
-            <span>NUMERO DE TELEFONO</span>
-          </div>
+          <div class="u-header"><span>NUMERO DE TELEFONO</span></div>
           <div class="u-body">
             <div style="display:flex;align-items: flex-end;">
-              <div class="u-input-email" style="margin-right:0.5rem;color:#909090">{countryCode}</div>
+              <div class="u-input-email" style="margin-right:0.5rem;color:#909090"  >
+                {countryCode}
+              </div>
               <input
                 class="u-input-email"
                 bind:value={user.phone}
-                on:keypress|preventDefault={(e)=>phoneOnlyNumber(e)}
+                on:keypress|preventDefault={(e) => phoneOnlyNumber(e)}
                 on:keypress={NextStepEnterPhone}
                 placeholder="Ingrese número de teléfono"
                 maxlength="10"
-                />
+              />
             </div>
             <span>El número celular es obligatorio</span>
           </div>
           <div class="u-button-control">
             <button
               class="u-button {user.phone ? 'u-active-button' : ''}"
-              on:click={validatePhone} >CONTINUAR</button
+              on:click={validatePhone}>CONTINUAR</button
             >
           </div>
         </div>
@@ -427,12 +533,11 @@
         </div>
         <!--Fin de componente contraseña-->
       {/if}
-
       {#if active_section == "date"}
         <!--Componente de correo-->
         <div class="u-date-new">
           <div class="u-header"><span>FECHA DE NACIMIENTO</span></div>
-          <div class="u-body" style="width: 386px;align-items: center;">
+          <!--div class="u-body" style="width: 386px;align-items: center;">
             <input
               class="u-input-email"
               type="date"
@@ -441,51 +546,68 @@
               placeholder="Ingresa tu fecha de nacimiento"
             />
 
+          </div-->
+          <div class="select-date">
+            <select bind:value={daySelected} on:change={onChangeDate}>
+              {#each days as day}
+                <option>{day}</option>
+              {/each}
+            </select>
+            <select bind:value={monthSelected} on:change={onChangeDate}>
+              {#each months as month, i (i)}
+                <option value={i} disabled={i == 0}>{month}</option>
+              {/each}
+            </select>
+            <select bind:value={yearSelected} on:change={onChangeDate}>
+              {#each years as year}
+                <option>{year}</option>
+              {/each}
+            </select>
           </div>
           <div class="u-button-control">
             <button
               class="u-button {user.date ? 'u-active-button' : ''}"
               on:click={validateDate}
             >
-              CONTINUAR</button
-            >
+              CONTINUAR
+            </button>
           </div>
         </div>
         <!--Fin de componente correo-->
       {/if}
-      {#if userType=="X" && active_section == "codeAgent"}
+      {#if userType == "X" && active_section == "codeAgent"}
         <!--Componente de user-->
         <div class="u-date-new">
           <div class="u-header">
             <span>CODIGO DE AGENTE</span>
           </div>
           <div class="u-body">
-              <input
-                class="u-input-email"
-                type="number"
-                maxlength="8"
-                bind:value={user.codeAgent}
-                on:keypress={NextStepEnterCodeAgent}
-                placeholder="Ingresar código de agente"
-                />
+            <input
+              class="u-input-email"
+              type="number"
+              maxlength="8"
+              bind:value={user.codeAgent}
+              on:keypress={NextStepEnterCodeAgent}
+              placeholder="Ingresar código de agente"
+            />
             <span>El código de agente es obligatorio</span>
           </div>
           <div class="u-button-control">
             <button
               class="u-button {user.codeAgent ? 'u-active-button' : ''}"
-              on:click={validateCodeAgent} >CONTINUAR</button
+              on:click={validateCodeAgent}>CONTINUAR</button
             >
           </div>
         </div>
         <!--Fin de componente user-->
       {/if}
       {#if active_section == "validateSMS"}
-      <!--Componente de user-->
-      <div class="u-date-new">
-        <div class="u-header">
-          <span>VALIDACION SMS</span>
-        </div>
-        <div class="u-body">
+        <!--Componente de user-->
+        <div class="u-date-new">
+          <div class="u-header">
+            <span>VALIDACION SMS</span>
+          </div>
+          <div class="u-body">
             <input
               class="u-input-email"
               type="number"
@@ -493,20 +615,19 @@
               bind:value={user.validateSMS}
               on:keypress={NextStepEnterValidateSMS}
               placeholder="Ingresar código SMS"
-              />
-          <span>El código SMS es obligatorio</span>
+            />
+            <span>El código SMS es obligatorio</span>
+          </div>
+          <div class="u-button-control">
+            <button
+              class="u-button {user.validateSMS ? 'u-active-button' : ''}"
+              on:click={validateSMS}>CONTINUAR</button
+            >
+          </div>
         </div>
-        <div class="u-button-control">
-          <button 
-            class="u-button {user.validateSMS ? 'u-active-button' : ''}"
-            on:click={validateSMS} >CONTINUAR</button
-          >
-        </div>
-      </div>
-      <!--Fin de componente user-->
-    {/if}
-
-    {#if active_section == "currency"}
+        <!--Fin de componente user-->
+      {/if}
+      {#if active_section == "currency"}
         <!--Componente de moneda-->
         <div class="u-date-new">
           <div class="u-header">
@@ -515,19 +636,27 @@
           <div class="u-body u-currency">
             <span>Monedas sugeridas</span>
             <div class="u-coins" on:keypress={NextStepEnterCurrency}>
-              {#each currencies as currency }
-              <button class="u-button-coins {active_currency == currency.code?'u-opt-select':''}"
-                on:click={() => { active_currency = currency.code;}}>{currency.code}</button>
+              {#each currencies as currency}
+                <button
+                  class="u-button-coins {active_currency == currency.code
+                    ? 'u-opt-select'
+                    : ''}"
+                  on:click={() => {
+                    active_currency = currency.code;
+                  }}>{currency.code}</button
+                >
               {/each}
             </div>
           </div>
           <div class="u-button-control">
-            <button class="u-button {active_currency ? 'u-active-button' : ''}"  on:click={validateCurrency}>CONTINUAR</button>
+            <button
+              class="u-button {active_currency ? 'u-active-button' : ''}"
+              on:click={validateCurrency}>CONTINUAR</button
+            >
           </div>
         </div>
         <!--Fin de componente moneda-->
       {/if}
-
       {#if active_section == "conditions"}
         <!--Componente terminos-->
         <div class="u-date-new">
@@ -579,10 +708,16 @@
   </div>
 </div>
 
-<Notifier bind:display={notify.display} bind:message={notify.message} bind:type={notify.type}/>
+<Notifier
+  bind:display={notify.display}
+  bind:message={notify.message}
+  bind:type={notify.type}
+/>
 
 <style>
-  .u-wrapp-progress { color:white;}
+  .u-wrapp-progress {
+    color: white;
+  }
   @media only screen and (max-width: 1200px) {
     .u-content-logo {
       display: none;
@@ -734,12 +869,12 @@
     .u-close {
       text-align: center;
       border: none;
-      background: #BD992A;
-    color: black;
-    width: 24px;
-    height: 27px;
-    font-size: 28px;
-    font-weight: 800;
+      background: #bd992a;
+      color: black;
+      width: 24px;
+      height: 27px;
+      font-size: 28px;
+      font-weight: 800;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -947,12 +1082,12 @@
       margin-left: 0.5rem;
       text-align: center;
       border: none;
-      background: #BD992A;
-    color: black;
-    width: 24px;
-    height: 27px;
-    font-size: 28px;
-    font-weight: 800;
+      background: #bd992a;
+      color: black;
+      width: 24px;
+      height: 27px;
+      font-size: 28px;
+      font-weight: 800;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -967,6 +1102,15 @@
     }
     .u-category-select-final {
       background-color: rgb(231, 238, 28);
+    }
+    .select-date {
+      display: grid;
+      grid-template-columns: 31% 31% 31%;
+      gap: 0.5rem;
+    }
+    select {
+      height: 2.8em;
+      border-radius: 0.4rem;
     }
   }
 </style>
