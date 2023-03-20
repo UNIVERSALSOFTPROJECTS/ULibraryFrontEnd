@@ -2,7 +2,7 @@
   import ServerConnection from "./js/server";
   import Notifier from "./Notifier.svelte";
   import { onMount } from "svelte";
-  import moment, { max } from "moment";
+  import moment from "moment";
   import "moment/locale/es" ;
   export let dateString = null; //YYYY-MM-DD
 
