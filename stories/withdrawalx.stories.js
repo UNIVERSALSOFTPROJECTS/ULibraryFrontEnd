@@ -25,6 +25,6 @@ export default {
 
 export const withdrawal = () => ({
   Component: Withdrawalx,
-  props: { user, open:true ,onOk,onError,amountMin,pendingWhitdrawall}
+  props: { user, open:true ,onOk,onError,pendingWhitdrawall}
 });
 
