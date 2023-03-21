@@ -151,7 +151,7 @@
     /*Retirar Saldo sin saldo pendiente*/
     .u-main-payments{
         display: grid;
-        grid-template-columns: 80% 7%;
+        grid-template-columns: 80% 9%;
         align-items: flex-start;
         justify-content: center;
         gap: 0.5rem;
