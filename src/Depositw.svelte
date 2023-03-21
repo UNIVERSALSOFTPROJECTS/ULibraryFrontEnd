@@ -9,6 +9,8 @@
     export let onOk;
     export let onError;
     export let assetsUrl;
+    export let maxAmount;
+    export let minAmount;
     let amount = "";
     let bankDeposit = {};
     bankDeposit.reference = "";
@@ -100,8 +102,8 @@
   
     const validateAmount = (e) => {
       if(!/\d/.test(e.key)) return notify = util.getNotify("error","Ingrese numeros")
-      if( bankDeposit.amount.length >= 4) return notify = util.getNotify("error","El monto máximo es de 6000")
-      if ( Number(bankDeposit.amount) > 6000) return e.preventDefault();
+      // if( bankDeposit.amount > maxAmount) return notify = util.getNotify("error","El monto máximo es de 6000")
+      if ( Number(bankDeposit.amount) > maxAmount) return notify = util.getNotify("error",`El monto máximo es de ${maxAmount}`);
       bankDeposit.amount += e.key;
     }
     // TODO:CHUMBE
@@ -128,8 +130,8 @@
         notify = util.getNotify("error","Ingrese el número de referencia")
         return;
       }
-      if (amount_ < 20 || amount_ > 6000) {
-        notify = util.getNotify("error","El monto debe estar entre 20 y 6000")
+      if (amount_ < minAmount || amount_ > maxAmount) {
+        notify = util.getNotify("error",`El monto debe estar entre ${minAmount} y ${maxAmount}`)
         return;
       }
       if (!bankDeposit.amount || bankDeposit.amount === "") {
