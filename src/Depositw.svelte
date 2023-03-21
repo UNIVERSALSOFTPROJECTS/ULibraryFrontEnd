@@ -3,7 +3,8 @@
     import { onMount } from "svelte";
     import util from "./js/util";
     import Notifier from "./Notifier.svelte";
-  
+    import moment from "moment";
+
     export let open;
     export let user;
     export let onOk;
@@ -14,7 +15,7 @@
     let amount = "";
     let bankDeposit = {};
     bankDeposit.reference = "";
-    bankDeposit.amount = "10";
+    bankDeposit.amount = minAmount;
     bankDeposit.account = "";
     bankDeposit.targetBankId;
   
@@ -25,25 +26,14 @@
     let active_method = {};
     let active_type_method = "TD";
     let notify = {};
-
-    let actualDate = new Date(),
-      day,
-      month,
-      year;
   
     const closeModal = () => {
       open = false;
     };
-  
+    
     onMount(() => {
-      (month = "" + (actualDate.getMonth() + 1)),
-        (day = "" + actualDate.getDate()),
-        (year = actualDate.getFullYear());
-  
-      if (month.length < 2) month = "0" + month;
-      if (day.length < 2) day = "0" + day;
-      bankDeposit.date = [year, month, day].join("-");
-    });
+      bankDeposit.date = moment().format("YYYY-MM-DD");
+    })
     
     const getPayMethods = async () => {
       try {
@@ -52,7 +42,6 @@
         appPaymethods = data.filter((e) => e.virtual == 1);
       } catch (error) {
         notify = util.getNotify("error","Error al conseguir metodos de pago")
-       
       }
     };
   
@@ -80,7 +69,6 @@
         closeModal();
         onOk(data)
       } catch (error) {
-        // notify = util.getNotify("error","Error al realizar depósito")
         onError(error)
       }
     }
@@ -102,48 +90,26 @@
   
     const validateAmount = (e) => {
       if(!/\d/.test(e.key)) return notify = util.getNotify("error","Ingrese numeros")
-      // if( bankDeposit.amount > maxAmount) return notify = util.getNotify("error","El monto máximo es de 6000")
       if ( Number(bankDeposit.amount) > maxAmount) return notify = util.getNotify("error",`El monto máximo es de ${maxAmount}`);
       bankDeposit.amount += e.key;
     }
-    // TODO:CHUMBE
+
     const validateAccountNumber = (e) => {
-      let isNumber = /\d/.test(e.key);
-      if (isNumber && bankDeposit.account.length < 15)
-        bankDeposit.account += e.key;
-      else if (isNumber && bankDeposit.account.length >= 15) {
-        notify = util.getNotify("error","15 dígitos como máximo")
-      }
-    };
+      if(!/\d/.test(e.key)) return notify = util.getNotify("error","Ingrese numeros")
+      if(bankDeposit.account.length >= 15) return notify = util.getNotify("error","15 dígitos como máximo")
+      bankDeposit.account += e.key;      
+    }
   
     const validateData = () => {
       let amount_ = Number(bankDeposit.amount);
-      if (!bankDeposit.targetBankId || bankDeposit.targetBankId === "") {
-        notify = util.getNotify("error","Seleccione el banco receptor")
-        return;
-      }
-      if (!amount_) {
-        notify = util.getNotify("error","Ingrese el monto a depositar")
-        return;
-      }
-      if (!bankDeposit.reference || bankDeposit.reference === "") {
-        notify = util.getNotify("error","Ingrese el número de referencia")
-        return;
-      }
-      if (amount_ < minAmount || amount_ > maxAmount) {
-        notify = util.getNotify("error",`El monto debe estar entre ${minAmount} y ${maxAmount}`)
-        return;
-      }
-      if (!bankDeposit.amount || bankDeposit.amount === "") {
-        notify = util.getNotify("error","Ingrese el monto a depositar")
-        return;
-      }
-      if (!bankDeposit.account || bankDeposit.account === "") {
-        notify = util.getNotify("error","Ingrese el número de cuenta")
-        return;
-      }
+      if (!bankDeposit.targetBankId || bankDeposit.targetBankId === "") return notify = util.getNotify("error","Seleccione el banco receptor");
+      if (!amount_) return notify = util.getNotify("error","Ingrese el monto a depositar");
+      if (!bankDeposit.reference || bankDeposit.reference === "") return notify = util.getNotify("error","Ingrese el número de referencia");
+      if (amount_ < minAmount || amount_ > maxAmount) return notify = util.getNotify("error",`El monto debe estar entre ${minAmount} y ${maxAmount}`);
+      if (!bankDeposit.amount || bankDeposit.amount === "") return notify = util.getNotify("error","Ingrese el monto a depositar");
+      if (!bankDeposit.account || bankDeposit.account === "") return notify = util.getNotify("error","Ingrese el número de cuenta");
       deposit();
-    };
+    }
   
     getPayMethods();
   </script>
@@ -155,8 +121,7 @@
           class="type-method {active_type_method == 'TD' ? 'u-type-method' : ''}"
           on:click={() => {
             active_type_method = "TD";
-          }}>Transferencias Directas</button
-        >
+          }}>Transferencias Directas</button>
         <!--button class="type-method {active_type_method=='TB'?'u-type-method':''}" on:click={()=>{  active_type_method="TB"}}>Transferencias Bancarias</button-->
       </div>
   

@@ -1,43 +1,20 @@
 <script>
     import ServerConnection from "./js/server";
-    import { onMount } from "svelte";
 
     export let open;
     export let user;
     export let onOk;
     export let onError;
-    let bankDeposit = {};
-    bankDeposit.reference = "";
-    bankDeposit.amount = "10";
-    bankDeposit.account = "";
-    bankDeposit.targetBankId;
 
     let depositRetailCode = "";
     let active_type_method = "TD";
-    let actualDate = new Date(),
-        day,
-        month,
-        year;
 
     const closeModal = () => {
         open = false;
     };
-
-    onMount(() => {
-        (month = "" + (actualDate.getMonth() + 1)),
-            (day = "" + actualDate.getDate()),
-            (year = actualDate.getFullYear());
-        if (month.length < 2) month = "0" + month;
-        if (day.length < 2) day = "0" + day;
-        bankDeposit.dateString = [year, month, day].join("-");
-    });
-
     const depositRetail = async () => {
         try {
-            let { data } = await ServerConnection.wallet.depositRetail(
-                user.token,
-                depositRetailCode
-            );
+            let { data } = await ServerConnection.wallet.depositRetail( user.token, depositRetailCode);
             if (data.resp == "ok") {
                 user.balance = data.saldo;
                 onOk(data);
@@ -63,28 +40,16 @@
                 class="type-method {active_type_method == 'TD'
                     ? 'u-type-method'
                     : ''}"
-                on:click={() => {
-                    active_type_method = "TD";
-                }}>Métodos de pago</button
-            >
+                on:click={() => { active_type_method = "TD";}}>Métodos de pago</button>
             <!--button class="type-method {active_type_method=='TB'?'u-type-method':''}" on:click={()=>{  active_type_method="TB"}}>Transferencias Bancarias</button-->
         </div>
 
         <div class="u-wrapp-payments">
             <div class="u-wrapp-deposit">
-                <p class="u-wrapp-deposit-title">
-                    Ingrese el código de recarga
-                </p>
+                <p class="u-wrapp-deposit-title"> Ingrese el código de recarga</p>
                 <div>
-                    <input
-                        class="u-wrapp-deposit-input"
-                        type="text"
-                        placeholder="Código de recarga"
-                        bind:value={depositRetailCode}
-                    />
-                    <button class="u-wrapp-deposit-btn" on:click={depositRetail}
-                        >Activar</button
-                    >
+                    <input class="u-wrapp-deposit-input" type="text" placeholder="Código de recarga" bind:value={depositRetailCode}/>
+                    <button class="u-wrapp-deposit-btn" on:click={depositRetail}> Activar</button>
                 </div>
                 <div>
                     <p>
@@ -96,8 +61,7 @@
                         automáticamente la versión mas reciente de los <a
                             href="https://d2zzz5z45zl95g.cloudfront.net/365fortuna/t&c.pdf"
                             target="_blank"
-                            style="color:red;">términos y condiciones</a
-                        >
+                            style="color:red;">términos y condiciones</a>
                     </p>
                 </div>
                 <div>

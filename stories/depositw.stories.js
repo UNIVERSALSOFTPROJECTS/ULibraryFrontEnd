@@ -6,6 +6,7 @@ import { Depositw } from '../src/index';
 let user = {token:"461fe101f3f24f7a6d94a3ecfd3102ef272f5a448f0ffe727bfb274afcda2f39",balance:12.21} ;
 let assetsUrl ="https://d2zzz5z45zl95g.cloudfront.net";
 let maxAmount = 6000;
+let minAmount=50;
 export default {
   title: 'Deposit W',
   component: Depositw,
@@ -18,8 +19,8 @@ const onError=()=>{
   alert('Error');
 }
 
-export const DepositX = () => ({
+export const DepositW = () => ({
   Component: Depositw,
-  props: { user, open:true, onOk,onError,assetsUrl,maxAmount }
+  props: { user, open:true, onOk,onError,assetsUrl,maxAmount, minAmount }
 });
 
