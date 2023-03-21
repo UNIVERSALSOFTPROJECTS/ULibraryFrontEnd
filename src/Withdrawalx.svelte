@@ -1,12 +1,12 @@
 <script>
     import ServerConnection from "./js/server"
     import moment from "moment";
+    import copyCode from 'copy-text-to-clipboard';
 
     export let open;
     export let minAmount;
     export let user;
     export let pendingWhitdrawall;
-
     export let onOk;
     export let onError;
 
@@ -58,6 +58,11 @@
         // else if(isNumber && amount.length >= 4) onError("LOW_AMOUNT");
     };
 
+    const copyCodeWhitdrawall = () => {
+    let code=pendingWhitdrawall.codigo;
+    copyCode(code);
+  };
+
 </script>
 <div class="u-main-payments">
     {#if pendingWhitdrawall && pendingWhitdrawall.monto>0}
@@ -72,8 +77,16 @@
             </div>
             <div class="u-info2-retail">
                 <p>Código:</p>
-                <span>{pendingWhitdrawall.codigo}</span>
-                <p>Cantidad:</p>export
+                <div class="u-section-code">
+                    <span>{pendingWhitdrawall.codigo}</span>
+                    <button title="Copiar Código" class="u-copyCode" on:click={copyCodeWhitdrawall}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                        </svg>
+                    </button>
+                </div>
+                <p>Cantidad:</p>
                 <span>{pendingWhitdrawall.monto}</span>
             </div>
             <div class="w-100">Acercate a nuestras sucursales, para proceder con el retiro.</div>
@@ -201,6 +214,22 @@
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
+    }
+    .u-section-code{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap:  0.5rem;
+    }
+    .u-copyCode{
+        border: none;
+        cursor: pointer;
+        background-color: transparent;
+        border-radius: 0.3rem;
+    }
+    .u-copyCode:hover{
+        background-color: rgb(202, 202, 202);
     }
 }
 </style>
