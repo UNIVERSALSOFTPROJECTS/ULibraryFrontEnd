@@ -12,7 +12,7 @@
     let amount = "";
     let bankDeposit = {};
     bankDeposit.reference = "";
-    bankDeposit.amount = "20";
+    bankDeposit.amount = "10";
     bankDeposit.account = "";
     bankDeposit.targetBankId;
   
