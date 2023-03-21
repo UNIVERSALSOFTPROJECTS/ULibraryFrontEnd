@@ -171,13 +171,14 @@
     }
     .u-wrapp-payments{
         display: flex;
-        flex-direction: column;
         align-items: center;
+        flex-direction: column;
         justify-content: center;
+        background-color: white;
         border-radius: 0.5rem;
         width: 100%;
         gap: 1rem;
-        background-color: white;
+        padding: 0.8rem;
         color: black;
     }
     .u-content-info{
