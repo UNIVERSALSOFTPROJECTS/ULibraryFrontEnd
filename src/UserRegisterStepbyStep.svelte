@@ -3,7 +3,7 @@
   import Notifier from "./Notifier.svelte";
   import { onMount } from "svelte";
   import moment from "moment";
-  import "moment/locale/es" ;
+  //import "moment/locale/es" ;
   export let dateString = null; //YYYY-MM-DD
 
   export let logoUrl;
