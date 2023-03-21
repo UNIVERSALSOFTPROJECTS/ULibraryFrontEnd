@@ -1,0 +1,300 @@
+<script>
+  import ServerConnection from "./js/server";
+  import DateThreeSelect from "./Dat3Select.svelte";
+  import Notifier from "./Notifier.svelte";
+
+  export let user = {};
+
+  let confirmPassword;
+  let agentCodeOne = "";
+  let agentCodeTwo = "";
+  user.agentCodeTotal = "";
+
+  const validateName = (e) => {
+    if (! /^[A-Za-zúéáíóüÜÑñÓÍÚÁÉ ]*$/.test(e.key)) {
+      e.preventDefault();
+      return showNotify("error", "Sólo letras en mayúscula o minúscula");
+    }
+  };
+
+  const validateUsername = (e) => {
+    if (! /^[A-Za-z0-9úéáíóüÜÑñÓÍÚÁÉ_ ]*$/.test(e.key)) {
+      e.preventDefault();
+      return showNotify("error", "Sólo letras, números y guión bajo");
+    }
+  };
+
+  const phoneOnlyNumber = (event) => {
+    let isNumber = /\d/.test(event.key);
+    if (isNumber && user.phone.length < 10) user.phone += event.key;
+  };
+
+  const emailLow = () => {
+    user.email = user.email.toLowerCase();
+  };
+
+  const validateEmail = (e) => {
+    if (/^[!#$%^&*ºª´¿()+,=/¡'?"`¨¨€´´:´´~~¬·¨¨{}çÇ|<>]*$/.test(e.key)) {
+      e.preventDefault();
+    }
+  };
+
+  const validateCodeAgent = (e) => {
+    let isNumber = /\d/.test(e.key);
+    if (isNumber && agentCodeOne.length < 4) {agentCodeOne += e.key; user.agentCodeTotal = agentCodeOne; return;}
+    if (isNumber && agentCodeTwo.length < 4) {agentCodeTwo += e.key; user.agentCodeTotal = agentCodeOne + agentCodeTwo; return;}
+  };
+
+  const validateSpaceKey = (e) => {
+    if (e.charCode === 32) {
+      e.preventDefault();
+      return showNotify("error", "No se permite espacios en blanco");
+    }
+  };
+
+  const register = async () => {
+    try {
+      let response = await backend.register(
+        user.name,
+        user.username,
+        user.phone,
+        user.email,
+        user.password,
+        user.birthday
+      );
+      if (
+        response.message ==
+          "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}" ||
+        response.message ==
+          "{resp=Err, Id=2, Msg=El correo o el Usuario ya Exite}"
+      ) {
+        return showNotify("error", "Este correo ya está en uso");
+      } else if (
+        response.message == "{resp=Err, Id=1, Msg=Usuario ya Exite}" ||
+        response.message == "{resp=Err, Id=2, Msg=Usuario ya Exite}"
+      ) {
+        return showNotify("error", "Este nombre de usuario ya existe");
+      }
+    } catch (error) {
+      console.log(error);
+      showNotify("error", "Error al crear usuario");
+    }
+  };
+
+  const validateData = () => {
+    if (!user.name || user.name === "") {
+      return showNotify("error", "Ingrese su nombre");
+    }
+    if (!user.username || user.username === "") {
+      return showNotify("error", "Ingrese su nombre de usuario");
+    }
+    if (!user.phone || user.phone === "") {
+      return showNotify("error", "Ingrese su teléfono");
+    }
+    let isEmail = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(user.email);
+    if (!user.email || user.email === "") {
+      return showNotify("error", "Ingrese su correo electrónico");
+    }
+    if (!isEmail) {
+      return showNotify("error", "Formato de e-mail incorrecto");
+    }
+    if (!user.password || user.password === "") {
+      return showNotify("error", "Ingrese su contraseña");
+    }
+    if (!confirmPassword || confirmPassword === "") {
+      return showNotify("error", "Confirme la contraseña");
+    }
+    if (user.password != confirmPassword) {
+      return showNotify("error", "La contraseña no coincide con la confirmación");
+    }
+    if (!user.birthday || user.birthday === "") {
+      return showNotify("error", "Ingrese su fecha de nacimiento");
+    }
+    register();
+  };
+</script>
+
+<div class="u-main-conteiner">
+  <div class="u-modal-register-header">
+    <span class="u-register-title">REGISTRARSE</span>
+  </div>
+  <div class="u-modal-register-body">
+    <div class="u-item-register">
+      <span>USUARIO</span>
+      <input
+        type="text"
+        maxlength="30"
+        bind:value={user.name}
+        on:keydown={validateName}
+        placeholder="ingrese su nombre"
+      />
+    </div>
+    <div class="u-item-register">
+      <span>NOMBRE DE USUARIO</span>
+      <input
+        type="text"
+        maxlength="20"
+        bind:value={user.username}
+        on:keypress={validateUsername}
+        placeholder=" Ingrese su nombre de usuario"
+      />
+    </div>
+    <div class="u-item-register">
+      <span>TELÉFONO</span>
+      <input
+        type="text"
+        bind:value={user.phone}
+        on:keypress|preventDefault={(e) => phoneOnlyNumber(e)}
+        placeholder="Ingrese su número de teléfono"
+      />
+    </div>
+    <div class="u-item-register">
+      <span>CORREO ELECTRÓNICO</span>
+      <input
+        type="email"
+        maxlength="30"
+        bind:value={user.email}
+        on:input={emailLow}
+        on:keypress={validateSpaceKey}
+        on:keypress={validateEmail}
+        placeholder="Ingrese su correo (ejemplo: alguien@gmail.com)"
+      />
+    </div>
+    <div class="u-item-register">
+      <span>CONTRASEÑA</span>
+      <input
+        type="password"
+        maxlength="20"
+        bind:value={user.password}
+        autocomplete="off"
+        on:keypress={validateSpaceKey}
+        placeholder="Ingrese su contraseña"
+      />
+    </div>
+    <div class="u-item-register">
+      <span>CONFIRMACIÓN DE CONTRASEÑA</span>
+      <input
+        type="password"
+        bind:value={confirmPassword}
+        on:keypress={validateSpaceKey}
+        placeholder="Ingrese nuevamente su contraseña"
+      />
+    </div>
+    <div class="u-item-register">
+      <span>FECHA DE NACIMIENTO</span>
+      <DateThreeSelect bind:dateString={user.birthday} />
+    </div>
+    <div class="u-item-register">
+      <span>CODIGO DE AGENTE</span>
+      <div class="u-section-code-agent">
+        <input
+          type="text"
+          bind:value={agentCodeOne}
+          on:keypress|preventDefault={validateCodeAgent}
+        />
+        -
+        <input
+          type="text"
+          bind:value={agentCodeTwo}
+          on:keypress|preventDefault={validateCodeAgent}
+        />
+      </div>
+    </div>
+  </div>
+  <div class="u-modal-footer">
+    <button class="u-btn-register" on:click={validateData}>REGISTRAR</button>
+  </div>
+</div>
+
+<style>
+  @media only screen and (max-width: 1200px) {
+    .u-main-conteiner {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1rem;
+      background: linear-gradient(50deg, #340f49, #110f49);
+      border-radius: 0.5rem;
+    }
+    .u-modal-register-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    input {
+      width: 95%;
+      height: 1.5rem;
+    }
+    input:focus {
+      outline: 0;
+    }
+    .u-register-title {
+      font-weight: 800;
+    }
+    .u-item-register {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .u-modal-footer {
+      display: flex;
+      justify-content: end;
+    }
+    .u-btn-register {
+      border: none;
+      background-color: #6c1e98;
+      color: white;
+      height: 2rem;
+      border-radius: 0.3rem;
+    }
+  }
+  /*Estilo Desktop*/
+
+  @media only screen and (min-width: 1200px) {
+    .u-main-conteiner {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      padding: 1rem;
+      background: linear-gradient(50deg, #340f49, #110f49);
+    }
+    .u-modal-register-body {
+      display: grid;
+      grid-template-columns: 49% 49%;
+      gap: 1rem;
+    }
+    input {
+      width: 95%;
+      height: 2rem;
+      border-radius: 0.4rem;
+    }
+    .u-section-code-agent {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: end;
+    }
+    input:focus {
+      outline: 0;
+    }
+    .u-register-title {
+      font-weight: 800;
+    }
+    .u-item-register {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .u-modal-footer {
+      display: flex;
+      justify-content: end;
+    }
+    .u-btn-register {
+      border: none;
+      background-color: #6c1e98;
+      color: white;
+      height: 2rem;
+      border-radius: 0.3rem;
+    }
+  }
+</style>
