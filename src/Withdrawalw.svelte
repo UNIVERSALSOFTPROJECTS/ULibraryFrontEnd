@@ -4,9 +4,9 @@
     export let open;
     export let user;
 
-    let amount = "50";
+    let amount = "";
     let accountNumber="";
-    let info="";
+    let info=".";
     let bankName="";
     let name="";
     let document="";

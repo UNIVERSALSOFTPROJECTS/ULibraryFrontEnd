@@ -19,22 +19,31 @@ const ServerConnection = (() => {
         retailWithdrawal:async(token, amount)=>{
             var url=conf.API+"/retailWithdrawal";
             var payload = {token, amount}
-            return await axios.post( url,JSON.stringify(payload),{headers} );            
+            return await axios.post( url,payload,{headers} );            
         },
         depositRetail:async(token, cod)=>{
             var url=conf.API+"/wallet/depositRetail";
             var payload = {token, cod}
-            return axios.post( url,JSON.stringify(payload),{headers} );
+            return axios.post( url,payload,{headers} );
         },
         withdrawal_w :async(token, amount, bank, account, info)=>{
             let payload = {token, amount, bank, account, info}
             let url = conf.API+"/withdrawal";
-            return await axios.post( url,JSON.stringify(payload),{headers} );
+            return await axios.post( url,payload,{headers} );
         },
         bankDeposit:async (token,bankDeposit )=>{
             let payload = {...bankDeposit, token}
             let url = conf.API+"/wallet/bankDeposit";
-            return await axios.post( url,JSON.stringify(payload),{headers} );
+            return await axios.post( url,payload,{headers} );
+        },
+        getPayMethods:async (userToken)=>{            
+            let url = conf.API+"/paymethods/"+userToken
+            return await axios.get(url,{headers});
+        },
+        getPayLink:async (token, amount, type)=>{
+            let url = conf.API+"/getpaylink/"
+            return await axios.post( url,{token, amount, type},{headers} );
+
         }
          
     }
