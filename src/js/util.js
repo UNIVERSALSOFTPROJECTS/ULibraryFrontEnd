@@ -1,5 +1,11 @@
 const utils = (() => {
-
+  const getNotify = (type, message,time=4000) => {
+    let notify = { display: true, type, message };
+    setTimeout(() => {
+      notify.display = false;
+    }, time);
+    return notify
+  }
     const sleep=(seconds)=>{
       return new Promise( (result)=>{ setTimeout( ()=>{ result()  },seconds*1000 ) } )
     }
@@ -59,6 +65,6 @@ const utils = (() => {
     const categoryAllowedChange=(category, userState)=>{
       return ( /horses|sportbook|esports/.test(category) && userState == "logout")
     }
-    return {sleep,checkSetIsFav,getImgUrl,getProviderImgUrl,getGameURL,isMobile,dateDiffInDays,getAge,setUrlPage,categoryAllowedChange} ;
+    return {getNotify,sleep,checkSetIsFav,getImgUrl,getProviderImgUrl,getGameURL,isMobile,dateDiffInDays,getAge,setUrlPage,categoryAllowedChange} ;
 })()
 export default utils
