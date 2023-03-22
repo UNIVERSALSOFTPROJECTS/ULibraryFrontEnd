@@ -10,7 +10,7 @@
   export let open;
   export let user = {};
   export let userType;
-  export let countryCode = "+51";
+  export let countryCodes;
   export let onOk;
   export let currencies;
   export let platform;
@@ -102,8 +102,8 @@
       let { data } = await ServerConnection.user.register(
         user.username,
         user.name,
-        countryCode,
-        countryCode + user.phone,
+        user.countryCode,
+        user.countryCode + user.phone,
         user.email,
         user.password,
         user.date,
@@ -248,7 +248,7 @@
       await ServerConnection.user.preRegister(
         user.username,
         user.email,
-        countryCode + user.phone,
+        user.countryCode + user.phone,
         platform
       );
       active_section = "validateSMS";
@@ -452,9 +452,11 @@
           <div class="u-header"><span>NUMERO DE TELEFONO</span></div>
           <div class="u-body">
             <div style="display:flex;align-items: flex-end;">
-              <div class="u-input-email" style="margin-right:0.5rem;color:#909090" >
-                {countryCode}
-              </div>
+              <select class="u-input-email" style="margin-right:0.5rem;color:#909090"  bind:value={user.countryCode}>
+                {#each countryCodes as code}
+                <option>+{code}</option>
+                {/each}
+              </select>
               <input
                 class="u-input-email"
                 bind:value={user.phone}
@@ -713,6 +715,9 @@
     --u-userregister-stepprogress-subtitle-color: white;
     --u-userregister-databydata-bg-menu: white;
   }
+  .u-input-email:focus-visible {
+    outline: 0;
+}
   @media only screen and (min-width: 1200px) {
     input:focus-visible {
       outline: 0;
