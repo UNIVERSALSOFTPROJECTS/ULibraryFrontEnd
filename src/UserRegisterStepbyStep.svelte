@@ -95,9 +95,12 @@
     //if( userType=="W" && !codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
     try {
       //if(userType=="W") user.codeAgent=codeAgent;
-      user.codeAgent = currencies.find(
-        (e) => e.code == active_currency
-      ).codeAgent;
+      if( userType=='W'){
+        user.codeAgent = currencies.find(
+          (e) => e.code == active_currency
+        ).codeAgent;
+      } 
+      
       if (!user.codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
       let { data } = await ServerConnection.user.register(
         user.username,
