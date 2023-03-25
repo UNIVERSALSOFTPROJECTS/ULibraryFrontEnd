@@ -10,7 +10,7 @@
   export let open;
   export let user = {};
   export let userType;
-  export let countryCode = "+51";
+  export let countryCodes;
   export let onOk;
   export let currencies;
   export let platform;
@@ -95,15 +95,18 @@
     //if( userType=="W" && !codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
     try {
       //if(userType=="W") user.codeAgent=codeAgent;
-      user.codeAgent = currencies.find(
-        (e) => e.code == active_currency
-      ).codeAgent;
+      if( userType=='W'){
+        user.codeAgent = currencies.find(
+          (e) => e.code == active_currency
+        ).codeAgent;
+      } 
+      
       if (!user.codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
       let { data } = await ServerConnection.user.register(
         user.username,
         user.name,
-        countryCode,
-        countryCode + user.phone,
+        user.countryCode,
+        user.countryCode + user.phone,
         user.email,
         user.password,
         user.date,
@@ -248,7 +251,7 @@
       await ServerConnection.user.preRegister(
         user.username,
         user.email,
-        countryCode + user.phone,
+        user.countryCode + user.phone,
         platform
       );
       active_section = "validateSMS";
@@ -295,8 +298,7 @@
     register();
   };
 </script>
-
-<div class="u-main-content-general">
+<div class="u-userregister-stepbystep u-main-content-general">
   <div class="u-content-logo"><img class="logo" src={logoUrl} alt="" /></div>
   <div class="u-main-general">
     <div class="u-content-info">
@@ -452,9 +454,11 @@
           <div class="u-header"><span>NUMERO DE TELEFONO</span></div>
           <div class="u-body">
             <div style="display:flex;align-items: flex-end;">
-              <div class="u-input-email" style="margin-right:0.5rem;color:#909090" >
-                {countryCode}
-              </div>
+              <select class="u-input-email" style="margin-right:0.5rem;color:#909090"  bind:value={user.countryCode}>
+                {#each countryCodes as code}
+                <option>+{code}</option>
+                {/each}
+              </select>
               <input
                 class="u-input-email"
                 bind:value={user.phone}
@@ -706,13 +710,18 @@
 />
 
 <style>
-  :root {
-    --u-userregister-stepbystep-bg-menu: black;
-    --u-userregister-stepbystep-bg-menu-title-principal: #f1bf00;
-    --u-userregister-mydata-title: rgb(198, 194, 195);
-    --u-userregister-stepprogress-subtitle-color: white;
-    --u-userregister-databydata-bg-menu: white;
-  }
+
+
+:root{
+    --u-userregister-stepbystep-bg-menu: var(--universal-userregister-stepbystep-bg-menu, #000);
+    --u-userregister-stepbystep-bg-menu-title-principal: var(--universal-userregister-stepbystep-bg-menu-title-principal,#f1bf00);
+    --u-userregister-mydata-title: var( --universal-userregister-mydata-title, rgb(198, 194, 195) ) ;
+    --u-userregister-stepprogress-subtitle-color: var(--universal-userregister-stepprogress-subtitle-color,#fff) ;
+    --u-userregister-databydata-bg-menu: var( --universal-userregister-databydata-bg-menu, #fff);
+}
+  .u-input-email:focus-visible {
+    outline: 0;
+}
   @media only screen and (min-width: 1200px) {
     input:focus-visible {
       outline: 0;

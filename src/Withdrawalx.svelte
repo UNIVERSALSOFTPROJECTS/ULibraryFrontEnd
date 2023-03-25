@@ -1,12 +1,12 @@
 <script>
     import ServerConnection from "./js/server"
     import moment from "moment";
+    import copyCode from 'copy-text-to-clipboard';
 
     export let open;
     export let minAmount;
     export let user;
     export let pendingWhitdrawall;
-
     export let onOk;
     export let onError;
 
@@ -58,12 +58,17 @@
         // else if(isNumber && amount.length >= 4) onError("LOW_AMOUNT");
     };
 
+    const copyCodeWhitdrawall = () => {
+    let code=pendingWhitdrawall.codigo;
+    copyCode(code);
+  };
+
 </script>
 <div class="u-main-payments">
     {#if pendingWhitdrawall && pendingWhitdrawall.monto>0}
     <div>
         <div class="u-wrapp-payments">
-            <h2 class="w-100 u-title bd">RETIRAR SU SALDO</h2>
+            <span class="u-title bd">RETIRAR SU SALDO</span>
             <div class="u-info-retail">
                 <div>Usuario :  <span>{user.username}</span></div>
                 <div>ID: <span>{user.code}</span></div>   
@@ -72,8 +77,16 @@
             </div>
             <div class="u-info2-retail">
                 <p>Código:</p>
-                <span>{pendingWhitdrawall.codigo}</span>
-                <p>Cantidad:</p>export
+                <div class="u-section-code">
+                    <span>{pendingWhitdrawall.codigo}</span>
+                    <button title="Copiar Código" class="u-copyCode" on:click={copyCodeWhitdrawall}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                        </svg>
+                    </button>
+                </div>
+                <p>Cantidad:</p>
                 <span>{pendingWhitdrawall.monto}</span>
             </div>
             <div class="w-100">Acercate a nuestras sucursales, para proceder con el retiro.</div>
@@ -84,7 +97,7 @@
     {:else}
 
     <div class="u-wrapp-payments">
-        <h2 class="u-title">RETIRAR SU SALDO</h2>
+        <span class="u-title">RETIRAR SU SALDO</span>
         <div class="u-content-info">
             <span>INGRESE EL MONTO A RETIRAR:</span>
             <input data-testid="amount_input" class="u-input-pay" bind:value={amount} type="text" on:keypress|preventDefault={(e)=>validateAmount(e)} placeholder="Ingrese el monto a retirar">
@@ -100,16 +113,20 @@
 </div>
 
 <style>
-    .u-title.bd, .u-info-retail, .u-info2-retail{
-        border-bottom: 1px solid #6d6d6d;
+    :root{
+        --button-close-bg:#BD992A;
+        --button-close-cl:black;
+        --button-close-border-cl:white;
+    }
+    /**/
+    .u-title, .bd, .u-info-retail, .u-info2-retail{
+        border-bottom: 1px solid #f7f5f5;
         padding-bottom: 0.5rem;
+        font-size: 1.2rem;
     }
     .small-text{
         color: #6c757d!important;
         font-size: .875em;
-    }
-    .w-100{
-        width: 100%;
     }
     .u-info-retail{
         display: grid;
@@ -129,114 +146,40 @@
         margin:0;
     }
 
-@media only screen and (max-width: 1200px) {
-    .u-main-payments{
-        display: flex;
-        gap: 0.2rem;
-        height: 85vh;  
-    }
-    .u-title{
-        padding: 0;
-        margin: 0;
-    }
-    .u-close{
-        position: absolute;
-        left:90%;
-        background: #BD992A;
-        color: black;
-        width: 40px;
-        height: auto;
-        font-size: 22px;
-        font-weight: 800;
-        border-radius: 0.5rem;
-    }
-    .u-wrapp-payments{
-        background: white;
-        width: auto;
-        height: 95%;
-        color: black;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        border-radius: 0.5rem;
-        padding: 0.5rem;
-        gap: 0.5rem;
-    }
-    .u-content-info{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        font-weight: 600;
-    }
-    input{
-        width: 95%;
-        height: 1.2rem;
-    }
-    input:focus-visible{
-        outline: 0;
-    }
-    .u-input-pay{
-        height: 1.5rem;
-        border-radius: 0.5rem;
-        border: 1px solid #000;
-        padding: 0.5rem;
-    }
-    .gb-process{
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        font-size: 11px;
-    }
-    .u-button-pay{
-        background: #ffff00;
-        border: none;
-        height: 1.5rem;
-        width: 100%;
-        border-radius: 0.2rem;
-        font-size: 1rem;
-        font-weight: 600;
-        padding: 0.2rem;
-    }
-}
-@media only screen and (min-width: 1200px) {
 
-    input{
-        height: 1.8rem;
-    }
+@media only screen and (min-width: 1200px) {
+    /*Retirar Saldo sin saldo pendiente*/
     .u-main-payments{
-        display: flex;
-        flex-direction: row;
+        display: grid;
+        grid-template-columns: 80% 9%;
         align-items: flex-start;
         justify-content: center;
         gap: 0.5rem;
         height: 100%;
     }
     .u-close{
-        background: #BD992A;
-        color: black;
+        background: var(--button-close-bg);
+        color: var(--button-close-cl);
         width: auto;
         text-align: center;
         height:auto;
         font-size: 28px;
         font-weight: 800;
-        border: 1px solid white;
+        border: 1px solid var(--button-close-border-cl);
         border-radius: 0.5rem;
         cursor: pointer;
     }
     .u-wrapp-payments{
-        background: white;
-        width: 100%;
-        color: black;
         display: flex;
-        flex-direction: column;
         align-items: center;
+        flex-direction: column;
         justify-content: center;
+        background-color: white;
         border-radius: 0.5rem;
-        padding: 1rem;
+        width: 100%;
         gap: 1rem;
+        padding: 0.8rem;
+        color: black;
     }
     .u-content-info{
         display: flex;
@@ -274,6 +217,22 @@
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
+    }
+    .u-section-code{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap:  0.5rem;
+    }
+    .u-copyCode{
+        border: none;
+        cursor: pointer;
+        background-color: transparent;
+        border-radius: 0.3rem;
+    }
+    .u-copyCode:hover{
+        background-color: rgb(202, 202, 202);
     }
 }
 </style>
