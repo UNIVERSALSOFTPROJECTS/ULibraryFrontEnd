@@ -77,13 +77,13 @@
 
     const validateData = () =>{
         let amount_= Number(amount);
-        let msg = null;
+        let msg = "Retiro exitoso";
         if(amount_ < 50 || amount_ > 2000)  msg = "Monto mínimo 50 " + user.currency + ", máximo 2000 " + user.currency;
         if(!name)           msg = "Ingrese su nombre";
         if(!document)       msg = "Ingrese su documento de identidad";
         if(!bankName)       msg = "Ingrese el nombre del banco";
         if(!accountNumber)  msg = "Ingrese el número de cuenta";
-        msg == null ? cashout(): notify.error(msg);
+        msg == "Retiro exitoso" ? cashout(): notify.error(msg);
     }
 
 </script>
