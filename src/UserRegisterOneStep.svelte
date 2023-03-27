@@ -260,7 +260,7 @@
 
 <style>
   :root{
-    --u-userregister-onestep-bg-menu: var(--universal-userregister-stepbystep-bg-menu,linear-gradient(50deg, #51256b, #110f49));
+    --u-userregister-onestep-bg-menu: var(--universal-userregister-onestep-bg-menu,linear-gradient(50deg, #51256b, #110f49));
     --u-userregister-mydata-botton: var( --universal-userregister-mydata-botton, #6c1e98 ) ;
     --u-userregister-stepletter-color: var(--universal-userregister-stepletter-color,#fff) ;
 }
