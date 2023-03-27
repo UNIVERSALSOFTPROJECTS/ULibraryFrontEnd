@@ -1,5 +1,7 @@
 <script>
   import ServerConnection from "./js/server";
+  import Notifier from "./Notifier.svelte";
+  import util from "./js/util";
   import DateThreeSelect from "./Date3Select.svelte";
   export let user = {};
   export let currencies;
@@ -7,13 +9,21 @@
   export let userType;
   export let countryCodes;
 
+  let active_currency = "";
   let active_section="register";
   let confirmPassword;
   let agentCodeOne = "";
   let agentCodeTwo = "";
   user.agentCodeTotal = "";
+  let notify = { display: false, message: "", type: "success" };
 
   const CURRENCIES_ = { USD: 3, PEN: 9, ARS: 18 };
+  const showNotify = (type, message) => {
+    notify = { display: true, type, message };
+    setTimeout(() => {
+      notify.display = false;
+    }, 4000);
+  };
 
   const validateName = (e) => {
     if (! /^[A-Za-zúéáíóüÜÑñÓÍÚÁÉ ]*$/.test(e.key)) {
@@ -30,8 +40,8 @@
   };
 
   const phoneOnlyNumber = (event) => {
-    let isNumber = /\d/.test(event.key);
-    if (isNumber && user.phone.length < 10) user.phone += event.key;
+    user.phone = user.phone || "";
+    if (/\d/.test(event.key) && user.phone.length < 10) user.phone += event.key;
   };
 
   const emailLow = () => {
@@ -56,10 +66,11 @@
   };
 
   const preRegister = async () => {
-    if (countryCodes.length == 1) user.countryCode = countryCodes[0];
+    
     if (!currencies.length) return showNotify("error", "Moneda no difinida");
-    if(!user.countryCode)  return showNotify("error", "Codigo pais no definido");
+    if(!countryCodes.length)  return showNotify("error", "Codigo pais no definido");
     if(!platform)  return showNotify("error", "Platform no defindo");
+    if (countryCodes.length == 1) user.countryCode = countryCodes[0];
     let element = "sms-code";
     try {
       await ServerConnection.user.preRegister(
@@ -96,9 +107,10 @@
 
   const register = async () => {
     if (currencies.length == 1) active_currency = currencies[0].code;
+    
     try {
 
-      let response = await ServerConnection.user.register(
+      let {data} = await ServerConnection.user.register(
         user.username,
         user.name,
         user.countryCode,
@@ -108,24 +120,22 @@
         user.birthday,
         user.agentCodeTotal,
         user.validateSMS,
+        userType,
         platform,
         CURRENCIES_[active_currency]
       );
-      if (
-        response.message ==
-          "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}" ||
-        response.message ==
-          "{resp=Err, Id=2, Msg=El correo o el Usuario ya Exite}"
-      ) {
+      
+    } catch (e) {
+      let error = e.message;
+      console.log(e);
+      if(e.message && util.isJson(e.message) ){
+        error = JSON.parse(e.message);
+      }
+      if (error.Msg =="El correo o el Usuario ya Exite") {
         return showNotify("error", "Este correo ya está en uso");
-      } else if (
-        response.message == "{resp=Err, Id=1, Msg=Usuario ya Exite}" ||
-        response.message == "{resp=Err, Id=2, Msg=Usuario ya Exite}"
-      ) {
+      } else if ( error.Msg == "Usuario ya Exite"){ 
         return showNotify("error", "Este nombre de usuario ya existe");
       }
-    } catch (error) {
-      console.log(error);
       showNotify("error", "Error al crear usuario");
     }
   };
@@ -257,6 +267,11 @@
   {/if}
 
 </div>
+<Notifier
+  bind:display={notify.display}
+  bind:message={notify.message}
+  bind:type={notify.type}
+/>
 
 <style>
   @media only screen and (max-width: 1200px) {

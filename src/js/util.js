@@ -59,12 +59,21 @@ const utils = (() => {
         }
         return age;
     }
+
+    const isJson=(str)=>{
+      try {
+          JSON.parse(str);
+      } catch (e) {
+          return false;
+      }
+      return true;
+  }
     const setUrlPage=(page)=>{
       history.pushState({name: page}, null, page);
     }
     const categoryAllowedChange=(category, userState)=>{
       return ( /horses|sportbook|esports/.test(category) && userState == "logout")
     }
-    return {getNotify,sleep,checkSetIsFav,getImgUrl,getProviderImgUrl,getGameURL,isMobile,dateDiffInDays,getAge,setUrlPage,categoryAllowedChange} ;
+    return {isJson, getNotify,sleep,checkSetIsFav,getImgUrl,getProviderImgUrl,getGameURL,isMobile,dateDiffInDays,getAge,setUrlPage,categoryAllowedChange} ;
 })()
 export default utils
