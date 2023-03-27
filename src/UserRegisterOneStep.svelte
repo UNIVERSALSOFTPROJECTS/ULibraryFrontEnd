@@ -1,10 +1,9 @@
 <script>
   import ServerConnection from "./js/server";
   import DateThreeSelect from "./Dat3Select.svelte";
-  import Notifier from "./Notifier.svelte";
-
   export let user = {};
 
+  let active_section="register";
   let confirmPassword;
   let agentCodeOne = "";
   let agentCodeTwo = "";
@@ -34,9 +33,7 @@
   };
 
   const validateEmail = (e) => {
-    if (/^[!#$%^&*ºª´¿()+,=/¡'?"`¨¨€´´:´´~~¬·¨¨{}çÇ|<>]*$/.test(e.key)) {
-      e.preventDefault();
-    }
+    if (/^[!#$%^&*ºª´¿()+,=/¡'?"`¨¨€´´:´´~~¬·¨¨{}çÇ|<>]*$/.test(e.key)) e.preventDefault();
   };
 
   const validateCodeAgent = (e) => {
@@ -48,13 +45,51 @@
   const validateSpaceKey = (e) => {
     if (e.charCode === 32) {
       e.preventDefault();
-      return showNotify("error", "No se permite espacios en blanco");
+      return showNotify("error", "No se permiten espacios en blanco");
     }
   };
 
-  const register = async () => {
+  const preRegister = async () => {
+    if (!currencies.length) return showNotify("error", "Moneda no difinida");
+    if(!user.countryCode)  return showNotify("error", "Codigo pais no definido");
+    if(!platform)  return showNotify("error", "Platform no defindo");
+    let element = "sms-code";
     try {
-      let response = await backend.register(
+      await ServerConnection.user.preRegister(
+        user.username,
+        user.email,
+        user.countryCode + user.phone,
+        platform
+      );
+      active_section = "validateSMS";
+      document.getElementById(element).focus();
+    } catch (e) {
+      console.log("error: ", e);
+      let messagge = "Error desconocido en Preregistro";
+      if (e.response.data.message == "PHONE_FORMAT_FAILED") {
+        element = "phone";
+        messagge = "Formato Telefono incorrecto";
+      } else if (e.response.data.message == "El telefono ya existe") {
+        element = "phone";
+        messagge = e.response.data.message;
+      } else if (e.response.data.message == "El usuario  ya existe") {
+        element = "user";
+        messagge = e.response.data.message;
+      } else if (e == "ORG_MANDATORY") {
+        messagge = "ORG es obligatorio";
+      } else if (e.response.data.message == "El usuario u correo ya existe") {
+        element = "email";
+        messagge = e.response.data.message;
+      }
+      document.getElementById(element).focus();
+      return showNotify("error", messagge);
+    }
+  };
+
+
+  const registerNck = async () => {
+    try {
+      let response = await ServerConnection.user.register(
         user.name,
         user.username,
         user.phone,
@@ -82,41 +117,26 @@
   };
 
   const validateData = () => {
-    if (!user.name || user.name === "") {
-      return showNotify("error", "Ingrese su nombre");
-    }
-    if (!user.username || user.username === "") {
-      return showNotify("error", "Ingrese su nombre de usuario");
-    }
-    if (!user.phone || user.phone === "") {
-      return showNotify("error", "Ingrese su teléfono");
-    }
-    let isEmail = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(user.email);
-    if (!user.email || user.email === "") {
-      return showNotify("error", "Ingrese su correo electrónico");
-    }
-    if (!isEmail) {
-      return showNotify("error", "Formato de e-mail incorrecto");
-    }
-    if (!user.password || user.password === "") {
-      return showNotify("error", "Ingrese su contraseña");
-    }
-    if (!confirmPassword || confirmPassword === "") {
-      return showNotify("error", "Confirme la contraseña");
-    }
-    if (user.password != confirmPassword) {
-      return showNotify("error", "La contraseña no coincide con la confirmación");
-    }
-    if (!user.birthday || user.birthday === "") {
-      return showNotify("error", "Ingrese su fecha de nacimiento");
-    }
-    register();
+    if (!user.name || user.name === "") return showNotify("error", "Ingrese su nombre");
+    if (!user.username || user.username === "") return showNotify("error", "Ingrese su nombre de usuario");
+    if (!user.phone || user.phone === "") return showNotify("error", "Ingrese su teléfono");
+    if (!user.email || user.email === "") return showNotify("error", "Ingrese su correo electrónico");
+    if (! /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(user.email)) return showNotify("error", "Formato de e-mail incorrecto");
+    if (!user.password || user.password === "") return showNotify("error", "Ingrese su contraseña");
+    if (!confirmPassword || confirmPassword === "") return showNotify("error", "Confirme la contraseña");
+    if (user.password != confirmPassword) return showNotify("error", "La contraseña no coincide con la confirmación");
+    if (!user.birthday || user.birthday === "") return showNotify("error", "Ingrese su fecha de nacimiento");
+    preRegister();
   };
+
 </script>
 
 <div class="u-main-conteiner">
   <div class="u-modal-register-header">
     <span class="u-register-title">REGISTRARSE</span>
+  </div>
+  <div class="u-modal-register-header">
+    <span class="u-register-title">VALIDAR SMS</span>
   </div>
   <div class="u-modal-register-body">
     <div class="u-item-register">
