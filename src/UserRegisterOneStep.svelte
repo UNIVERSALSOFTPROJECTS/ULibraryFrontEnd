@@ -274,13 +274,18 @@
 />
 
 <style>
+  :root{
+    --u-userregister-onestep-bg-menu: var(--universal-userregister-onestep-bg-menu,linear-gradient(50deg, #51256b, #110f49));
+    --u-userregister-mydata-botton: var( --universal-userregister-mydata-botton, #6c1e98 ) ;
+    --u-userregister-stepletter-color: var(--universal-userregister-stepletter-color,#fff) ;
+}
   @media only screen and (max-width: 1200px) {
     .u-main-conteiner {
       display: flex;
       flex-direction: column;
       gap: 1rem;
       padding: 1rem;
-      background: linear-gradient(50deg, #340f49, #110f49);
+      background: var(--u-userregister-onestep-bg-menu);
       border-radius: 0.5rem;
     }
     .u-modal-register-body {
@@ -309,10 +314,13 @@
     }
     .u-btn-register {
       border: none;
-      background-color: #6c1e98;
-      color: white;
+      background-color: var(--u-userregister-mydata-botton);
+      color: var(--u-userregister-stepletter-color);
       height: 2rem;
       border-radius: 0.3rem;
+    }
+    span{
+      color: var(--u-userregister-stepletter-color);
     }
   }
   /*Estilo Desktop*/
@@ -323,7 +331,7 @@
       flex-direction: column;
       gap: 2rem;
       padding: 1rem;
-      background: linear-gradient(50deg, #340f49, #110f49);
+      background: var(--u-userregister-onestep-bg-menu);
     }
     .u-modal-register-body {
       display: grid;
@@ -358,10 +366,13 @@
     }
     .u-btn-register {
       border: none;
-      background-color: #6c1e98;
-      color: white;
+      background-color: var(--u-userregister-mydata-botton);
+      color: var(--u-userregister-stepletter-color);
       height: 2rem;
       border-radius: 0.3rem;
+    }
+    span{
+      color: var(--u-userregister-stepletter-color);
     }
   }
 </style>
