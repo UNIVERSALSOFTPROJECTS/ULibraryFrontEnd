@@ -1,13 +1,19 @@
 <script>
   import ServerConnection from "./js/server";
-  import DateThreeSelect from "./Dat3Select.svelte";
+  import DateThreeSelect from "./Date3Select.svelte";
   export let user = {};
+  export let currencies;
+  export let platform;
+  export let userType;
+  export let countryCodes;
 
   let active_section="register";
   let confirmPassword;
   let agentCodeOne = "";
   let agentCodeTwo = "";
   user.agentCodeTotal = "";
+
+  const CURRENCIES_ = { USD: 3, PEN: 9, ARS: 18 };
 
   const validateName = (e) => {
     if (! /^[A-Za-zúéáíóüÜÑñÓÍÚÁÉ ]*$/.test(e.key)) {
@@ -50,6 +56,7 @@
   };
 
   const preRegister = async () => {
+    if (countryCodes.length == 1) user.countryCode = countryCodes[0];
     if (!currencies.length) return showNotify("error", "Moneda no difinida");
     if(!user.countryCode)  return showNotify("error", "Codigo pais no definido");
     if(!platform)  return showNotify("error", "Platform no defindo");
@@ -87,15 +94,22 @@
   };
 
 
-  const registerNck = async () => {
+  const register = async () => {
+    if (currencies.length == 1) active_currency = currencies[0].code;
     try {
+
       let response = await ServerConnection.user.register(
-        user.name,
         user.username,
-        user.phone,
+        user.name,
+        user.countryCode,
+        user.countryCode + user.phone,
         user.email,
         user.password,
-        user.birthday
+        user.birthday,
+        user.agentCodeTotal,
+        user.validateSMS,
+        platform,
+        CURRENCIES_[active_currency]
       );
       if (
         response.message ==
@@ -135,9 +149,9 @@
   <div class="u-modal-register-header">
     <span class="u-register-title">REGISTRARSE</span>
   </div>
-  <div class="u-modal-register-header">
-    <span class="u-register-title">VALIDAR SMS</span>
-  </div>
+
+  {#if active_section == "register"}
+
   <div class="u-modal-register-body">
     <div class="u-item-register">
       <span>USUARIO</span>
@@ -224,6 +238,24 @@
   <div class="u-modal-footer">
     <button class="u-btn-register" on:click={validateData}>REGISTRAR</button>
   </div>
+
+  {:else if active_section == "validateSMS"}
+  <div class="u-item-register">
+    <span>VALIDACION SMS</span>
+    <div class="u-section-code-agent">
+      <input
+        type="text"
+        bind:value={user.validateSMS}
+      />
+    </div>
+
+    <div class="u-modal-footer">
+      <button class="u-btn-register" on:click={register}>CONFIRMAR SMS</button>
+    </div>
+
+  </div>
+  {/if}
+
 </div>
 
 <style>

@@ -9,3 +9,4 @@ export { default as  Withdrawalx } from './Withdrawalx.svelte';
 export { default as  Withdrawalw } from './Withdrawalw.svelte';
 export { default as  BrandsDropDown } from './BrandsDropDown.svelte'
 export { default as  UserRegisterStepbyStep } from './UserRegisterStepbyStep.svelte'
+export { default as  UserRegisterOneStep } from './UserRegisterOneStep.svelte'
