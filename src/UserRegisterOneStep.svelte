@@ -53,6 +53,7 @@
   };
 
   const validateCodeAgent = (e) => {
+    console.log("1:", agentCodeOne, "2:", agentCodeTwo, "tOTAL:", user.agentCodeTotal);
     let isNumber = /\d/.test(e.key);
     if (isNumber && agentCodeOne.length < 4) {agentCodeOne += e.key; user.agentCodeTotal = agentCodeOne; return;}
     if (isNumber && agentCodeTwo.length < 4) {agentCodeTwo += e.key; user.agentCodeTotal = agentCodeOne + agentCodeTwo; return;}
@@ -66,8 +67,8 @@
   };
 
   const preRegister = async () => {
-    
-    if (!currencies.length) return showNotify("error", "Moneda no difinida");
+    if(user.agentCodeTotal == "")  return showNotify("error", "Ingrese el código de agente");
+    if (!currencies.length) return showNotify("error", "Moneda no definida");
     if(!countryCodes.length)  return showNotify("error", "Codigo pais no definido");
     if(!platform)  return showNotify("error", "Platform no defindo");
     if (countryCodes.length == 1) user.countryCode = countryCodes[0];
@@ -80,7 +81,7 @@
         platform
       );
       active_section = "validateSMS";
-      document.getElementById(element).focus();
+      setTimeout( ()=>{document.getElementById(element).focus();}, 1000);
     } catch (e) {
       console.log("error: ", e);
       let messagge = "Error desconocido en Preregistro";
@@ -91,13 +92,13 @@
         element = "phone";
         messagge = e.response.data.message;
       } else if (e.response.data.message == "El usuario  ya existe") {
-        element = "user";
-        messagge = e.response.data.message;
+        element = "username";
+        messagge = "El nombre de usuario ya existe";
       } else if (e == "ORG_MANDATORY") {
         messagge = "ORG es obligatorio";
       } else if (e.response.data.message == "El usuario u correo ya existe") {
         element = "email";
-        messagge = e.response.data.message;
+        messagge = "El correo ya existe";
       }
       document.getElementById(element).focus();
       return showNotify("error", messagge);
@@ -106,6 +107,7 @@
 
 
   const register = async () => {
+    
     if (currencies.length == 1) active_currency = currencies[0].code;
     
     try {
@@ -126,17 +128,19 @@
       );
       
     } catch (e) {
-      let error = e.message;
-      console.log(e);
-      if(e.message && util.isJson(e.message) ){
-        error = JSON.parse(e.message);
+      let error = e.response.data || e.message;
+      let messageText = "Error al crear usuario";
+      
+      if ( error.message && /El correo o el Usuario ya Exite/.test(error.message) ) {
+        messageText = "Este correo ya está en uso"
+      } else if ( error.message && /Usuario ya Exite/.test(error.message) ){ 
+        messageText = "Este nombre de usuario ya existe"
+      }else if (error.message && /No existe ese id de grupo/.test(error.message) ) {
+        messageText = "Codigo de agente incorrecto";
       }
-      if (error.Msg =="El correo o el Usuario ya Exite") {
-        return showNotify("error", "Este correo ya está en uso");
-      } else if ( error.Msg == "Usuario ya Exite"){ 
-        return showNotify("error", "Este nombre de usuario ya existe");
-      }
-      showNotify("error", "Error al crear usuario");
+      active_section = "register";
+
+      showNotify("error", messageText);
     }
   };
 
@@ -164,7 +168,7 @@
 
   <div class="u-modal-register-body">
     <div class="u-item-register">
-      <span>USUARIO</span>
+      <span>NOMBRE COMPLETO</span>
       <input
         type="text"
         maxlength="30"
@@ -177,6 +181,7 @@
       <span>NOMBRE DE USUARIO</span>
       <input
         type="text"
+        id="username"
         maxlength="20"
         bind:value={user.username}
         on:keypress={validateUsername}
@@ -187,6 +192,7 @@
       <span>TELÉFONO</span>
       <input
         type="text"
+        id="phone"
         bind:value={user.phone}
         on:keypress|preventDefault={(e) => phoneOnlyNumber(e)}
         placeholder="Ingrese su número de teléfono"
@@ -196,6 +202,7 @@
       <span>CORREO ELECTRÓNICO</span>
       <input
         type="email"
+        id="email"
         maxlength="30"
         bind:value={user.email}
         on:input={emailLow}
@@ -232,6 +239,7 @@
       <span>CODIGO DE AGENTE</span>
       <div class="u-section-code-agent">
         <input
+          id="agentCode"
           type="text"
           bind:value={agentCodeOne}
           on:keypress|preventDefault={validateCodeAgent}
@@ -254,6 +262,7 @@
     <span>VALIDACION SMS</span>
     <div class="u-section-code-agent">
       <input
+        id="sms-code"
         type="text"
         bind:value={user.validateSMS}
       />

@@ -1,11 +1,11 @@
 import { UserRegisterOneStep, ServerConnection } from '../src/index';
 let user = {token:"ajsbfjhsgfhjakugilusguwger",balance:12.21,currency:"USD"} ;
-ServerConnection.setConfig({API:"https://lobby-bff.apiusoft.com",CLIENT_AUTH:"GOLD21GOLDENBET4A19028GOLDENBET1",CLIENT_CODE:"GOLD", domain:"goldenbet.pe", currency:user.currency, org:"GB"})
+ServerConnection.setConfig({API:"https://lobby-bff.apiusoft.com",CLIENT_AUTH:"LAJO43766091DIAMONDPLAY",CLIENT_CODE:"LAJO", domain:"lajoya.club", currency:user.currency, org:"JY"})
 
 let userType="W";
 let currencies2=[{code:"PEN", codeAgent:5263}];
 let countryCodes1 = ["51"];
-let platform = "GoldenBet";
+let platform = "LaJoya";
 
 const onOk=()=>{
   alert("Registro correcto");
