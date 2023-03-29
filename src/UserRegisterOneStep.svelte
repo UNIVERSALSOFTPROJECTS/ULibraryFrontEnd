@@ -135,9 +135,9 @@
       );
       
     } catch (e) {
-      let error = e.response.data || e.message;
+      let error = e.message;
+      if( e.response && e.response.data ) error = e.response.data;
       let messageText = "Error al crear usuario";
-      
       if ( error.message && /El correo o el Usuario ya Exite/.test(error.message) ) {
         messageText = "Este correo ya está en uso"
       } else if ( error.message && /Usuario ya Exite/.test(error.message) ){ 
