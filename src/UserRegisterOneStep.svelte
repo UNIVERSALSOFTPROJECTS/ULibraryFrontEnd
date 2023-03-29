@@ -115,7 +115,8 @@
   const register = async () => {
     
     if (currencies.length == 1) active_currency = currencies[0].code;
-    
+    let currency=  CURRENCIES_[active_currency];
+    if(!currency) return showNotify("error", "La moneda no esta definida");
     try {
 
       let {data} = await ServerConnection.user.register(
@@ -130,7 +131,7 @@
         user.validateSMS,
         userType,
         platform,
-        CURRENCIES_[active_currency]
+        currency
       );
       
     } catch (e) {
