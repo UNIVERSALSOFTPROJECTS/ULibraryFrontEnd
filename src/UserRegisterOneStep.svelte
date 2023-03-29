@@ -53,10 +53,10 @@
   };
 
   const validateCodeAgent = (e) => {
-    console.log("1:", agentCodeOne, "2:", agentCodeTwo, "tOTAL:", user.agentCodeTotal);
+    console.log(user.agentCodeTotal);
     let isNumber = /\d/.test(e.key);
     if (isNumber && agentCodeOne.length < 4) {agentCodeOne += e.key; user.agentCodeTotal = agentCodeOne; return;}
-    if (isNumber && agentCodeTwo.length < 4) {agentCodeTwo += e.key; user.agentCodeTotal = agentCodeOne + agentCodeTwo; return;}
+    if (isNumber && agentCodeTwo.length < 4) {agentCodeTwo += e.key; user.agentCodeTotal = agentCodeOne /*+ agentCodeTwo*/; return;}
   };
 
   const validateSpaceKey = (e) => {

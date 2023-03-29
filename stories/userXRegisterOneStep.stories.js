@@ -2,7 +2,7 @@ import { UserRegisterOneStep, ServerConnection } from '../src/index';
 let user = {token:"ajsbfjhsgfhjakugilusguwger",balance:12.21,currency:"USD"} ;
 ServerConnection.setConfig({API:"https://lobby-bff.apiusoft.com",CLIENT_AUTH:"LAJO43766091DIAMONDPLAY",CLIENT_CODE:"LAJO", domain:"lajoya.club", currency:user.currency, org:"JY"})
 
-let userType="W";
+let userType="X";
 let currencies2=[{code:"PEN", codeAgent:5263}];
 let countryCodes1 = ["51"];
 let platform = "LaJoya";
