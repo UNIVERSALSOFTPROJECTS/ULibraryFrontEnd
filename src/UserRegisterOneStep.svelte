@@ -89,7 +89,10 @@
     } catch (e) {
       console.log("error: ", e);
       let messagge = "Error desconocido en Preregistro";
-      if (e.response.data.message == "PHONE_FORMAT_FAILED") {
+      if (e == "ORG_MANDATORY") {
+        messagge = "ORG es obligatorio";
+      }
+      else if (e.response.data.message == "PHONE_FORMAT_FAILED") {
         element = "phone";
         messagge = "Formato Telefono incorrecto";
       } else if (e.response.data.message == "El telefono ya existe") {
@@ -98,13 +101,12 @@
       } else if (e.response.data.message == "El usuario  ya existe") {
         element = "username";
         messagge = "El nombre de usuario ya existe";
-      } else if (e == "ORG_MANDATORY") {
-        messagge = "ORG es obligatorio";
-      } else if (e.response.data.message == "El usuario u correo ya existe") {
+      } 
+      else if (e.response.data.message == "El usuario u correo ya existe") {
         element = "email";
         messagge = "El correo ya existe";
       }
-      document.getElementById(element).focus();
+      document.getElementById(element) && document.getElementById(element).focus();
       return showNotify("error", messagge);
     }
   };
