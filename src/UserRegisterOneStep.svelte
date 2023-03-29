@@ -8,6 +8,7 @@
   export let platform;
   export let userType;
   export let countryCodes;
+  export let onOk;
 
   let active_currency = "";
   let active_section="register";
@@ -133,7 +134,7 @@
         platform,
         currency
       );
-      
+      onOk();
     } catch (e) {
       let error = e.message;
       if( e.response && e.response.data ) error = e.response.data;
