@@ -2,6 +2,8 @@
   import ServerConnection from "./js/server";
   import Notifier from "./Notifier.svelte";
   import DateThreeSelect from "./Date3Select.svelte";
+    import { onMount } from "svelte";
+    import { log } from "npmlog";
   export let user = {};
   export let currencies;
   export let platform;
@@ -22,6 +24,11 @@
       notify.display = false;
     }, 4000);
   };
+
+  onMount( ()=>{
+    console.log("user: ", user);
+    if(!user) user = {};
+  })
 
   const validateName = (e) => {
     if (! /^[A-Za-zúéáíóüÜÑñÓÍÚÁÉ ]*$/.test(e.key)) {
