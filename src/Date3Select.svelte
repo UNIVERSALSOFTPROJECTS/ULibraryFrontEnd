@@ -1,5 +1,5 @@
 <script>
-  import moment, { max } from "moment";
+  import moment from "moment";
   import { onMount } from "svelte";
   export let dateString = null; //YYYY-MM-DD
   let days = [];
