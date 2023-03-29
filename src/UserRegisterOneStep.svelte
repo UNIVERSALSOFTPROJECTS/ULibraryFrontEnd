@@ -13,7 +13,6 @@
   let confirmPassword;
   let agentCodeOne = "";
   let agentCodeTwo = "";
-  user.agentCodeTotal = "";
   let notify = { display: false, message: "", type: "success" };
 
   const CURRENCIES_ = { USD: 3, PEN: 9, ARS: 18 };
@@ -52,7 +51,7 @@
   };
 
   const validateCodeAgent = (e) => {
-    console.log(user.agentCodeTotal);
+    user.agentCodeTotal = user.agentCodeTotal||'';
     let isNumber = /\d/.test(e.key);
     if (isNumber && agentCodeOne.length < 4) {agentCodeOne += e.key; user.agentCodeTotal = agentCodeOne; return;}
     if (isNumber && agentCodeTwo.length < 4) {agentCodeTwo += e.key; user.agentCodeTotal = agentCodeOne /*+ agentCodeTwo*/; return;}
