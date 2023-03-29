@@ -1,7 +1,6 @@
 <script>
   import ServerConnection from "./js/server";
   import Notifier from "./Notifier.svelte";
-  import util from "./js/util";
   import DateThreeSelect from "./Date3Select.svelte";
   export let user = {};
   export let currencies;
