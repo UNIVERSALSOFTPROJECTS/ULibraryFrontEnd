@@ -2,8 +2,7 @@
   import ServerConnection from "./js/server";
   import Notifier from "./Notifier.svelte";
   import DateThreeSelect from "./Date3Select.svelte";
-    import { onMount } from "svelte";
-    import { log } from "npmlog";
+  import { onMount } from "svelte";
   export let user = {};
   export let currencies;
   export let platform;
