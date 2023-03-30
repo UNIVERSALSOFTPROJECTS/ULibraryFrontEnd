@@ -3,6 +3,8 @@
     import notify from "./js/notify";
     export let open;
     export let user;
+    export let onOk;
+    export let onError;
 
     let amount = "";
     let accountNumber="";
@@ -11,8 +13,6 @@
     let name="";
     let document="";
     
-    export let onOK=()=>{};
-    export let onError=()=>{};
 
     const closeModal = () => {
         console.log("cerrando modal");

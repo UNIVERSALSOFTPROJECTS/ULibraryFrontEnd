@@ -17,6 +17,7 @@
     };
     const setPreview = async(token) => {
         let resp_pending = await ServerConnection.wallet.checkPreviewWithdrawal(token);
+        console.log("pending", resp_pending);
         if(resp_pending.data.monto) pendingWhitdrawall = resp_pending.data; // si tiene monto quiere decir que tiene un retiro pendiente
     };
     const duplicateSession=()=>{
@@ -29,15 +30,19 @@
         if(!amount) return onError("INVALID_AMOUNT")
         try {
             let resp_withdrawal = null;
-            await setPreview(user.token)
+            await setPreview(user.token);
             if(!pendingWhitdrawall){
                 resp_withdrawal = await ServerConnection.wallet.retailWithdrawal(user.token, amount);
                 await setPreview(user.token)
             }
             let { data } = await ServerConnection.user.getBalance(user.agregatorToken);
-            user.balance = data.balance
-            onOk({type:'withdrawalxok',data:resp_withdrawal?resp_withdrawal:pendingWhitdrawall})
+            console.log("balance", data);
+            user.balance = data.balance;
+            console.log("resp_withdrawal", resp_withdrawal);
+            console.log("pendingWhitdrawall", pendingWhitdrawall);
+            onOk(resp_withdrawal?resp_withdrawal:pendingWhitdrawall);
         } catch (e_withdrawal) {
+            console.log(e_withdrawal);
             if(e_withdrawal.response.data.message != 'RET_PEND') onError(e_withdrawal.response.data.message)
             else if(e_pending.response.data.errorCode=='OLD_TOKEN') duplicateSession()
             else onError(e_withdrawal.response.data)
@@ -46,12 +51,10 @@
     };
 
     const validateAmount = (event) => {
-        let isNumber = /\d/.test(event.key);
-        console.log("-========= ",isNumber);
+        if(!/\d/.test(event.key)) return;
         if(event.charCode === 45 || event.charCode === 43){ event.preventDefault(); return}
         let amountNumber = Number(amount);
         amountNumber += event.key;
-        console.log("-========= ",Number(amountNumber));
         if(Number(amountNumber) > minAmount ) event.preventDefault();
         else amount += event.key;
         // if (isNumber && amount.length < amountMin.length) amount += event.key;
