@@ -44,7 +44,7 @@
         } catch (e_withdrawal) {
             console.log(e_withdrawal);
             if(e_withdrawal.response.data.message != 'RET_PEND') onError(e_withdrawal.response.data.message)
-            else if(e_pending.response.data.errorCode=='OLD_TOKEN') duplicateSession()
+            else if(e_withdrawal.response.data.errorCode=='OLD_TOKEN') duplicateSession()
             else onError(e_withdrawal.response.data)
         }
         pendingWhitdrawall=null
