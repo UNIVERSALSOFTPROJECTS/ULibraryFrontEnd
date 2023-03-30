@@ -736,7 +736,6 @@
       display: flex;
       flex-direction: row;
       justify-content: center;
-      width: 50%;
     }
     .u-content-logo {
       width: 50%;
