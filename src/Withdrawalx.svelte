@@ -2,6 +2,8 @@
     import ServerConnection from "./js/server"
     import moment from "moment";
     import copyCode from 'copy-text-to-clipboard';
+    import { onMount } from "svelte";
+
 
     export let open;
     export let minAmount;
@@ -12,10 +14,14 @@
 
     let amount = "";
     
+    onMount(()=>{
+        pendingWhitdrawall = false;
+    })
+
     const closeModal = () => {
         open = false;
     };
-    const setPreview = async(token) => {
+    const getPendingWithdrawal = async(token) => {
         let resp_pending = await ServerConnection.wallet.checkPreviewWithdrawal(token);
         console.log("pending", resp_pending);
         if(resp_pending.data.monto) pendingWhitdrawall = resp_pending.data; // si tiene monto quiere decir que tiene un retiro pendiente
@@ -27,27 +33,31 @@
     };
 
     const cashout = async()=>{
+        pendingWhitdrawall=null;
         if(!amount) return onError("INVALID_AMOUNT")
         try {
+           
             let resp_withdrawal = null;
-            await setPreview(user.token);
+            await getPendingWithdrawal(user.token);
             if(!pendingWhitdrawall){
                 resp_withdrawal = await ServerConnection.wallet.retailWithdrawal(user.token, amount);
-                await setPreview(user.token)
+                await getPendingWithdrawal(user.token);
+                onOk(resp_withdrawal?resp_withdrawal:pendingWhitdrawall);
+                console.log("resp_withdrawal", resp_withdrawal);
+                console.log("pendingWhitdrawall", pendingWhitdrawall);
+            }else{
+                onError("PENDING_WITHDRAWAL");
             }
             let { data } = await ServerConnection.user.getBalance(user.agregatorToken);
             console.log("balance", data);
             user.balance = data.balance;
-            console.log("resp_withdrawal", resp_withdrawal);
-            console.log("pendingWhitdrawall", pendingWhitdrawall);
-            onOk(resp_withdrawal?resp_withdrawal:pendingWhitdrawall);
         } catch (e_withdrawal) {
             console.log(e_withdrawal);
             if(e_withdrawal.response.data.message != 'RET_PEND') onError(e_withdrawal.response.data.message)
             else if(e_withdrawal.response.data.errorCode=='OLD_TOKEN') duplicateSession()
             else onError(e_withdrawal.response.data)
         }
-        pendingWhitdrawall=null
+       
     };
 
     const validateAmount = (event) => {
@@ -71,7 +81,7 @@
     {#if pendingWhitdrawall && pendingWhitdrawall.monto>0}
     <div>
         <div class="u-wrapp-payments">
-            <span class="u-title bd">RETIRAR SU SALDO</span>
+            <span class="u-title bd">RETIRO PENDIENTE</span>
             <div class="u-info-retail">
                 <div>Usuario :  <span>{user.username}</span></div>
                 <div>ID: <span>{user.code}</span></div>   
@@ -89,7 +99,7 @@
                         </svg>
                     </button>
                 </div>
-                <p>Cantidad:</p>
+                <p>Monto:</p>
                 <span>{pendingWhitdrawall.monto}</span>
             </div>
             <div class="w-100">Acercate a nuestras sucursales, para proceder con el retiro.</div>
