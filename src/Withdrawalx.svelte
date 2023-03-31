@@ -158,7 +158,94 @@
     .u-info2-retail p{
         margin:0;
     }
-
+@media only screen and (max-width: 1200px) {
+    /*Retirar Saldo sin saldo pendiente*/
+    .u-main-payments{
+        display: grid;
+        grid-template-columns: 80% 9%;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 0.5rem;
+        height: 100%;
+    }
+    .u-close{
+        background: var(--button-close-bg);
+        color: var(--button-close-cl);
+        width: auto;
+        text-align: center;
+        height:auto;
+        font-size: 28px;
+        font-weight: 800;
+        border: 1px solid var(--button-close-border-cl);
+        border-radius: 0.5rem;
+        cursor: pointer;
+    }
+    .u-wrapp-payments{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        background-color: white;
+        border-radius: 0.5rem;
+        width: 100%;
+        gap: 1rem;
+        padding: 0.8rem;
+        color: black;
+    }
+    .u-content-info{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-weight: 600;
+    }
+    input:focus-visible{
+        outline: 0;
+    }
+    .u-input-pay{
+        width: 15rem;
+        height: 2rem;
+        border-radius: 0.5rem;
+        border: 1px solid #000;
+        padding: 0.2rem;
+        padding-left: 0.5rem;
+        font-size: 1rem;
+        text-align: center;
+    }
+    .gb-process{
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        font-size: 12px;
+    }
+    .u-button-pay{
+        background: #dead1a;
+        border: none;
+        height: 2rem;
+        width: 100%;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .u-section-code{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap:  0.5rem;
+    }
+    .u-copyCode{
+        border: none;
+        cursor: pointer;
+        background-color: transparent;
+        border-radius: 0.3rem;
+    }
+    .u-copyCode:hover{
+        background-color: rgb(202, 202, 202);
+    }
+}
 
 @media only screen and (min-width: 1200px) {
     /*Retirar Saldo sin saldo pendiente*/
