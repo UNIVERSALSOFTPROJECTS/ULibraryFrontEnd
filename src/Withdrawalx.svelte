@@ -64,12 +64,9 @@
   const validateAmount = (event) => {
     if (!/\d/.test(event.key)) return;
     if (event.charCode === 45 || event.charCode === 43) {event.preventDefault(); return;}
-    //let amountNumber = Number(amount);
-    //amountNumber += event.key;
-    //if (Number(amountNumber) > minAmount) event.preventDefault();
-    //else amount += event.key;
     if (amount.length < 4) amount += event.key;
     else if(amount.length >= 4) notify.error("Monto máximo: 2000");
+    if(!amount || amount === "") notify.error("Ingrese el monto");
   };
 
   const copyCodeWhitdrawall = () => {
