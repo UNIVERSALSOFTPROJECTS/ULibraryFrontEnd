@@ -36,23 +36,20 @@
         pendingWhitdrawall=null;
         if(!amount) return onError("INVALID_AMOUNT")
         try {
-           
             let resp_withdrawal = null;
             await getPendingWithdrawal(user.token);
             if(!pendingWhitdrawall){
                 resp_withdrawal = await ServerConnection.wallet.retailWithdrawal(user.token, amount);
                 await getPendingWithdrawal(user.token);
                 onOk(resp_withdrawal?resp_withdrawal:pendingWhitdrawall);
-                console.log("resp_withdrawal", resp_withdrawal);
-                console.log("pendingWhitdrawall", pendingWhitdrawall);
             }else{
                 onError("PENDING_WITHDRAWAL");
             }
             let { data } = await ServerConnection.user.getBalance(user.agregatorToken);
-            console.log("balance", data);
+            console.log("balance xd", data);
             user.balance = data.balance;
         } catch (e_withdrawal) {
-            console.log(e_withdrawal);
+            console.log("LLEGAAA?",e_withdrawal);
             if(e_withdrawal.response.data.message != 'RET_PEND') onError(e_withdrawal.response.data.message)
             else if(e_withdrawal.response.data.errorCode=='OLD_TOKEN') duplicateSession()
             else onError(e_withdrawal.response.data)
@@ -63,12 +60,8 @@
     const validateAmount = (event) => {
         if(!/\d/.test(event.key)) return;
         if(event.charCode === 45 || event.charCode === 43){ event.preventDefault(); return}
-        let amountNumber = Number(amount);
-        amountNumber += event.key;
-        if(Number(amountNumber) > minAmount ) event.preventDefault();
-        else amount += event.key;
-        // if (isNumber && amount.length < amountMin.length) amount += event.key;
-        // else if(isNumber && amount.length >= 4) onError("LOW_AMOUNT");
+        if (amount.length < 4) amount += event.key;
+        else if(amount.length >= 4) onError("El monto máximo es de 2000");
     };
 
     const copyCodeWhitdrawall = () => {
@@ -113,7 +106,7 @@
         <span class="u-title">RETIRAR SU SALDO</span>
         <div class="u-content-info">
             <span>INGRESE EL MONTO A RETIRAR:</span>
-            <input data-testid="amount_input" class="u-input-pay" bind:value={amount} type="text" on:keypress|preventDefault={(e)=>validateAmount(e)} placeholder="Ingrese el monto a retirar">
+            <input data-testid="amount_input" class="u-input-pay" bind:value={amount} type="text" max="2000" on:keypress|preventDefault={(e)=>validateAmount(e)} placeholder="Ingrese el monto a retirar">
 
         </div>
         <div class="gb-process">

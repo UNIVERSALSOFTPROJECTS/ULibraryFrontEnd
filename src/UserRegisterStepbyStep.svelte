@@ -117,9 +117,7 @@
         CURRENCIES_[active_currency]
       );
       console.log("DATA", data);
-      if (
-        data.message ==
-          "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}" ||
+      if (data.message == "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}" ||
         data.message == "{resp=Err, Id=2, Msg=El correo o el Usuario ya Exite}"
       ) {
         active_section = "email";
@@ -542,7 +540,7 @@
         <!--Componente de correo-->
         <div class="u-date-new">
           <div class="u-header"><span>FECHA DE NACIMIENTO</span></div>
-          <div class="select-date u-body">
+          <div class="select-date u-body" >
             <select bind:value={daySelected} on:change={onChangeDate}>
               {#each days as day}
                 <option>{day}</option>
