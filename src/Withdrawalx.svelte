@@ -66,13 +66,18 @@
     if (event.charCode === 45 || event.charCode === 43) {event.preventDefault(); return;}
     if (amount.length < 4) amount += event.key;
     else if(amount.length >= 4) notify.error("Monto máximo: 2000");
-    if(!amount || amount === "") notify.error("Ingrese el monto");
   };
 
   const copyCodeWhitdrawall = () => {
     let code = pendingWhitdrawall.codigo;
     copyCode(code);
   };
+
+  const validateDataPrevious = () => {
+    if(!amount || amount === "") {notify.error("Ingrese el monto"); return;}
+    cashout();
+  }
+
 </script>
 
 <div class="u-main-payments">
@@ -154,7 +159,7 @@
           >Al solicitar su retiro usted esta aceptando los términos y
           condiciones</span
         >
-        <button class="u-button-pay" on:click={cashout}>SOLICITAR RETIRO</button
+        <button class="u-button-pay" on:click={validateDataPrevious}>SOLICITAR RETIRO</button
         >
       </div>
     </div>
