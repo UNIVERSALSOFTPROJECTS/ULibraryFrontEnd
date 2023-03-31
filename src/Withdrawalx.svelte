@@ -5,7 +5,6 @@
   import { onMount } from "svelte";
 
   export let open;
-  export let minAmount;
   export let user;
   export let pendingWhitdrawall;
   export let onOk;
@@ -70,16 +69,13 @@
 
   const validateAmount = (event) => {
     if (!/\d/.test(event.key)) return;
-    if (event.charCode === 45 || event.charCode === 43) {
-      event.preventDefault();
-      return;
-    }
-    let amountNumber = Number(amount);
-    amountNumber += event.key;
-    if (Number(amountNumber) > minAmount) event.preventDefault();
-    else amount += event.key;
-    // if (isNumber && amount.length < amountMin.length) amount += event.key;
-    // else if(isNumber && amount.length >= 4) onError("LOW_AMOUNT");
+    if (event.charCode === 45 || event.charCode === 43) {event.preventDefault(); return;}
+    //let amountNumber = Number(amount);
+    //amountNumber += event.key;
+    //if (Number(amountNumber) > minAmount) event.preventDefault();
+    //else amount += event.key;
+    if (amount.length < 4) amount += event.key;
+    else if(amount.length >= 4) onError("LOW_AMOUNT");
   };
 
   const copyCodeWhitdrawall = () => {
@@ -157,6 +153,7 @@
           class="u-input-pay"
           bind:value={amount}
           type="text"
+          max="2000"
           on:keypress|preventDefault={(e) => validateAmount(e)}
           placeholder="Ingrese el monto a retirar"
         />
