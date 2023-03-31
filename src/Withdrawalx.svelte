@@ -3,6 +3,7 @@
   import moment from "moment";
   import copyCode from "copy-text-to-clipboard";
   import { onMount } from "svelte";
+  import notify from "./js/notify";
 
   export let open;
   export let user;
@@ -68,7 +69,7 @@
     //if (Number(amountNumber) > minAmount) event.preventDefault();
     //else amount += event.key;
     if (amount.length < 4) amount += event.key;
-    else if(amount.length >= 4) onError("LOW_AMOUNT");
+    else if(amount.length >= 4) notify.error("Monto máximo: 2000");
   };
 
   const copyCodeWhitdrawall = () => {
