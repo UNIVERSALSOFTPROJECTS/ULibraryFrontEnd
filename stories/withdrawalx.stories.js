@@ -22,7 +22,7 @@ export default {
   component: Withdrawalx,
 };
 
-
+ 
 export const withdrawal = () => ({
   Component: Withdrawalx,
   props: { user, open:true ,onOk,onError,pendingWhitdrawall}
