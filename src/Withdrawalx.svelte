@@ -3,15 +3,28 @@
   import moment from "moment";
   import copyCode from "copy-text-to-clipboard";
   import { onMount } from "svelte";
-  import notify from "./js/notify";
+  import util from "./js/util"
+  import Notifier from "./Notifier.svelte";
+  //import notify from "./js/notify";
 
   export let open;
   export let user;
   export let pendingWhitdrawall;
+  export let minAmount=0;
+  export let maxAmount=1000;
   export let onOk;
   export let onError;
-
+  
+  let notify = { display: false, message: "", type: "success" };
   let amount = "";
+
+  const showNotify = (type, message) => {
+    notify = { display: true, type, message };
+    setTimeout(() => {
+      notify.display = false;
+    }, 4000);
+  };
+
 
   onMount(() => {
     pendingWhitdrawall = false;
@@ -36,6 +49,7 @@
   const cashout = async () => {
     pendingWhitdrawall = null;
     if (!amount) return onError("INVALID_AMOUNT");
+    if (amount<minAmount)  return  showNotify("error",`Monto mínimo: ${minAmount}` );
     try {
       let resp_withdrawal = null;
       await getPendingWithdrawal(user.token);
@@ -63,9 +77,10 @@
 
   const validateAmount = (event) => {
     if (!/\d/.test(event.key)) return;
-    if (event.charCode === 45 || event.charCode === 43) {event.preventDefault(); return;}
-    if (amount.length < 4) amount += event.key;
-    else if(amount.length >= 4) notify.error("Monto máximo: 2000");
+    console.log(amount, maxAmount, amount > maxAmount);
+    if (amount > maxAmount) return  showNotify("error",`Monto máximo: ${maxAmount}` ) ;
+    amount += event.key;
+
   };
 
   const copyCodeWhitdrawall = () => {
@@ -74,12 +89,18 @@
   };
 
   const validateDataPrevious = () => {
-    if(!amount || amount === "") {notify.error("Ingrese el monto"); return;}
+    let amountNumber = Number(amount)
+    if(!amount || amount === "") return  showNotify("error",`Ingrese el monto` ) ;
+    if(amountNumber > maxAmount) return  showNotify("error",`El monto máximo es de: ${maxAmount}` ) ;
     cashout();
   }
 
 </script>
-
+<Notifier
+  bind:display={notify.display}
+  bind:message={notify.message}
+  bind:type={notify.type}
+/>
 <div class="u-main-payments">
   {#if pendingWhitdrawall && pendingWhitdrawall.monto > 0}
     <div>
@@ -149,7 +170,6 @@
           class="u-input-pay"
           bind:value={amount}
           type="text"
-          max="2000"
           on:keypress|preventDefault={(e) => validateAmount(e)}
           placeholder="Ingrese el monto a retirar"
         />
