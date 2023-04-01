@@ -67,7 +67,7 @@
     } catch (e_withdrawal) {
       console.log("error",e_withdrawal);
       if (e_withdrawal.response.data.message != "RET_PEND"){
-        onError(e_withdrawal.response.data.message);
+        onError(e_withdrawal.response.data);
       }
       else if (e_withdrawal.response.data.errorCode == "OLD_TOKEN")
         duplicateSession();
