@@ -38,7 +38,7 @@
       token
     );
     console.log("pending", resp_pending);
-    if (resp_pending.data.monto) pendingWhitdrawall = resp_pending.data; // si tiene monto quiere decir que tiene un retiro pendiente
+    if (resp_pending.data.monto && resp_pending.data.monto) pendingWhitdrawall = resp_pending.data; // si tiene monto quiere decir que tiene un retiro pendiente
   };
   const duplicateSession = () => {
     alert("SESION ABIERTA EN OTRO DISPOSITIVO");
