@@ -7,7 +7,7 @@ import ServerConnection from '../src/js/server'
 ServerConnection.setConfig({API:"https://lobby-bff.apiusoft.com",CLIENT_AUTH:"LAJO43766091DIAMONDPLAY",CLIENT_CODE:"LAJO", domain:"lajoya.club", currency:"USD"})
 
 notify.setEM(EventManager)
-let user = {"balance":0,"username":"fortunatest1","currency":"ARS","currency_id":18,"bono":0,"code":1138137,"token":"e247f3c51baa96eedb0c266d2935e2315131f36a7997e78f4227ff8be6ea83b5","serial":"8068160578275","agregatorToken":"637e8b1b1c90de353e98880e74f0ed41a168b1a9aa3ab1c77e0ddbf38242d0b32a01758cda6c446949ab654c00d2834bf113ac56bd0213ce8e850dd2b5af2abc","expireToken":1678480673923};
+let user = {"balance":9900,"username":"salva007","currency":"ARS","currency_id":18,"bono":0,"code":1138137,"token":"2ecc654b5432a87c105317a175b739262cfc44e5433babec5df7e2ba1b53bf1a","serial":"2776020563475","agregatorToken":"42aba320887f94b427f9fe63f6a2bac0fddd96e5f213b66ab9d1184407cd5bfc40d13352936797281614a4864699d95e262f1babe1ff1923076c29d4d9d66ad4","expireToken":1678480673923};
 let pendingWhitdrawall=null
 
 const onOk=()=>{

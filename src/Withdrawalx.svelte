@@ -34,9 +34,7 @@
     open = false;
   };
   const getPendingWithdrawal = async (token) => {
-    let resp_pending = await ServerConnection.wallet.checkPreviewWithdrawal(
-      token
-    );
+    let resp_pending = await ServerConnection.wallet.checkPreviewWithdrawal(token);
     console.log("pending", resp_pending);
     if (resp_pending.data.monto && resp_pending.data.monto > 0) pendingWhitdrawall = resp_pending.data; // si tiene monto quiere decir que tiene un retiro pendiente
   };
@@ -58,11 +56,10 @@
         await getPendingWithdrawal(user.token);
         onOk(resp_withdrawal ? resp_withdrawal : pendingWhitdrawall);
       } else {
+        showNotify("error","Retiro Pendiente");
         onError("PENDING_WITHDRAWAL");
       }
-      let { data } = await ServerConnection.user.getBalance(
-        user.agregatorToken
-      );
+      let { data } = await ServerConnection.user.getBalance(user.agregatorToken);
       user.balance = data.balance;
     } catch (e_withdrawal) {
       console.log("error",e_withdrawal);
