@@ -52,9 +52,9 @@
       let resp_withdrawal = null;
       await getPendingWithdrawal(user.token);
       if (!pendingWhitdrawall) {
-        resp_withdrawal = await ServerConnection.wallet.retailWithdrawal(user.token,amount);
-        await getPendingWithdrawal(user.token);
-        onOk(resp_withdrawal ? resp_withdrawal : pendingWhitdrawall);
+        //resp_withdrawal = await ServerConnection.wallet.retailWithdrawal(user.token,amount);
+        //await getPendingWithdrawal(user.token);
+        //onOk(resp_withdrawal ? resp_withdrawal : pendingWhitdrawall);
       } else {
         showNotify("error","Retiro Pendiente");
         onError("PENDING_WITHDRAWAL");
@@ -63,7 +63,7 @@
       user.balance = data.balance;
     } catch (e_withdrawal) {
       console.log("error",e_withdrawal);
-      if (e_withdrawal.response.data.message != "RET_PEND"){
+      if (e_withdrawal.response.data.message != "RET_PEND" || e_withdrawal.response.data.message != "PENDING_WITHDRAWAL"){
         onError(e_withdrawal.response.data);
       }
       else if (e_withdrawal.response.data.errorCode == "OLD_TOKEN")

@@ -62,6 +62,7 @@
     let isNumber = /\d/.test(e.key);
     if (isNumber && agentCodeOne.length < 4) {agentCodeOne += e.key; user.agentCodeTotal = agentCodeOne; return;}
     if (isNumber && agentCodeTwo.length < 4) {agentCodeTwo += e.key; user.agentCodeTotal = agentCodeOne /*+ agentCodeTwo*/; return;}
+    console.log("agente: ", user.agentCodeTotal, "agentOne: ", agentCodeOne);
   };
 
   const validateSpaceKey = (e) => {
@@ -72,7 +73,6 @@
   };
 
   const preRegister = async () => {
-    if(user.agentCodeTotal == "")  return showNotify("error", "Ingrese el código de agente");
     if (!currencies.length) return showNotify("error", "Moneda no definida");
     if(!countryCodes.length)  return showNotify("error", "Codigo pais no definido");
     if(!platform)  return showNotify("error", "Platform no defindo");
@@ -89,7 +89,7 @@
       setTimeout( ()=>{document.getElementById(element).focus();}, 1000);
     } catch (e) {
       console.log("error: ", e);
-      let messagge = "Error desconocido en Preregistro";
+      let messagge = "Error desconocido en Preregistro UNIVERSAL";
       if (e == "ORG_MANDATORY") {
         messagge = "ORG es obligatorio";
       }
@@ -162,6 +162,10 @@
     if (!confirmPassword || confirmPassword === "") return showNotify("error", "Confirme la contraseña");
     if (user.password != confirmPassword) return showNotify("error", "La contraseña no coincide con la confirmación");
     if (!user.birthday || user.birthday === "") return showNotify("error", "Ingrese su fecha de nacimiento");
+    if (!user.agentCodeTotal || user.agentCodeTotal === "") {
+      user.agentCodeTotal = agentCodeOne !="" ? agentCodeOne : "";
+      if(user.agentCodeTotal == "") return showNotify("error", "Ingrese el código de agente");
+     }
     preRegister();
   };
 
