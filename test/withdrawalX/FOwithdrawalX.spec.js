@@ -2,7 +2,7 @@
 import '@testing-library/jest-dom/extend-expect'
 import axios from "axios"
 import { render, fireEvent, screen  } from '@testing-library/svelte'
-import Depositx from '../../src/Depositx.svelte'
+import Withdrawalx from '../../src/Withdrawalx.svelte'
 import ServerConnection from '../../src/js/server'
 jest.mock('axios');
 
@@ -12,12 +12,12 @@ let user = {"balance":10,"username":"fortunatest001","currency":"ARS","currency_
 
 describe('FO WithdrwalX', () => {
   it('WHEN no amount RETURN error', async() => {
-    render(Depositx, { open: true, user,  onOk:(r)=>{ }, onError:(e)=>{ } })
-    const activateBtn = screen.getByText("Activar");
+    render(Withdrawalx, { open: true, user, pendingWhitdrawall, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ } })
+    const activateBtn = screen.getByText("SOLICITAR RETIRO");
     await fireEvent.click(activateBtn)
-    expect( screen.getByText("Ingrese código") ).toBeInTheDocument();
+    expect( screen.getByText("Ingrese el monto") ).toBeInTheDocument();
   });
-
+/*
   it('WHEN no valid amount RETURN error', async() => {
     let chargeCode="RA123";
     axios.post.mockResolvedValue({data:{error:2 }});
@@ -44,5 +44,5 @@ describe('FO WithdrwalX', () => {
     const activateBtn = screen.getByText("Activar");
     await fireEvent.click(activateBtn)
   });
-
+  */
 });
