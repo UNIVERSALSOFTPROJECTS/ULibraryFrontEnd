@@ -52,11 +52,10 @@
       let resp_withdrawal = null;
       await getPendingWithdrawal(user.token);
       if (!pendingWhitdrawall) {
-        //resp_withdrawal = await ServerConnection.wallet.retailWithdrawal(user.token,amount);
-        //await getPendingWithdrawal(user.token);
-        //onOk(resp_withdrawal ? resp_withdrawal : pendingWhitdrawall);
+        resp_withdrawal = await ServerConnection.wallet.retailWithdrawal(user.token,amount);
+        await getPendingWithdrawal(user.token);
+        onOk(resp_withdrawal ? resp_withdrawal : pendingWhitdrawall);
       } else {
-        showNotify("error","Retiro Pendiente");
         onError("PENDING_WITHDRAWAL");
       }
       let { data } = await ServerConnection.user.getBalance(user.agregatorToken);
