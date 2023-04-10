@@ -1,11 +1,9 @@
 <script>
   import ServerConnection from "./js/server";
   import moment from "moment";
-  import copyCode from "copy-text-to-clipboard";
+  //import copyCode from "copy-text-to-clipboard";
   import { onMount } from "svelte";
-  import util from "./js/util"
   import Notifier from "./Notifier.svelte";
-  //import notify from "./js/notify";
 
   export let open;
   export let user;

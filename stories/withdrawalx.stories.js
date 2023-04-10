@@ -1,12 +1,16 @@
 import { Withdrawalx } from '../src/index';
-
 import EventManager from '../src/js/EventManager'
 import notify from '../src/js/notify'
 import ServerConnection from '../src/js/server'
-//ServerConnection.setConfig({API:"https://lobby-bff.apiusoft.com",CLIENT_AUTH:"FORT2023FORTUNEUSOFFORTUNEBET12",CLIENT_CODE:"FORT"})
-ServerConnection.setConfig({API:"https://lobby-bff.apiusoft.com",CLIENT_AUTH:"LAJO43766091DIAMONDPLAY",CLIENT_CODE:"LAJO", domain:"lajoya.club", currency:"USD", org:"JY"})
+ServerConnection.setConfig({API:"https://lobby-bff.apiusoft.com",CLIENT_AUTH:"FORT2023FORTUNEUSOFFORTUNEBET12",CLIENT_CODE:"FORT"})
+//ServerConnection.setConfig({API:"https://lobby-bff.apiusoft.com",CLIENT_AUTH:"LAJO43766091DIAMONDPLAY",CLIENT_CODE:"LAJO", domain:"lajoya.club", currency:"USD", org:"JY"})
+
+let minAmount=10;
+let maxAmount=2000;
+let pendingWhitdrawall=null
 
 notify.setEM(EventManager)
+
 /*let user = {
   "balance": 1328.88,
   "username": "LaJoya",
@@ -19,6 +23,7 @@ notify.setEM(EventManager)
   "agregatorToken": "64339a511180630c90066fc23c0418deae94d3c7e0e60c0b6af093410169c8bb18d0145ba111a56619fd3225857cf74ad41adb0b7a894bcd5ef7f57facb7f5a5",
   "expireToken": 1680799800069
 }*/
+
 let user = {
   "balance": 9865,
   "username": "salva007",
@@ -32,7 +37,6 @@ let user = {
   "expireToken": 1680798374251,
   "org":"JY"
 }
-let pendingWhitdrawall=null
 
 const onOk=()=>{
   alert('ok');
@@ -46,9 +50,8 @@ export default {
   component: Withdrawalx,
 };
 
- 
 export const withdrawal = () => ({
   Component: Withdrawalx,
-  props: { user, open:true ,onOk,onError,pendingWhitdrawall}
+  props: { user, open:true ,onOk,onError, minAmount, maxAmount, pendingWhitdrawall}
 });
 
