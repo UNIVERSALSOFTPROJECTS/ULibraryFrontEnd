@@ -13,13 +13,29 @@ let minAmount = 10;
 let maxAmount = 2000;
 
 describe('GB DepositW', () => {
+  /*
   it('WHEN no select bank name RETURN error', async() => {
+    bankSelected = '';
     render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ } })
+    const input = screen.getByLabelText("bankSelected");
+    await fireEvent.input(input, { target: { value:refNumber } });
     const activateBtn = screen.getByText("DEPOSITAR");
     await fireEvent.click(activateBtn)
     expect( screen.getByText("Seleccione el banco receptor") ).toBeInTheDocument();
+    
   });
-  /*
+
+  it('WHEN no enter reference number RETURN error', async() => {
+    refNumber = '';
+    render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ } })
+    const input = screen.getByLabelText("refNumber");
+    await fireEvent.input(input, { target: { value:refNumber } });
+    const activateBtn = screen.getByText("DEPOSITAR");
+    await fireEvent.click(activateBtn)
+    expect( screen.getByText("Seleccione el banco receptor") ).toBeInTheDocument();
+    
+  });
+  
   it('WHEN select only bank name RETURN error', async() => {
     let bankName = "BCP";
     axios.post.mockResolvedValue({data:{error:2 }});

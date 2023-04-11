@@ -161,6 +161,7 @@
         <span>INGRESE EL MONTO A RETIRAR:</span>
         <input
           data-testid="amount_input"
+          aria-label="amount_value"
           class="u-input-pay"
           bind:value={amount}
           type="text"

@@ -185,7 +185,7 @@
             <div class="u-form-data">
               <div class="u-sub-form">
                 <span>Banco Receptor</span>
-                <select class="u-select" bind:value={bankDeposit.targetBankId}>
+                <select aria-label="bankSelected" class="u-select" bind:value={bankDeposit.targetBankId}>
                   {#each bankPaymethods as method}
                     <option value={method.id}>{method.banco}</option>
                   {/each}
@@ -205,6 +205,7 @@
                 >
                 <input
                   class="u-content-data"
+                  aria-label="refNumber"
                   type="text"
                   bind:value={bankDeposit.reference}
                   on:keypress|preventDefault={validateReferenceNumber}

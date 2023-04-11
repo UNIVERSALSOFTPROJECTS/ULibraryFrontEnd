@@ -21,9 +21,10 @@ notify.setEM(EventManager)
   "token": "8af92f6552617428281fa8acadfd48297a1557287d30f30bed56f9afb387af9d",
   "serial": "7042031078562",
   "agregatorToken": "64339a511180630c90066fc23c0418deae94d3c7e0e60c0b6af093410169c8bb18d0145ba111a56619fd3225857cf74ad41adb0b7a894bcd5ef7f57facb7f5a5",
-  "expireToken": 1680799800069
-}*/
-
+  "expireToken": 1680799800069,
+  "org":"JY"
+}
+*/
 let user = {
   "balance": 9865,
   "username": "salva007",
@@ -35,7 +36,7 @@ let user = {
   "serial": "2776020563475",
   "agregatorToken": "ee2090c3b2f26ca046917a79f791ab161f0216f44428122c7080b3bc0efa78b18b70bc2536245080cce55025d44550378d5682c85b080ca962a68f430ac54e8f",
   "expireToken": 1680798374251,
-  "org":"JY"
+  "org":"FO"
 }
 
 const onOk=()=>{

@@ -19,7 +19,7 @@ describe('JY DepositX', () => {
   });
 
   it('WHEN no valid code RETURN error', async() => {
-    let chargeCode="RA123";
+    let chargeCode="RA-.!123";
     axios.post.mockResolvedValue({data:{error:2 }});
     render(Depositx, { open: true, user,
        onOk:()=>{},
