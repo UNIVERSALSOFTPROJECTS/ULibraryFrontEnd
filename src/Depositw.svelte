@@ -46,7 +46,6 @@
     };
    
     const deposit = async () => {
-      console.log("fecha: ", bankDeposit.date);
       if (active_type_method == "TD") {
         await makeBankDeposit();
       } else {
@@ -103,6 +102,7 @@
   
     const validateData = () => {
       let amount_ = Number(bankDeposit.amount);
+      console.log("fecha: ", bankDeposit.date);
       if (!bankDeposit.targetBankId || bankDeposit.targetBankId === "" ) return notify = util.getNotify("error","Seleccione el banco receptor");
       if (!bankDeposit.date || bankDeposit.date === "" || bankDeposit.date === "dd/mm/aaaa") return notify = util.getNotify("error","Ingrese la fecha");
       if (!amount_) return notify = util.getNotify("error","Ingrese el monto a depositar");
