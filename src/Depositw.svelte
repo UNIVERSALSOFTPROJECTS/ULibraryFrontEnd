@@ -102,11 +102,11 @@
   
     const validateData = () => {
       let amount_ = Number(bankDeposit.amount);
-      console.log("fecha: ", bankDeposit.date);
+      ;
       if (!bankDeposit.targetBankId || bankDeposit.targetBankId === "" ) return notify = util.getNotify("error","Seleccione el banco receptor");
       if (!bankDeposit.date || bankDeposit.date === "" || bankDeposit.date === "dd/mm/aaaa") return notify = util.getNotify("error","Ingrese la fecha");
       if (!amount_) return notify = util.getNotify("error","Ingrese el monto a depositar");
-      if (!bankDeposit.reference || bankDeposit.reference === "") return notify = util.getNotify("error","Ingrese el número de referencia");
+      if (!bankDeposit.reference || bankDeposit.reference === "") {console.log("fecha: ", bankDeposit.date);  return notify = util.getNotify("error","Ingrese el número de referencia");}
       if (amount_ < minAmount || amount_ > maxAmount) return notify = util.getNotify("error",`El monto debe estar entre ${minAmount} y ${maxAmount}`);
       if (!bankDeposit.amount || bankDeposit.amount === "") return notify = util.getNotify("error","Ingrese el monto a depositar");
       if (!bankDeposit.account || bankDeposit.account === "") return notify = util.getNotify("error","Ingrese el número de cuenta");
