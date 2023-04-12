@@ -103,8 +103,8 @@
   
     const validateData = () => {
       let amount_ = Number(bankDeposit.amount);
-      if (!bankDeposit.targetBankId || bankDeposit.targetBankId === "") return notify = util.getNotify("error","Seleccione el banco receptor");
-      if (!bankDeposit.date || bankDeposit.date === "") return notify = util.getNotify("error","Ingrese la fecha");
+      if (!bankDeposit.targetBankId || bankDeposit.targetBankId === "" ) return notify = util.getNotify("error","Seleccione el banco receptor");
+      if (!bankDeposit.date || bankDeposit.date === "" || bankDeposit.date === "dd/mm/aaaa") return notify = util.getNotify("error","Ingrese la fecha");
       if (!amount_) return notify = util.getNotify("error","Ingrese el monto a depositar");
       if (!bankDeposit.reference || bankDeposit.reference === "") return notify = util.getNotify("error","Ingrese el número de referencia");
       if (amount_ < minAmount || amount_ > maxAmount) return notify = util.getNotify("error",`El monto debe estar entre ${minAmount} y ${maxAmount}`);
@@ -196,6 +196,7 @@
               <div class="u-sub-form">
                 <span>Fecha Transferencia</span>
                 <input
+                  aria-label="trxDate"
                   class="u-content-data"
                   type="date"
                   bind:value={bankDeposit.date}
