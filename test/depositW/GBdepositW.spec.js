@@ -1,9 +1,11 @@
-// npx jest depositX.spec.js
+// npx jest depositW.spec.js -t 'no date'
 import '@testing-library/jest-dom/extend-expect'
 import axios from "axios"
 import { render, fireEvent, screen  } from '@testing-library/svelte'
 import Depositw from '../../src/Depositw.svelte'
+import Test from "../../src/Test.svelte"
 import ServerConnection from '../../src/js/server'
+import moment from 'moment'
 jest.mock('axios');
 
 ServerConnection.setConfig({API:".",CLIENT_AUTH:"GOLD21GOLDENBET4A19028GOLDENBET1",CLIENT_CODE:"GOLD", domain:"goldenbet.com.pe", currency:"USD"})
@@ -12,34 +14,116 @@ let assetsUrl = "https://assets.apiusoft.com";
 let minAmount = 10;
 let maxAmount = 2000;
 
+// Return a fixed timestamp when moment().format() is called
+jest.mock('moment', () => () => ({format: () => '2023–04–11T12:34:56+00:00'}));
+
+let banks = [
+  {
+      "id": 208,
+      "nombre": "DEVIN Y ASOCIADOS SAC - 20550351642",
+      "cta": "N.- Cuenta: 194-2682364-0-84  CCI: 00219400268236408497",
+      "banco": "BCP",
+      "id_moneda": 9,
+      "pais": "51",
+      "min": 20,
+      "max": 6000,
+      "muestra": true,
+      "retiro_min": 50,
+      "activo": true,
+      "id_banca": 2918,
+      "id_server": 1010,
+      "nota": null,
+      "iso": "PEN",
+      "id_credencial": 1,
+      "pasarela": 1,
+      "retiro_max": 0,
+      "virtual": 0,
+      "orden": 4
+  },
+  {
+      "id": 231,
+      "nombre": "DEVIN Y ASOCIADOS SAC - 20550351642",
+      "cta": "N- Cuenta 009-3001039543  CCI: 003-009-003001039543-89",
+      "banco": "Interbank",
+      "id_moneda": 9,
+      "pais": "51",
+      "min": 20,
+      "max": 6000,
+      "muestra": false,
+      "retiro_min": 50,
+      "activo": true,
+      "id_banca": 2918,
+      "id_server": 1010,
+      "nota": null,
+      "iso": "PEN",
+      "id_credencial": 1,
+      "pasarela": 1,
+      "retiro_max": 0,
+      "virtual": 0,
+      "orden": 4
+  },
+  {
+      "id": 232,
+      "nombre": "DEVIN Y ASOCIADOS SAC - 20550351642",
+      "cta": "N- Cuenta 0011-0175-0100077968-74 CCI: 011-175-000100077968-74",
+      "banco": "BBVA",
+      "id_moneda": 9,
+      "pais": "51",
+      "min": 20,
+      "max": 6000,
+      "muestra": false,
+      "retiro_min": 50,
+      "activo": true,
+      "id_banca": 2918,
+      "id_server": 1010,
+      "nota": null,
+      "iso": "PEN",
+      "id_credencial": 1,
+      "pasarela": 1,
+      "retiro_max": 0,
+      "virtual": 0,
+      "orden": 4
+  }
+]
+
 describe('GB DepositW', () => {
-  /*
-  it('WHEN no select bank name RETURN error', async() => {
-    bankSelected = '';
-    render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ } })
-    const input = screen.getByLabelText("bankSelected");
-    await fireEvent.input(input, { target: { value:refNumber } });
+
+  it('WHEN no Bank RETURN error', async() => {
+    axios.post.mockResolvedValue({data:banks});
+    render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ }})
     const activateBtn = screen.getByText("DEPOSITAR");
     await fireEvent.click(activateBtn)
     expect( screen.getByText("Seleccione el banco receptor") ).toBeInTheDocument();
-    
   });
 
-  it('WHEN no enter reference number RETURN error', async() => {
-    refNumber = '';
-    render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ } })
-    const input = screen.getByLabelText("refNumber");
-    await fireEvent.input(input, { target: { value:refNumber } });
+  it('WHEN bank selected RETURN error', async() => {
+    axios.post.mockResolvedValue({data:banks});
+    render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ }})
+    const select = screen.getByLabelText("bankSelected");
+    await fireEvent.input(select, { target: { value:208 } });
     const activateBtn = screen.getByText("DEPOSITAR");
     await fireEvent.click(activateBtn)
-    expect( screen.getByText("Seleccione el banco receptor") ).toBeInTheDocument();
-    
+    expect( screen.getByText("Ingrese el número de referencia") ).toBeInTheDocument();
   });
-  
-  it('WHEN select only bank name RETURN error', async() => {
-    let bankName = "BCP";
-    axios.post.mockResolvedValue({data:{error:2 }});
-    render(Depositw, { open: true, user, assets, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ } })
+
+  it('WHEN no date selected RETURN error', async() => {
+    let date = "dd/mm/aaaa";
+    axios.post.mockResolvedValue({data:banks});
+    render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ }})
+    const select = screen.getByLabelText("bankSelected");
+    await fireEvent.input(select, { target: { value:208 } });
+    const trxDate = screen.getByLabelText("trxDate");
+    await fireEvent.input(trxDate, { target: { value:date } });
+    const activateBtn = screen.getByText("DEPOSITAR");
+    await fireEvent.click(activateBtn)
+    expect( screen.getByText("Ingrese el número de referencia") ).toBeInTheDocument();
+  });
+/*
+  it('WHEN no date RETURN error', async() => {
+    axios.post.mockResolvedValue({data:banks});
+    render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ }})
+    const select = screen.getByLabelText("bankSelected");
+    await fireEvent.input(select, { target: { value:208 } });
     const activateBtn = screen.getByText("DEPOSITAR");
     await fireEvent.click(activateBtn)
     expect( screen.getByText("Seleccione el banco receptor") ).toBeInTheDocument();

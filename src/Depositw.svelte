@@ -3,7 +3,7 @@
     import { onMount } from "svelte";
     import util from "./js/util";
     import Notifier from "./Notifier.svelte";
-    import moment from "moment";
+    const moment = require("moment");
 
     export let open;
     export let user;
@@ -32,7 +32,7 @@
     };
     
     onMount(() => {
-      bankDeposit.date = moment().format("YYYY-MM-DD");
+      bankDeposit.date = moment().format('YYYY-MM-DD');
     })
     
     const getPayMethods = async () => {
@@ -44,8 +44,9 @@
         notify = util.getNotify("error","Error al conseguir metodos de pago")
       }
     };
-  
+   
     const deposit = async () => {
+      console.log("fecha: ", bankDeposit.date);
       if (active_type_method == "TD") {
         await makeBankDeposit();
       } else {
@@ -103,6 +104,7 @@
     const validateData = () => {
       let amount_ = Number(bankDeposit.amount);
       if (!bankDeposit.targetBankId || bankDeposit.targetBankId === "") return notify = util.getNotify("error","Seleccione el banco receptor");
+      if (!bankDeposit.date || bankDeposit.date === "") return notify = util.getNotify("error","Ingrese la fecha");
       if (!amount_) return notify = util.getNotify("error","Ingrese el monto a depositar");
       if (!bankDeposit.reference || bankDeposit.reference === "") return notify = util.getNotify("error","Ingrese el número de referencia");
       if (amount_ < minAmount || amount_ > maxAmount) return notify = util.getNotify("error",`El monto debe estar entre ${minAmount} y ${maxAmount}`);
