@@ -736,8 +736,7 @@
       justify-content: center;
     }
     .u-content-logo {
-      width: 50%;
-      height: 120px;
+      height: 100px;
     }
     .logo {
       width: 100%;
@@ -745,9 +744,9 @@
     }
     .u-content-info {
       display: grid;
-      grid-template-columns: 40% 60%;
+      grid-template-columns: 50% 50%;
       align-items: center;
-      width: 100%;
+      width: 35rem;
     }
     .u-info {
       display: flex;
@@ -835,7 +834,7 @@
     }
     .u-input-email {
       border: none;
-      font-size: 1.3rem;
+      font-size: 1rem;
       letter-spacing: -1px;
       border-bottom: 1px solid #727272;
       font-weight: 800;
