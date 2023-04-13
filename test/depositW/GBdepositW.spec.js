@@ -5,7 +5,6 @@ import { render, waitFor ,fireEvent, screen  } from '@testing-library/svelte'
 import Depositw from '../../src/Depositw.svelte'
 import Test from "../../src/Test.svelte"
 import ServerConnection from '../../src/js/server'
-import moment from 'moment'
 jest.mock('axios');
 
 ServerConnection.setConfig({API:".",CLIENT_AUTH:"GOLD21GOLDENBET4A19028GOLDENBET1",CLIENT_CODE:"GOLD", domain:"goldenbet.com.pe", currency:"USD"})

@@ -3,10 +3,13 @@
     import { onMount } from "svelte";
     import util from "./js/util";
     import Notifier from "./Notifier.svelte";
-    import momentx from "moment";
+    import moment from "moment";
+
+    /*import momentx from "moment";
     let moment;
     if (!momentx) moment = require("moment");
     else moment=momentx;
+    */
 
     export let open;
     export let user;
