@@ -112,7 +112,6 @@
       if (!amount_) return notify = util.getNotify("error","Ingrese el monto a depositar");
       if (!bankDeposit.reference || bankDeposit.reference === "") {return notify = util.getNotify("error","Ingrese el número de referencia");}
       if (amount_ < minAmount || amount_ > maxAmount) return notify = util.getNotify("error",`El monto debe estar entre ${minAmount} y ${maxAmount}`);
-      if (!bankDeposit.amount || bankDeposit.amount === "") return notify = util.getNotify("error","Ingrese el monto a depositar");
       if (!bankDeposit.account || bankDeposit.account === "") return notify = util.getNotify("error","Ingrese el número de cuenta");
       deposit();
     }
@@ -221,6 +220,7 @@
                 <span>Monto</span>
                 <input
                   class="u-content-data"
+                  aria-label="amountNumber"
                   type="text"
                   bind:value={bankDeposit.amount}
                   on:keypress|preventDefault={validateAmount}
@@ -234,6 +234,7 @@
                 >
                 <input
                   class="u-content-data"
+                  aria-label="acountNumber"
                   type="text"
                   bind:value={bankDeposit.account}
                   on:keypress|preventDefault={validateAccountNumber}
@@ -243,6 +244,7 @@
                 <span>Su Banco:</span>
                 <select
                   class="u-select"
+                  aria-label="yourBank"
                   bind:value={bankDeposit.targetBankId}
                   disabled
                 >

@@ -96,58 +96,110 @@ describe('GB DepositW', () => {
     expect( screen.getByText("Seleccione el banco receptor") ).toBeInTheDocument();
   });
 
-  it('WHEN no reference RETURN error', async() => {
-    //const mockApiCall = jest.fn().mockResolvedValue({data: banks});
-    // now lets assign this mock function to axios.get
-    //axios.get = mockApiCall;
-
+  it('WHEN no date selected RETURN error', async() => {
     await axios.get.mockResolvedValue({data:banks});
     render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ }})
+    await waitFor( async()=>{
+      let select = screen.getByLabelText("bankSelected");
+      let options = screen.getAllByLabelText("bankOption");
+      await fireEvent.change(select, { target: { value:"208" } });
+      let date = screen.getByLabelText("trxDate");
+      await fireEvent.input(date, { target: { value:null } });
+      const activateBtn = screen.getByText("DEPOSITAR");
+      await fireEvent.click(activateBtn)
+      console.log("date: ",date);
+      expect(options[0].selected).toBeTruthy();
+      expect( screen.getByText("Ingrese una fecha válida") ).toBeInTheDocument();
+    } )
+  });
 
-
+  it('WHEN no reference RETURN error', async() => {
+    await axios.get.mockResolvedValue({data:banks});
+    render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ }})
     await waitFor( async()=>{
       let select = screen.getByLabelText("bankSelected");
       let options = screen.getAllByLabelText("bankOption");
       //console.log("seleccion: ",options);
-      
       await fireEvent.change(select, { target: { value:"208" } });
-      expect(options[0].selected).toBeTruthy();
       const activateBtn = screen.getByText("DEPOSITAR");
       await fireEvent.click(activateBtn)
+      expect(options[0].selected).toBeTruthy();
       expect( screen.getByText("Ingrese el número de referencia") ).toBeInTheDocument();
       //screen.debug(undefined, Infinity)
     } )
-
-    
-    
-    //
-    //
-    //
   });
 
-  it('WHEN no date selected RETURN error', async() => {
-    let date = "dd/mm/aaaa";
-    axios.post.mockResolvedValue({data:banks});
+  it('WHEN no enter amount RETURN error', async() => {
+    await axios.get.mockResolvedValue({data:banks});
     render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ }})
-    const select = screen.getByLabelText("bankSelected");
-    await fireEvent.input(select, { target: { value:208 } });
-    const trxDate = screen.getByLabelText("trxDate");
-    await fireEvent.input(trxDate, { target: { value:date } });
-    const activateBtn = screen.getByText("DEPOSITAR");
-    await fireEvent.click(activateBtn)
-    expect( screen.getByText("Ingrese el número de referencia") ).toBeInTheDocument();
+    await waitFor( async()=>{
+      let select = screen.getByLabelText("bankSelected");
+      let options = screen.getAllByLabelText("bankOption");
+      await fireEvent.change(select, { target: { value:"208" } });
+      let reference = screen.getByLabelText("refNumber")
+      await fireEvent.input(reference, { target: { value:"5241" } });
+      let amount = screen.getByLabelText("amountNumber")
+      await fireEvent.input(amount, { target: { value: null} });
+      const activateBtn = screen.getByText("DEPOSITAR");
+      await fireEvent.click(activateBtn)
+      expect(options[0].selected).toBeTruthy();
+      expect( screen.getByText("Ingrese el monto a depositar") ).toBeInTheDocument();
+    } )
   });
+
+  it('WHEN no valid amount RETURN error', async() => {
+    await axios.get.mockResolvedValue({data:banks});
+    render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ }})
+    await waitFor( async()=>{
+      let select = screen.getByLabelText("bankSelected");
+      let options = screen.getAllByLabelText("bankOption");
+      await fireEvent.change(select, { target: { value:"208" } });
+      let reference = screen.getByLabelText("refNumber")
+      await fireEvent.input(reference, { target: { value:"5241" } });
+      let amount = screen.getByLabelText("amountNumber")
+      await fireEvent.input(amount, { target: { value: "2001"} });
+      const activateBtn = screen.getByText("DEPOSITAR");
+      await fireEvent.click(activateBtn)
+      expect(options[0].selected).toBeTruthy();
+      expect( screen.getByText(`El monto debe estar entre ${minAmount} y ${maxAmount}`) ).toBeInTheDocument();
+    } )
+  });
+
+  it('WHEN no acount number RETURN error', async() => {
+    await axios.get.mockResolvedValue({data:banks});
+    render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ }})
+    await waitFor( async()=>{
+      let select = screen.getByLabelText("bankSelected");
+      let options = screen.getAllByLabelText("bankOption");
+      await fireEvent.change(select, { target: { value:"208" } });
+      let reference = screen.getByLabelText("refNumber")
+      await fireEvent.input(reference, { target: { value:"5241" } });
+      const activateBtn = screen.getByText("DEPOSITAR");
+      await fireEvent.click(activateBtn)
+      expect(options[0].selected).toBeTruthy();
+      expect( screen.getByText("Ingrese el número de cuenta") ).toBeInTheDocument();
+    } )
+  });
+
+  it('WHEN no enter your bank RETURN error', async() => {
+    await axios.get.mockResolvedValue({data:banks});
+    render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ }})
+    await waitFor( async()=>{
+      let select = screen.getByLabelText("bankSelected");
+      let options = screen.getAllByLabelText("bankOption");
+      await fireEvent.change(select, { target: { value:"208" } });
+      let reference = screen.getByLabelText("refNumber")
+      await fireEvent.input(reference, { target: { value:"5241" } });
+      let acountNumber = screen.getByLabelText("acountNumber")
+      await fireEvent.input(acountNumber, { target: { value:"52413421" } });
+      const activateBtn = screen.getByText("DEPOSITAR");
+      await fireEvent.click(activateBtn)
+      expect(options[0].selected).toBeTruthy();
+      expect( screen.getByText("Ingrese el número de cuenta") ).toBeInTheDocument();
+    } )
+  });
+
 /*
-  it('WHEN no date RETURN error', async() => {
-    axios.post.mockResolvedValue({data:banks});
-    render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ }})
-    const select = screen.getByLabelText("bankSelected");
-    await fireEvent.input(select, { target: { value:208 } });
-    const activateBtn = screen.getByText("DEPOSITAR");
-    await fireEvent.click(activateBtn)
-    expect( screen.getByText("Seleccione el banco receptor") ).toBeInTheDocument();
-  });
-
   it('WHEN no valid code RETURN error', async() => {
     let chargeCode="RA123";
     axios.post.mockResolvedValue({data:{error:2 }});
