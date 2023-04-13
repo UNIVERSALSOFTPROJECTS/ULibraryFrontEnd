@@ -368,7 +368,7 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      justify-content: end;
+      width: 96%;
     }
     input:focus {
       outline: 0;
