@@ -74,7 +74,7 @@
 <style>
   .select-date {
     display: grid;
-    grid-template-columns: 31% 31% 31%;
+    grid-template-columns: 31.5% 31% 31%;
     gap: 0.5rem;
   }
   select {
