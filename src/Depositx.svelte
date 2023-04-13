@@ -1,5 +1,7 @@
 <script>
     import ServerConnection from "./js/server";
+    import Notifier from "./Notifier.svelte";
+    import util from "./js/util";
 
     export let open;
     export let user;
@@ -8,39 +10,39 @@
 
     let depositRetailCode = "";
     let active_type_method = "TD";
+    let notify = {};
 
-    const closeModal = () => {
-        open = false;
-    };
+    const closeModal = () => { open = false;}
+
+
+
     const depositRetail = async () => {
+        if(!depositRetailCode) {return notify = util.getNotify("error","Ingrese código")}
         try {
             let { data } = await ServerConnection.wallet.depositRetail( user.token, depositRetailCode);
             if (data.resp == "ok") {
                 user.balance = data.saldo;
                 onOk(data);
-            } else
-                data.tipo == "T_NO_ENCONTRADA"
-                    ? onError("BAD_CODE")
-                    : onError("UNKNOW_ERROR");
+            } else onError( data.tipo == "T_NO_ENCONTRADA"? "BAD_CODE": "UNKNOW_ERROR");
         } catch (e) {
             console.log("ERROR", e);
             //e es un JSON que tiene el mensaje de porque no se pudo procesar
             //puedes hacer un IF para mostrar el error de que se trata.
             // alert(`Error al procesar deposito`);
-            onError("Error al procesar deposito");
+            onError("Error al procesar deposito",e);
         }
-    };
+    }
     //getPayMethods();
 </script>
-
+<Notifier
+    bind:display={notify.display}
+    bind:message={notify.message}
+    bind:type={notify.type}
+/>
 <div class="u-main-payments">
     <div class="u-wrapp-body">
         <div class="u-headboard">
-            <button
-                class="type-method {active_type_method == 'TD'
-                    ? 'u-type-method'
-                    : ''}"
-                on:click={() => { active_type_method = "TD";}}>Métodos de pago</button>
+            <button class="type-method {active_type_method == 'TD'? 'u-type-method': ''}" on:click={() => { active_type_method = "TD";}}>Métodos de pago</button>
             <!--button class="type-method {active_type_method=='TB'?'u-type-method':''}" on:click={()=>{  active_type_method="TB"}}>Transferencias Bancarias</button-->
         </div>
 
@@ -48,28 +50,19 @@
             <div class="u-wrapp-deposit">
                 <p class="u-wrapp-deposit-title"> Ingrese el código de recarga</p>
                 <div>
-                    <input class="u-wrapp-deposit-input" type="text" placeholder="Código de recarga" bind:value={depositRetailCode}/>
+                    <input aria-label="charge-code-txt" class="u-wrapp-deposit-input" type="text" placeholder="Código de recarga" bind:value={depositRetailCode}/>
                     <button class="u-wrapp-deposit-btn" on:click={depositRetail}> Activar</button>
                 </div>
                 <div>
+                    <p> Todos los depósitos serán acreditado a su cuenta en moneda local.</p>
                     <p>
-                        Todos los depósitos serán acreditado a su cuenta en
-                        moneda local.
-                    </p>
-                    <p>
-                        Al depositar dinero a su cuenta, usted acepta
-                        automáticamente la versión mas reciente de los <a
-                            href="https://d2zzz5z45zl95g.cloudfront.net/365fortuna/t&c.pdf"
-                            target="_blank"
-                            style="color:red;">términos y condiciones</a>
+                        Al depositar dinero a su cuenta, usted acepta automáticamente la versión mas reciente de los 
+                        <a href="https://assets.apiusoft.com/365fortuna/t&c.pdf" target="_blank" style="color:red;">términos y condiciones</a>
                     </p>
                 </div>
                 <div>
                     <p class="u-wrapp-deposit-title2">IMPORTANTE</p>
-                    <p>
-                        Acepto que al enviar el formulario estoy de acuerdo con
-                        los términos y condiciones de la Página web
-                    </p>
+                    <p> Acepto que al enviar el formulario estoy de acuerdo con los términos y condiciones de la Página web</p>
                 </div>
             </div>
         </div>

@@ -49,3 +49,8 @@ Si en el cliente sale error al abrir la pagina debe:
 
 Para importarlo se debe hacerlo de la siguiente manera:
  import {UserRegisterStepbyStep} from "u-library";
+
+Para correr los test stories:
+npx jest test_name
+ejemplo:
+npx jest FOdepositX.spec.js

@@ -74,6 +74,7 @@ const utils = (() => {
     const categoryAllowedChange=(category, userState)=>{
       return ( /horses|sportbook|esports/.test(category) && userState == "logout")
     }
-    return {isJson, getNotify,sleep,checkSetIsFav,getImgUrl,getProviderImgUrl,getGameURL,isMobile,dateDiffInDays,getAge,setUrlPage,categoryAllowedChange} ;
+
+    return { isJson, getNotify,sleep,checkSetIsFav,getImgUrl,getProviderImgUrl,getGameURL,isMobile,dateDiffInDays,getAge,setUrlPage,categoryAllowedChange} ;
 })()
 export default utils

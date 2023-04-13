@@ -3,7 +3,7 @@
     import { onMount } from "svelte";
     import util from "./js/util";
     import Notifier from "./Notifier.svelte";
-    import moment from "moment";
+    const moment = require("moment");
 
     export let open;
     export let user;
@@ -32,7 +32,7 @@
     };
     
     onMount(() => {
-      bankDeposit.date = moment().format("YYYY-MM-DD");
+      bankDeposit.date = moment().format('YYYY-MM-DD');
     })
     
     const getPayMethods = async () => {
@@ -44,7 +44,7 @@
         notify = util.getNotify("error","Error al conseguir metodos de pago")
       }
     };
-  
+   
     const deposit = async () => {
       if (active_type_method == "TD") {
         await makeBankDeposit();
@@ -102,9 +102,11 @@
   
     const validateData = () => {
       let amount_ = Number(bankDeposit.amount);
-      if (!bankDeposit.targetBankId || bankDeposit.targetBankId === "") return notify = util.getNotify("error","Seleccione el banco receptor");
+      ;
+      if (!bankDeposit.targetBankId || bankDeposit.targetBankId === "" ) return notify = util.getNotify("error","Seleccione el banco receptor");
+      if (!bankDeposit.date || bankDeposit.date === "" || bankDeposit.date === "dd/mm/aaaa") return notify = util.getNotify("error","Ingrese la fecha");
       if (!amount_) return notify = util.getNotify("error","Ingrese el monto a depositar");
-      if (!bankDeposit.reference || bankDeposit.reference === "") return notify = util.getNotify("error","Ingrese el número de referencia");
+      if (!bankDeposit.reference || bankDeposit.reference === "") {console.log("fecha: ", bankDeposit.date);  return notify = util.getNotify("error","Ingrese el número de referencia");}
       if (amount_ < minAmount || amount_ > maxAmount) return notify = util.getNotify("error",`El monto debe estar entre ${minAmount} y ${maxAmount}`);
       if (!bankDeposit.amount || bankDeposit.amount === "") return notify = util.getNotify("error","Ingrese el monto a depositar");
       if (!bankDeposit.account || bankDeposit.account === "") return notify = util.getNotify("error","Ingrese el número de cuenta");
@@ -185,7 +187,7 @@
             <div class="u-form-data">
               <div class="u-sub-form">
                 <span>Banco Receptor</span>
-                <select class="u-select" bind:value={bankDeposit.targetBankId}>
+                <select aria-label="bankSelected" class="u-select" bind:value={bankDeposit.targetBankId}>
                   {#each bankPaymethods as method}
                     <option value={method.id}>{method.banco}</option>
                   {/each}
@@ -194,6 +196,7 @@
               <div class="u-sub-form">
                 <span>Fecha Transferencia</span>
                 <input
+                  aria-label="trxDate"
                   class="u-content-data"
                   type="date"
                   bind:value={bankDeposit.date}
@@ -205,6 +208,7 @@
                 >
                 <input
                   class="u-content-data"
+                  aria-label="refNumber"
                   type="text"
                   bind:value={bankDeposit.reference}
                   on:keypress|preventDefault={validateReferenceNumber}
