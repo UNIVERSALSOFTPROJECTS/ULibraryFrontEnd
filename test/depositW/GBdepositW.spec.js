@@ -1,7 +1,7 @@
 // npx jest depositW.spec.js -t 'no date'
 import '@testing-library/jest-dom/extend-expect'
 import axios from "axios"
-import { render, fireEvent, screen  } from '@testing-library/svelte'
+import { render, waitFor ,fireEvent, screen  } from '@testing-library/svelte'
 import Depositw from '../../src/Depositw.svelte'
 import Test from "../../src/Test.svelte"
 import ServerConnection from '../../src/js/server'
@@ -96,14 +96,33 @@ describe('GB DepositW', () => {
     expect( screen.getByText("Seleccione el banco receptor") ).toBeInTheDocument();
   });
 
-  it('WHEN bank selected RETURN error', async() => {
-    axios.post.mockResolvedValue({data:banks});
+  it('WHEN no reference RETURN error', async() => {
+    //const mockApiCall = jest.fn().mockResolvedValue({data: banks});
+    // now lets assign this mock function to axios.get
+    //axios.get = mockApiCall;
+
+    await axios.get.mockResolvedValue({data:banks});
     render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ }})
-    const select = screen.getByLabelText("bankSelected");
-    await fireEvent.input(select, { target: { value:208 } });
-    const activateBtn = screen.getByText("DEPOSITAR");
-    await fireEvent.click(activateBtn)
-    expect( screen.getByText("Ingrese el número de referencia") ).toBeInTheDocument();
+
+
+    await waitFor( async()=>{
+      let select = screen.getByLabelText("bankSelected");
+      let options = screen.getAllByLabelText("bankOption");
+      //console.log("seleccion: ",options);
+      
+      await fireEvent.change(select, { target: { value:"208" } });
+      expect(options[0].selected).toBeTruthy();
+      const activateBtn = screen.getByText("DEPOSITAR");
+      await fireEvent.click(activateBtn)
+      expect( screen.getByText("Ingrese el número de referencia") ).toBeInTheDocument();
+      //screen.debug(undefined, Infinity)
+    } )
+
+    
+    
+    //
+    //
+    //
   });
 
   it('WHEN no date selected RETURN error', async() => {

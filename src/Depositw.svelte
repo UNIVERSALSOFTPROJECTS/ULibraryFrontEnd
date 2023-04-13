@@ -3,7 +3,10 @@
     import { onMount } from "svelte";
     import util from "./js/util";
     import Notifier from "./Notifier.svelte";
-    const moment = require("moment");
+    import momentx from "moment";
+    let moment;
+    if (!momentx) moment = require("moment");
+    else moment=momentx;
 
     export let open;
     export let user;
@@ -31,8 +34,10 @@
       open = false;
     };
     
-    onMount(() => {
+    onMount(async () => {
+      await getPayMethods();
       bankDeposit.date = moment().format('YYYY-MM-DD');
+
     })
     
     const getPayMethods = async () => {
@@ -43,7 +48,7 @@
       } catch (error) {
         notify = util.getNotify("error","Error al conseguir metodos de pago")
       }
-    };
+    }
    
     const deposit = async () => {
       if (active_type_method == "TD") {
@@ -102,18 +107,16 @@
   
     const validateData = () => {
       let amount_ = Number(bankDeposit.amount);
-      ;
       if (!bankDeposit.targetBankId || bankDeposit.targetBankId === "" ) return notify = util.getNotify("error","Seleccione el banco receptor");
-      if (!bankDeposit.date || bankDeposit.date === "" || bankDeposit.date === "dd/mm/aaaa") return notify = util.getNotify("error","Ingrese la fecha");
+      if (!bankDeposit.date ) {console.log(bankDeposit.date); return notify = util.getNotify("error","Ingrese una fecha válida");}
       if (!amount_) return notify = util.getNotify("error","Ingrese el monto a depositar");
-      if (!bankDeposit.reference || bankDeposit.reference === "") {console.log("fecha: ", bankDeposit.date);  return notify = util.getNotify("error","Ingrese el número de referencia");}
+      if (!bankDeposit.reference || bankDeposit.reference === "") {return notify = util.getNotify("error","Ingrese el número de referencia");}
       if (amount_ < minAmount || amount_ > maxAmount) return notify = util.getNotify("error",`El monto debe estar entre ${minAmount} y ${maxAmount}`);
       if (!bankDeposit.amount || bankDeposit.amount === "") return notify = util.getNotify("error","Ingrese el monto a depositar");
       if (!bankDeposit.account || bankDeposit.account === "") return notify = util.getNotify("error","Ingrese el número de cuenta");
       deposit();
     }
   
-    getPayMethods();
   </script>
   
   <div class="u-main-payments">
@@ -186,10 +189,10 @@
             </div>
             <div class="u-form-data">
               <div class="u-sub-form">
-                <span>Banco Receptor</span>
+                <span>Banco Receptor ({bankPaymethods.length})</span>
                 <select aria-label="bankSelected" class="u-select" bind:value={bankDeposit.targetBankId}>
                   {#each bankPaymethods as method}
-                    <option value={method.id}>{method.banco}</option>
+                    <option aria-label="bankOption" value={method.id}>{method.banco}</option>
                   {/each}
                 </select>
               </div>
