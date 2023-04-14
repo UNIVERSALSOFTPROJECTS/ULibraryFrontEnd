@@ -1,18 +1,20 @@
 <script>
     import ServerConnection from "./js/server"
     import moment from "moment";
-    import copyCode from 'copy-text-to-clipboard';
     import { onMount } from "svelte";
-
+    import Notifier from "./Notifier.svelte";
+    import util from "./js/util";
 
     export let open;
     export let minAmount;
+    export let maxAmount;
     export let user;
     export let pendingWhitdrawall;
     export let onOk;
     export let onError;
 
     let amount = "";
+    let notify = {};
     
     onMount(()=>{
         pendingWhitdrawall = false;
@@ -34,24 +36,19 @@
 
     const cashout = async()=>{
         pendingWhitdrawall=null;
-        if(!amount) return onError("INVALID_AMOUNT")
         try {
            
             let resp_withdrawal = null;
             await getPendingWithdrawal(user.token);
             if(!pendingWhitdrawall ){
-                console.log("sin retiro pendiente");
                 resp_withdrawal = await ServerConnection.wallet.retailWithdrawal(user.token, amount);
                 console.log("resp withdra ",resp_withdrawal.data);
                 await getPendingWithdrawal(user.token);
                 onOk(resp_withdrawal?resp_withdrawal:pendingWhitdrawall);
-                console.log("resp_withdrawal", resp_withdrawal);
-                console.log("pendingWhitdrawall", pendingWhitdrawall);
             }else{
                 onError("PENDING_WITHDRAWAL");
             }
             let { data } = await ServerConnection.user.getBalance(user.agregatorToken);
-            console.log("balance", data);
             user.balance = data.balance;
         } catch (e_withdrawal) {
             console.log(e_withdrawal);
@@ -65,20 +62,37 @@
     const validateAmount = (event) => {
         if(!/\d/.test(event.key)) return;
         if(event.charCode === 45 || event.charCode === 43){ event.preventDefault(); return}
-        let amountNumber = Number(amount);
-        amountNumber += event.key;
-        if(Number(amountNumber) > minAmount ) event.preventDefault();
-        else amount += event.key;
-        // if (isNumber && amount.length < amountMin.length) amount += event.key;
-        // else if(isNumber && amount.length >= 4) onError("LOW_AMOUNT");
+        if (amount.length < 4) amount += event.key;
+        else if(amount.length >= 4) return notify = util.getNotify("error","Alcanzó el limite de cifras" )
     };
 
     const copyCodeWhitdrawall = () => {
-    let code=pendingWhitdrawall.codigo;
-    copyCode(code);
-  };
+        //let copyText = document.getElementById("myInput");
+        // Select the text field
+        //copyText.select();
+        //copyText.setSelectionRange(0, 99999); // For mobile devices
+        // Copy the text inside the text field
+        navigator.clipboard.writeText(pendingWhitdrawall.codigo);
+    };
+
+    const validateData = () => {
+        let msg = "Retiro exitoso"
+        if(!amount || amount ==='') msg = "Ingrese el monto";
+        else if(amount < minAmount || amount > maxAmount)  msg = "Monto mínimo " +minAmount +" "+ user.currency + ", máximo " + maxAmount+" "+user.currency;
+        if(msg !== "Retiro exitoso") {return notify = util.getNotify("error",msg);}
+        else{
+            cashout();
+        }
+    }
 
 </script>
+
+<Notifier
+    bind:display={notify.display}
+    bind:message={notify.message}
+    bind:type={notify.type}
+/>
+
 <div class="u-main-payments">
     {#if pendingWhitdrawall && pendingWhitdrawall.monto>0}
     <div>
@@ -115,12 +129,12 @@
         <span class="u-title">RETIRAR SU SALDO</span>
         <div class="u-content-info">
             <span>INGRESE EL MONTO A RETIRAR:</span>
-            <input data-testid="amount_input" class="u-input-pay" bind:value={amount} type="text" on:keypress|preventDefault={(e)=>validateAmount(e)} placeholder="Ingrese el monto a retirar">
+            <input aria-label="amount" class="u-input-pay" bind:value={amount} type="text" on:keypress|preventDefault={(e)=>validateAmount(e)} placeholder="Ingrese el monto a retirar">
 
         </div>
         <div class="gb-process">
             <span>Al solicitar su retiro usted esta aceptando los términos y condiciones</span>
-            <button class="u-button-pay" on:click={cashout}>SOLICITAR RETIRO</button>
+            <button class="u-button-pay" on:click={validateData}>SOLICITAR RETIRO</button>
         </div>
     </div>
     {/if}

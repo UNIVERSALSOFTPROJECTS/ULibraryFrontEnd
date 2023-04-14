@@ -22,9 +22,9 @@ describe('FO WithdrwalX', () => {
   
   it('WHEN low amount RETURN error', async() => {
     let amount=9;
-    let message = `Monto mínimo: ${minAmount}`;
+    let message = "Monto mínimo " +minAmount +" "+ user.currency + ", máximo " + maxAmount+" "+user.currency;
     render(Withdrawalx, { open: true, user, pendingWhitdrawall:false, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ } })
-    const input = screen.getByLabelText("amount_value");
+    const input = screen.getByLabelText("amount");
     const activateBtn = screen.getByText("SOLICITAR RETIRO");
     await fireEvent.input(input, { target: { value:amount } });
     await fireEvent.click(activateBtn)
@@ -33,9 +33,9 @@ describe('FO WithdrwalX', () => {
 
   it('WHEN amount exceeds the limit RETURN error', async() => {
     let amount=2001;
-    let message = `El monto máximo es de: ${maxAmount}`;
+    let message = "Monto mínimo " +minAmount +" "+ user.currency + ", máximo " + maxAmount+" "+user.currency;
     render(Withdrawalx, { open: true, user, pendingWhitdrawall:false, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ } })
-    const input = screen.getByLabelText("amount_value");
+    const input = screen.getByLabelText("amount");
     const activateBtn = screen.getByText("SOLICITAR RETIRO");
     await fireEvent.input(input, { target: { value:amount } });
     await fireEvent.click(activateBtn)

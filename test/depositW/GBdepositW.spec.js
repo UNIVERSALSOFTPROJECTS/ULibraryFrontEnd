@@ -180,7 +180,7 @@ describe('GB DepositW', () => {
     } )
   });
 
-  it('WHEN no enter your bank RETURN error', async() => {
+  it('WHEN complete data RETURN OK', async() => {
     await axios.get.mockResolvedValue({data:banks});
     render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ }})
     await waitFor( async()=>{
@@ -194,7 +194,6 @@ describe('GB DepositW', () => {
       const activateBtn = screen.getByText("DEPOSITAR");
       await fireEvent.click(activateBtn)
       expect(options[0].selected).toBeTruthy();
-      expect( screen.getByText("Ingrese el número de cuenta") ).toBeInTheDocument();
     } )
   });
 

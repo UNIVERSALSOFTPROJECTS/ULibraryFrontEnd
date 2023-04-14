@@ -23,9 +23,9 @@ describe('JY WithdrwalX', () => {
   
   it('WHEN low amount RETURN error', async() => {
     let amount=9;
-    let message = `Monto mínimo: ${minAmount}`;
+    let message = "Monto mínimo " +minAmount +" "+ user.currency + ", máximo " + maxAmount+" "+user.currency;
     render(Withdrawalx, { open: true, user, pendingWhitdrawall:false, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ } })
-    const input = screen.getByLabelText("amount_value");
+    const input = screen.getByLabelText("amount");
     const activateBtn = screen.getByText("SOLICITAR RETIRO");
     await fireEvent.input(input, { target: { value:amount } });
     await fireEvent.click(activateBtn)
@@ -34,9 +34,9 @@ describe('JY WithdrwalX', () => {
 
   it('WHEN amount exceeds the limit RETURN error', async() => {
     let amount=2001;
-    let message = `El monto máximo es de: ${maxAmount}`;
+    let message = "Monto mínimo " +minAmount +" "+ user.currency + ", máximo " + maxAmount+" "+user.currency;
     render(Withdrawalx, { open: true, user, pendingWhitdrawall:false, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ } })
-    const input = screen.getByLabelText("amount_value");
+    const input = screen.getByLabelText("amount");
     const activateBtn = screen.getByText("SOLICITAR RETIRO");
     await fireEvent.input(input, { target: { value:amount } });
     await fireEvent.click(activateBtn)
@@ -44,19 +44,22 @@ describe('JY WithdrwalX', () => {
   });
  
   /*
-  it('WHEN pendiNg withdrawal RETURN error', async() => {
+  it('WHEN pending withdrawal RETURN error', async() => {
     let amount=20;
-    axios.post.mockResolvedValue({resp_withdrawal:{errorCode:"6C54PWQFE7", message:"PENDING_WITHDRAWAL"}});
+    axios.post.mockResolvedValue({e_withdrawal:{errorCode:"6C54PWQFE7", message:"PENDING_WITHDRAWAL"}});
     render(Withdrawalx, { open: true, user, pendingWhitdrawall:true, minAmount, maxAmount,
       onOk:()=>{},
-      onError:(e_withdrawal)=>{ expect(e_withdrawal.response.data.message).toEqual('PENDING_WITHDRAWAL') } 
+      onError:(e)=>{ 
+        console.log("error: ",e);
+        expect(e.message).toEqual('PENDING_WITHDRAWAL') 
+      } 
     });
-    const input = screen.getByLabelText("amount_value");
+    const input = screen.getByLabelText("amount_input");
     const activateBtn = screen.getByText("SOLICITAR RETIRO");
     await fireEvent.input(input, { target: { value:amount } });
     await fireEvent.click(activateBtn)
   });
-  
+
   it('WHEN valid amount RETURN ok', async() => {
     let amount = 20.00;
     console.log("balance previo" + user.balance);
