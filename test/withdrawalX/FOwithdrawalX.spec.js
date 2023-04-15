@@ -56,7 +56,7 @@ describe('FO WithdrwalX', () => {
     await fireEvent.click(activateBtn)
   });
   
-  it('WHEN valid amount RETURN ok', async() => {
+  it('WHEN all is ok RETURN ok', async() => {
     let amount = 20.00;
     console.log("balance previo" + user.balance);
     user.balance += user.balance + amount;

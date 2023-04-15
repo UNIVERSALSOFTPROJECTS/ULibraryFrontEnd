@@ -76,6 +76,7 @@
         let {data} = await ServerConnection.wallet.bankDeposit(user.token, bankDeposit);
         closeModal();
         onOk(data)
+        notify = util.getNotify("success",data.message)
       } catch (error) {
         onError(error)
       }
@@ -191,7 +192,7 @@
             </div>
             <div class="u-form-data">
               <div class="u-sub-form">
-                <span>Banco Receptor ({bankPaymethods.length})</span>
+                <span>Banco Receptor</span>
                 <select aria-label="bankSelected" class="u-select" bind:value={bankDeposit.targetBankId}>
                   {#each bankPaymethods as method}
                     <option aria-label="bankOption" value={method.id}>{method.banco}</option>
