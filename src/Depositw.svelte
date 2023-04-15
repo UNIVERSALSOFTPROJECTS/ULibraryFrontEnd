@@ -79,7 +79,7 @@
         notify = util.getNotify("success",data.message)
       } catch (error) {
         notify = util.getNotify("error",data.message)
-        onError(error)
+        //onError(error)
       }
     }
   
