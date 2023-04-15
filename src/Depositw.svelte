@@ -77,8 +77,8 @@
         closeModal();
         onOk(data)
         notify = util.getNotify("success",data.message)
-        console.log("data msg here: ", data.message)
       } catch (error) {
+        console.log("data msg here: ", "si llega al catch de make deposit")
         notify = util.getNotify("error","Hay un depósito en curso")
       }
     }
