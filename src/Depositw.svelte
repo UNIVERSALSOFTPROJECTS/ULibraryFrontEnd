@@ -71,11 +71,11 @@
     const makeBankDeposit = async () => {
       console.log("afuera del try")
       try {
-        console.log("entra pero no procesa erl deposit")
         bankDeposit.originBank = bankDeposit.targetBankId;
         bankDeposit.aditional = "empty";
         bankDeposit.imageUrl = "";
         let {data} = await ServerConnection.wallet.bankDeposit(user.token, bankDeposit);
+        console.log("dataxxx", data)
         closeModal();
         onOk(data)
         notify = util.getNotify("success",data.message)
