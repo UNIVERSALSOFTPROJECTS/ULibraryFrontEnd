@@ -21,7 +21,7 @@
     let amount = "";
     let bankDeposit = {};
     bankDeposit.reference = "";
-    bankDeposit.amount = minAmount;
+    bankDeposit.amount = "";
     bankDeposit.account = "";
     bankDeposit.targetBankId;
   
