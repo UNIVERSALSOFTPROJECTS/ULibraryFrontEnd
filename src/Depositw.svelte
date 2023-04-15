@@ -69,7 +69,9 @@
     };
   
     const makeBankDeposit = async () => {
+      console.log("afuera del try")
       try {
+        console.log("entra pero no procesa erl deposit")
         bankDeposit.originBank = bankDeposit.targetBankId;
         bankDeposit.aditional = "empty";
         bankDeposit.imageUrl = "";
@@ -78,8 +80,7 @@
         onOk(data)
         notify = util.getNotify("success",data.message)
       } catch (error) {
-        console.log("data msg here: ", "si llega al catch de make deposit")
-        return notify = util.getNotify("error","Hay un depósito en curso")
+        onError(error);
       }
     }
   
