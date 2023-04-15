@@ -3,7 +3,6 @@ import '@testing-library/jest-dom/extend-expect'
 import axios from "axios"
 import { render, waitFor ,fireEvent, screen  } from '@testing-library/svelte'
 import Depositw from '../../src/Depositw.svelte'
-import Test from "../../src/Test.svelte"
 import ServerConnection from '../../src/js/server'
 jest.mock('axios');
 
@@ -180,6 +179,7 @@ describe('GB DepositW', () => {
     } )
   });
 
+  //Aun no pasa
   it('WHEN complete data RETURN OK', async() => {
     await axios.get.mockResolvedValue({data:banks});
 
@@ -206,32 +206,4 @@ describe('GB DepositW', () => {
 
   });
 
-/*
-  it('WHEN no valid code RETURN error', async() => {
-    let chargeCode="RA123";
-    axios.post.mockResolvedValue({data:{error:2 }});
-    render(Depositx, { open: true, user,
-       onOk:()=>{},
-       onError:(e)=>{ expect(e).toEqual('UNKNOW_ERROR') } 
-    })
-    const input = screen.getByLabelText("charge-code-txt");
-    await fireEvent.input(input, { target: { value:chargeCode } });
-    const activateBtn = screen.getByText("Activar");
-    await fireEvent.click(activateBtn)
-  });
-
-  it('WHEN valid code RETURN ok', async() => {
-    let chargeCode="RA123";
-    let chargeBalance = 20.00;
-    axios.post.mockResolvedValue({data:{resp:'ok', saldo:chargeBalance }});
-    render(Depositx, { open: true, user,
-       onOk:(data)=>{ expect(user.balance).toEqual(data.saldo) },
-       onError:()=>{ } 
-    })
-    const input = screen.getByLabelText("charge-code-txt");
-    await fireEvent.input(input, { target: { value:chargeCode } });
-    const activateBtn = screen.getByText("Activar");
-    await fireEvent.click(activateBtn)
-  });
-  */
 });
