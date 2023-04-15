@@ -75,10 +75,9 @@
         bankDeposit.aditional = "empty";
         bankDeposit.imageUrl = "";
         let {data} = await ServerConnection.wallet.bankDeposit(user.token, bankDeposit);
-        console.log("dataxxx", data)
         closeModal();
         onOk(data)
-        notify = util.getNotify("success",data.message)
+        notify = util.getNotify("success",data.msg)
       } catch (error) {
         onError(error);
       }
