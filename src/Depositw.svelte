@@ -78,7 +78,7 @@
         onOk(data)
         notify = util.getNotify("success",data.message)
       } catch (error) {
-        //console.log("data msg here: ", "si llega al catch de make deposit")
+        console.log("data msg here: ", "si llega al catch de make deposit")
         return notify = util.getNotify("error","Hay un depósito en curso")
       }
     }
