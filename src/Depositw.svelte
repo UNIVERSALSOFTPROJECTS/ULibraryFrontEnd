@@ -114,8 +114,8 @@
       let amount_ = Number(bankDeposit.amount);
       if (!bankDeposit.targetBankId || bankDeposit.targetBankId === "" ) return notify = util.getNotify("error","Seleccione el banco receptor");
       if (!bankDeposit.date ) {console.log(bankDeposit.date); return notify = util.getNotify("error","Ingrese una fecha válida");}
-      if (!amount_) return notify = util.getNotify("error","Ingrese el monto a depositar");
       if (!bankDeposit.reference || bankDeposit.reference === "") {return notify = util.getNotify("error","Ingrese el número de referencia");}
+      if (!amount_) return notify = util.getNotify("error","Ingrese el monto a depositar");
       if (amount_ < minAmount || amount_ > maxAmount) return notify = util.getNotify("error",`El monto debe estar entre ${minAmount} y ${maxAmount}`);
       if (!bankDeposit.account || bankDeposit.account === "") return notify = util.getNotify("error","Ingrese el número de cuenta");
       deposit();
