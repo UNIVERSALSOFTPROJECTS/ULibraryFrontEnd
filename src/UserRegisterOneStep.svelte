@@ -9,6 +9,7 @@
   export let userType;
   export let countryCodes;
   export let onOk;
+  export let onError;
 
   let active_currency = "";
   let active_section="register";
@@ -26,7 +27,6 @@
   };
 
   onMount( ()=>{
-    console.log("user: ", user);
     if(!user) user = {};
   })
 
@@ -88,22 +88,22 @@
       active_section = "validateSMS";
       setTimeout( ()=>{document.getElementById(element).focus();}, 1000);
     } catch (e) {
-      console.log("error: ", e);
+      console.log("errorxx: ", e);
       let messagge = "Error desconocido en Preregistro UNIVERSAL";
       if (e == "ORG_MANDATORY") {
         messagge = "ORG es obligatorio";
       }
-      else if (e.response.data.message == "PHONE_FORMAT_FAILED") {
+      else if (e.response && e.response.data && e.response.data.message == "PHONE_FORMAT_FAILED") {
         element = "phone";
-        messagge = "Formato Telefono incorrecto";
-      } else if (e.response.data.message == "El telefono ya existe") {
+        messagge = "Formato teléfono incorrecto";
+      } else if (e.response && e.response.data && e.response.data.message == "El telefono ya existe") {
         element = "phone";
         messagge = e.response.data.message;
-      } else if (e.response.data.message == "El usuario  ya existe") {
+      } else if (e.response && e.response.data && e.response.data.message == "El usuario  ya existe") {
         element = "username";
         messagge = "El nombre de usuario ya existe";
       } 
-      else if (e.response.data.message == "El usuario u correo ya existe") {
+      else if (e.response && e.response.data && e.response.data.message == "El usuario u correo ya existe") {
         element = "email";
         messagge = "El correo ya existe";
       }
@@ -184,6 +184,7 @@
       <input
         type="text"
         maxlength="30"
+        aria-label="name"
         bind:value={user.name}
         on:keydown={validateName}
         placeholder="ingrese su nombre"
@@ -194,6 +195,7 @@
       <input
         type="text"
         id="username"
+        aria-label="username"
         maxlength="20"
         bind:value={user.username}
         on:keypress={validateUsername}
@@ -205,6 +207,7 @@
       <input
         type="text"
         id="phone"
+        aria-label="phone"
         bind:value={user.phone}
         on:keypress|preventDefault={(e) => phoneOnlyNumber(e)}
         placeholder="Ingrese su número de teléfono"
@@ -215,6 +218,7 @@
       <input
         type="email"
         id="email"
+        aria-label="email"
         maxlength="30"
         bind:value={user.email}
         on:input={emailLow}
@@ -226,6 +230,7 @@
     <div class="u-item-register">
       <span>CONTRASEÑA</span>
       <input
+        aria-label="password"
         type="password"
         maxlength="20"
         bind:value={user.password}
@@ -237,6 +242,7 @@
     <div class="u-item-register">
       <span>CONFIRMACIÓN DE CONTRASEÑA</span>
       <input
+        aria-label="confirmpassword"
         type="password"
         bind:value={confirmPassword}
         on:keypress={validateSpaceKey}
@@ -251,6 +257,7 @@
       <span>CODIGO DE AGENTE</span>
       <div class="u-section-code-agent">
         <input
+          aria-label="agentcodeone"
           id="agentCode"
           type="text"
           bind:value={agentCodeOne}

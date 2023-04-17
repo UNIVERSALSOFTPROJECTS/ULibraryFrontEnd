@@ -3,8 +3,7 @@
     import { onMount } from "svelte";
     import util from "./js/util";
     import Notifier from "./Notifier.svelte";
-    //import moment from "moment";
-
+    //de esta forma para funcionar en Jest
     import momentx from "moment";
     let moment;
     if (!momentx) moment = require("moment");

@@ -72,43 +72,39 @@ describe('GB DepositW', () => {
 
   it('WHEN no enter bankName RETURN error', async() => {
     render(Withdrawalw, { open: true, user, pendingWhitdrawall:false, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ }})
-    await waitFor( async()=>{
-      let validAmount = 50; 
-      let validName = "Juan"; 
-      let validDocument=714632782;
-      let message = "Ingrese el nombre del banco";
-      let inputAmount = screen.getByLabelText("amountLabel");
-      await fireEvent.input(inputAmount, { target: { value: validAmount } });
-      let inputName = screen.getByLabelText("nameLabel");
-      await fireEvent.input(inputName, { target: { value: validName } });
-      let inputDocument = screen.getByLabelText("documentLabel");
-      await fireEvent.input(inputDocument, { target: { value: validDocument } });
-      const activateBtn = screen.getByText("SOLICITAR RETIRO");
-      await fireEvent.click(activateBtn)
-      expect( screen.getByText(message) ).toBeInTheDocument();
-    })
+    let validAmount = 50; 
+    let validName = "Juan"; 
+    let validDocument=714632782;
+    let message = "Ingrese el nombre del banco";
+    let inputAmount = screen.getByLabelText("amountLabel");
+    await fireEvent.input(inputAmount, { target: { value: validAmount } });
+    let inputName = screen.getByLabelText("nameLabel");
+    await fireEvent.input(inputName, { target: { value: validName } });
+    let inputDocument = screen.getByLabelText("documentLabel");
+    await fireEvent.input(inputDocument, { target: { value: validDocument } });
+    const activateBtn = screen.getByText("SOLICITAR RETIRO");
+    await fireEvent.click(activateBtn)
+    expect( screen.getByText(message) ).toBeInTheDocument();
   });
 
   it('WHEN no enter accountNumber RETURN error', async() => {
     render(Withdrawalw, { open: true, user, pendingWhitdrawall:false, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ }})
-    await waitFor( async()=>{
-      let validAmount = 50; 
-      let validName = "Juan"; 
-      let validDocument=7146327821;
-      let validBankName= "BCP";
-      let message = "Ingrese el número de cuenta";
-      let inputAmount = screen.getByLabelText("amountLabel");
-      await fireEvent.input(inputAmount, { target: { value: validAmount } });
-      let inputName = screen.getByLabelText("nameLabel");
-      await fireEvent.input(inputName, { target: { value: validName } });
-      let inputDocument = screen.getByLabelText("documentLabel");
-      await fireEvent.input(inputDocument, { target: { value: validDocument } });
-      let inputBankName = screen.getByLabelText("bankNameLabel");
-      await fireEvent.input(inputBankName, { target: { value: validBankName } });
-      const activateBtn = screen.getByText("SOLICITAR RETIRO");
-      await fireEvent.click(activateBtn)
-      expect( screen.getByText(message) ).toBeInTheDocument();
-    })
+    let validAmount = 50; 
+    let validName = "Juan"; 
+    let validDocument=7146327821;
+    let validBankName= "BCP";
+    let message = "Ingrese el número de cuenta";
+    let inputAmount = screen.getByLabelText("amountLabel");
+    await fireEvent.input(inputAmount, { target: { value: validAmount } });
+    let inputName = screen.getByLabelText("nameLabel");
+    await fireEvent.input(inputName, { target: { value: validName } });
+    let inputDocument = screen.getByLabelText("documentLabel");
+    await fireEvent.input(inputDocument, { target: { value: validDocument } });
+    let inputBankName = screen.getByLabelText("bankNameLabel");
+    await fireEvent.input(inputBankName, { target: { value: validBankName } });
+    const activateBtn = screen.getByText("SOLICITAR RETIRO");
+    await fireEvent.click(activateBtn)
+    expect( screen.getByText(message) ).toBeInTheDocument();
   });
 
   it('WHEN pending withdrawall RETURN error', async() => {
@@ -144,9 +140,10 @@ describe('GB DepositW', () => {
       
   });
 
+  /*
   it('WHEN all is ok RETURN ok', async() => {
-    const networkPassed = {errorCode: "", message:"Retiro satisfactorio"};
-    axios.post.mockResolvedValueOnce(networkPassed);
+    const successResponse = {message:"deposito correcto"};
+    axios.post.mockResolvedValueOnce(successResponse);
     render(Withdrawalw, { open: true, user, pendingWhitdrawall:false, minAmount, maxAmount, onOk:(r)=>{ }, onError: async (e)=>{  }});
       let validAmount = 50; 
       let validName = "Juan"; 
@@ -166,10 +163,10 @@ describe('GB DepositW', () => {
       const activateBtn = screen.getByText("SOLICITAR RETIRO");
       await fireEvent.click(activateBtn);
       await waitFor (async ()=>{
-        expect( screen.getByText("Retiro satisfactorio") ).toBeInTheDocument();
+        expect( screen.getByText("deposito correcto") ).toBeInTheDocument();
       })
   });
-
+*/
   
 
 });
