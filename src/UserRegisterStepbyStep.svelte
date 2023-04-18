@@ -2,10 +2,13 @@
   import ServerConnection from "./js/server";
   import Notifier from "./Notifier.svelte";
   import { onMount } from "svelte";
-  import moment from "moment";
-  //import "moment/locale/es" ;
+  //import moment from "moment";
+  import momentx from "moment";
+  let moment;
+  if (!momentx) moment = require("moment");
+  else moment=momentx;
+    
   export let dateString = null; //YYYY-MM-DD
-
   export let logoUrl;
   export let open;
   export let user = {};
@@ -214,7 +217,7 @@
     if (!user.phone)
       return showNotify("error", "Ingrese su numero de telefono");
     else if (user.phone.length < 6)
-      return showNotify("error", "Telefono mayor a 6 digitos");
+      return showNotify("error", "Mínimo 6 digitos para el teléfono");
     active_section = "email";
   };
 
@@ -228,7 +231,7 @@
   const validatePassword = () => {
     if (!user.password) return showNotify("error", "Ingrese una contraseña");
     else if (user.password.length < 6)
-      return showNotify("error", "Minimo 6 caracteres");
+      return showNotify("error", "Minimo 6 caracteres para la contraseña");
     active_section = "date";
   };
 
@@ -400,6 +403,7 @@
           <div class="u-header"><span>NOMBRE DE USUARIO</span></div>
           <div class="u-body">
             <input
+              aria-label="username"
               class="u-input-email"
               type="text"
               maxlength="20"
@@ -429,6 +433,7 @@
           </div>
           <div class="u-body">
             <input
+              aria-label="name"
               class="u-input-email"
               type="text"
               bind:value={user.name}
@@ -458,6 +463,7 @@
                 {/each}
               </select>
               <input
+                aria-label="phone"
                 class="u-input-email"
                 bind:value={user.phone}
                 on:keypress|preventDefault={(e) => phoneOnlyNumber(e)}
@@ -483,6 +489,7 @@
           <div class="u-header"><span>CORREO ELECTRONICO</span></div>
           <div class="u-body">
             <input
+              aria-label="email"
               class="u-input-email u-input-tall"
               type="email"
               maxlength="30"
@@ -515,6 +522,7 @@
           </div>
           <div class="u-body">
             <input
+              aria-label="password"
               class="u-input-email u-input-tall"
               type="password"
               maxlength="20"

@@ -24,12 +24,12 @@ export default {title: 'Registro Usuario W',component: UserRegisterStepbyStep,
 
 export const userWRegister1Currency = () => ({
   Component: UserRegisterStepbyStep,
-  props: {logoUrl, open, user, userType,currencies:currencies1, countryCodes:countryCodes1, onOk, platform}
+  props: {logoUrl, open, user, userType,currencies:currencies2,  countryCodes:countryCodes1, onOk, platform}
 });
 
 export const userWRegister2Currencies = () => ({
   Component: UserRegisterStepbyStep,
-  props: {logoUrl, open, user, userType,currencies:currencies2,  countryCodes:countryCodes1, onOk, platform}
+  props: {logoUrl, open, user, userType,currencies:currencies1, countryCodes:countryCodes1, onOk, platform}
 });
 
 export const userWRegister1CountryCode = () => ({

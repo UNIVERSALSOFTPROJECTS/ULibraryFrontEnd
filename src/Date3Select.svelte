@@ -3,9 +3,9 @@
   export let dateString = null; //YYYY-MM-DD
   //import moment from "moment";
   import momentx from "moment";
-    let moment;
-    if (!momentx) moment = require("moment");
-    else moment=momentx;
+  let moment;
+  if (!momentx) moment = require("moment");
+  else moment=momentx;
   
   
   let days = [];
