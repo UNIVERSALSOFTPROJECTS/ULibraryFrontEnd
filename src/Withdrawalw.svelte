@@ -41,7 +41,7 @@
             if(error.errorCode && error.errorCode == 'PENDING_WITHDRAWAL' ) {
                 msg = error.message
                 console.log("ERRORX", msg);
-                notify = util.getNotify("error",msg)
+                return notify = util.getNotify("error",msg)
             }    
         }
     }

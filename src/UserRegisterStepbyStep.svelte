@@ -2,6 +2,8 @@
   import ServerConnection from "./js/server";
   import Notifier from "./Notifier.svelte";
   import { onMount } from "svelte";
+  import DateThreeSelect from "./Date3Select.svelte";
+
   //import moment from "moment";
   import momentx from "moment";
   let moment;
@@ -38,20 +40,15 @@
     return years;
   };
   const onChangeDate = (mode) => {
-    let daysOfMonth = moment(
-      `${yearSelected}-${monthSelected}-01`
-    ).daysInMonth();
+    let daysOfMonth = moment(`${yearSelected}-${monthSelected}-01`).daysInMonth();
     days = [];
-    for (let i = 1; i <= daysOfMonth; i++) {
-      days.push(i);
-    }
-    //TODO: cambiar fecha y devolver la nueva fecha en DateString.
-    if (mode != "first") {
-      dateString = moment(
-        `${yearSelected}-${monthSelected}-${daySelected}`
-      ).format("YYYY-MM-DD");
+    for (let i = 1; i <= daysOfMonth; i++) {days.push(i);}
+    /*if (mode != "first") {dateString = moment(`${yearSelected}-${monthSelected}-${daySelected}`).format("YYYY-MM-DD");
       user.date = dateString;
-    }
+    }*/
+    dateString = moment(`${yearSelected}-${monthSelected}-${daySelected}`).format("YYYY-MM-DD")
+    user.date = dateString;
+
   };
 
   const currentYear = Number(moment().format("YYYY"));
@@ -82,6 +79,7 @@
       monthSelected = dates[1];
       daySelected = dates[0];
     }
+    user.date = dateString;
   });
 
   const welcome = () => {
@@ -192,20 +190,17 @@
       return showNotify("error", "No se permite espacios en blanco");
     }
   };
-  const validateUsername = async (e) => {
-    if (!user.username)
-      return showNotify("error", "Ingrese un nombre de usuario");
-    else if (!/^[A-Za-z0-9_]+$/.test(user.username))
-      return showNotify("error", "Sólo letras, números y guión bajo");
+  const validateUsername = (e) => {
+    if (!user.username) return showNotify("error", "Ingrese un nombre de usuario");
+    if (!/^[A-Za-z0-9_]+$/.test(user.username)) return showNotify("error", "Sólo letras, números y guión bajo");
     active_section = "name";
   };
 
-  const validateName = () => {
+  const validateName = (e) => {
     if (!user.name) return showNotify("error", "Ingrese nombre y apellidos");
+    if (! /^[A-Za-zúéáíóüÜÑñÓÍÚÁÉ  ]*$/.test(user.name)) return showNotify("error", "Ingrese letras solamente"); 
     if (currencies.length > 1) active_section = "currency";
-    else {
-      active_section = "phone";
-    }
+    else active_section = "phone";
   };
 
   function phoneOnlyNumber(event) {
@@ -257,9 +252,9 @@
       );
       active_section = "validateSMS";
     } catch (e) {
-      console.log("error: ", e);
+      console.log("errorxxx: ", e);
       let messagge = "Error desconocido en Preregistro";
-      if (e.response.data.message == "PHONE_FORMAT_FAILED") {
+      if (e.response && e.response.data && e.response.data.message == "PHONE_FORMAT_FAILED") {
         active_section = "phone";
         messagge = "Formato Telefono incorrecto";
       } else if (e.response.data.message == "El telefono ya existe") {
@@ -284,7 +279,7 @@
     preRegister();
   };
   const validateSMS = () => {
-    if (!user.validateSMS) return showNotify("error", "Ingrese el codogo SMS");
+    if (!user.validateSMS) return showNotify("error", "Ingrese el codigo SMS");
     active_section = "conditions";
   };
 
@@ -548,10 +543,12 @@
         <!--Componente de correo-->
         <div class="u-date-new">
           <div class="u-header"><span>FECHA DE NACIMIENTO</span></div>
+            <!--DateThreeSelect bind:dateString={user.birthday} /-->
+
           <div class="select-date u-body" >
-            <select bind:value={daySelected} on:change={onChangeDate}>
+            <select aria-label="daySelected" bind:value={daySelected} on:change={onChangeDate}>
               {#each days as day}
-                <option>{day}</option>
+                <option aria-label="dayOption" >{day}</option>
               {/each}
             </select>
             <select bind:value={monthSelected} on:change={onChangeDate}>

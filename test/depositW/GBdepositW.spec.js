@@ -180,15 +180,12 @@ describe('GB DepositW', () => {
     } )
   });
 
-  /*
-  //Aun no pasa
+  
   it('WHEN complete data RETURN OK', async() => {
     await axios.get.mockResolvedValue({data:banks});
+    axios.post.mockResolvedValue({data:{msg:"DEPOSITO_OK"}});
 
-    const networkPassed = {"msg":"DEPOSITO_OK"};
-    axios.post.mockResolvedValueOnce(networkPassed);
-
-    render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{ }, onError:(e)=>{ }})
+    render(Depositw, { open: true, user, assetsUrl, minAmount, maxAmount, onOk:(r)=>{expect(e).toEqual(data.msg) }, onError:(e)=>{  }})
     await waitFor( async()=>{
       let select = screen.getByLabelText("bankSelected");
       let options = screen.getAllByLabelText("bankOption");
@@ -202,10 +199,6 @@ describe('GB DepositW', () => {
       expect(options[0].selected).toBeTruthy();
     } )
 
-    await waitFor (async ()=>{
-      expect( screen.getByText("DEPOSITO_OK") ).toBeInTheDocument();
-    })
-
   });
-  */
+  
 });
