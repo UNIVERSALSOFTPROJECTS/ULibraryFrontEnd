@@ -5,13 +5,6 @@ import { render, fireEvent, screen , waitFor} from '@testing-library/svelte'
 import UserRegisterStepbyStep from '../../src/UserRegisterStepbyStep.svelte'
 import ServerConnection from '../../src/js/server'
 jest.mock('axios');
-/*
-  jest.mock('moment', () => {  return (date=null) =>  { 
-      if(!date) return jest.requireActual('moment')('2021-12-31T19:00:00-05:00');
-      else return jest.requireActual('moment')('2003-12-31T19:00:00-05:00');
-      }
-  });
-*/
 jest.mock("moment", () => {
   return (...args) => {
       if (args.length > 0) {
@@ -21,17 +14,17 @@ jest.mock("moment", () => {
   }
 });
 
-ServerConnection.setConfig({API:".",CLIENT_AUTH:"GOLD21GOLDENBET4A19028GOLDENBET1",CLIENT_CODE:"GOLD", domain:"goldenbet.com.pe", currency:"USD", org:"GB"})
+ServerConnection.setConfig({API:".",CLIENT_AUTH:"FORT2023FORTUNEUSOFFORTUNEBET12",CLIENT_CODE:"FORT", domain:"365fortuna.com", currency:"ARS", org:"FO"})
 let logoUrl="https://d2zzz5z45zl95g.cloudfront.net/golden/logo.svg";
 let open=true;
 let userType="W";
 let user = {};
 let countryCodes = ["51","1","113"];
-let currencies = [{code:"USD", codeAgent:5664},{code:"PEN", codeAgent:5263}];
-let platform = "GoldenBet";
+let currencies = [{code:"ARS", codeAgent:5070}];
+let platform = "365Fortuna";
 
 
-describe('GB user register Step by step', () => {
+describe('FO user register step by step', () => {
 
   it('WHEN no username RETURN error', async() => {
     render(UserRegisterStepbyStep, {logoUrl, user, open, userType, currencies, countryCodes, platform, onOk:(r)=>{ }})
@@ -92,39 +85,6 @@ describe('GB user register Step by step', () => {
     await fireEvent.input(inputName, { target: { value:"Salvador"} });
     activateBtn = screen.getByText("CONTINUAR");
     await fireEvent.click(activateBtn);
-    expect( screen.getByText("ESTABLECER MONEDA") ).toBeInTheDocument();
-  });
-
-  it('WHEN no select currency RETURN error', async() => {
-    render(UserRegisterStepbyStep, {logoUrl, user, open, userType, currencies, countryCodes, platform, onOk:(r)=>{ }})
-    let inputUsername = screen.getByLabelText("username")
-    await fireEvent.input(inputUsername, { target: { value:"Salva23" } });
-    let activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
-    let inputName = screen.getByLabelText("name")
-    await fireEvent.input(inputName, { target: { value:"Salvador"} });
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
-    expect( screen.getByText("Escoja una moneda") ).toBeInTheDocument();
-  });
-
-  it('WHEN selected currency GO TO NEXT STEP', async() => {
-    await axios.get.mockResolvedValue({data:currencies});
-    render(UserRegisterStepbyStep, {logoUrl, user, open, userType, currencies, countryCodes, platform, onOk:(r)=>{ }})
-    let inputUsername = screen.getByLabelText("username")
-    await fireEvent.input(inputUsername, { target: { value:"Salva23" } });
-    let activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
-    let inputName = screen.getByLabelText("name")
-    await fireEvent.input(inputName, { target: { value:"Salvador"} });
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
-    let selectCurrency = screen.getByText("USD")
-    await fireEvent.click(selectCurrency);
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
     expect( screen.getByText("NUMERO DE TELEFONO") ).toBeInTheDocument();
   });
 
@@ -137,11 +97,7 @@ describe('GB user register Step by step', () => {
     let inputName = screen.getByLabelText("name")
     await fireEvent.input(inputName, { target: { value:"Salvador"} });
     activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
-    let selectCurrency = screen.getByText("USD")
-    await fireEvent.click(selectCurrency);
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
+    await fireEvent.click(activateBtn); 
     activateBtn = screen.getByText("CONTINUAR");
     await fireEvent.click(activateBtn);
     expect( screen.getByText("Ingrese su numero de telefono") ).toBeInTheDocument();
@@ -155,10 +111,6 @@ describe('GB user register Step by step', () => {
     await fireEvent.click(activateBtn);
     let inputName = screen.getByLabelText("name")
     await fireEvent.input(inputName, { target: { value:"Salvador"} });
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
-    let selectCurrency = screen.getByText("USD")
-    await fireEvent.click(selectCurrency);
     activateBtn = screen.getByText("CONTINUAR");
     await fireEvent.click(activateBtn);
     let inputPhone = screen.getByLabelText("phone")
@@ -178,10 +130,6 @@ describe('GB user register Step by step', () => {
     await fireEvent.input(inputName, { target: { value:"Salvador"} });
     activateBtn = screen.getByText("CONTINUAR");
     await fireEvent.click(activateBtn);
-    let selectCurrency = screen.getByText("USD")
-    await fireEvent.click(selectCurrency);
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
     let inputPhone = screen.getByLabelText("phone")
     await fireEvent.input(inputPhone, { target: { value:"940212"} }); //minimo 6 digitos
     activateBtn = screen.getByText("CONTINUAR");
@@ -197,10 +145,6 @@ describe('GB user register Step by step', () => {
     await fireEvent.click(activateBtn);
     let inputName = screen.getByLabelText("name")
     await fireEvent.input(inputName, { target: { value:"Salvador"} });
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
-    let selectCurrency = screen.getByText("USD")
-    await fireEvent.click(selectCurrency);
     activateBtn = screen.getByText("CONTINUAR");
     await fireEvent.click(activateBtn);
     let inputPhone = screen.getByLabelText("phone")
@@ -220,10 +164,6 @@ describe('GB user register Step by step', () => {
     await fireEvent.click(activateBtn);
     let inputName = screen.getByLabelText("name")
     await fireEvent.input(inputName, { target: { value:"Salvador"} });
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
-    let selectCurrency = screen.getByText("USD")
-    await fireEvent.click(selectCurrency);
     activateBtn = screen.getByText("CONTINUAR");
     await fireEvent.click(activateBtn);
     let inputPhone = screen.getByLabelText("phone")
@@ -247,10 +187,6 @@ describe('GB user register Step by step', () => {
     await fireEvent.input(inputName, { target: { value:"Salvador"} });
     activateBtn = screen.getByText("CONTINUAR");
     await fireEvent.click(activateBtn);
-    let selectCurrency = screen.getByText("USD")
-    await fireEvent.click(selectCurrency);
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
     let inputPhone = screen.getByLabelText("phone")
     await fireEvent.input(inputPhone, { target: { value:"940212"} }); 
     activateBtn = screen.getByText("CONTINUAR");
@@ -270,10 +206,6 @@ describe('GB user register Step by step', () => {
     await fireEvent.click(activateBtn);
     let inputName = screen.getByLabelText("name")
     await fireEvent.input(inputName, { target: { value:"Salvador"} });
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
-    let selectCurrency = screen.getByText("USD")
-    await fireEvent.click(selectCurrency);
     activateBtn = screen.getByText("CONTINUAR");
     await fireEvent.click(activateBtn);
     let inputPhone = screen.getByLabelText("phone")
@@ -297,10 +229,6 @@ describe('GB user register Step by step', () => {
     await fireEvent.click(activateBtn);
     let inputName = screen.getByLabelText("name")
     await fireEvent.input(inputName, { target: { value:"Salvador"} });
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
-    let selectCurrency = screen.getByText("USD")
-    await fireEvent.click(selectCurrency);
     activateBtn = screen.getByText("CONTINUAR");
     await fireEvent.click(activateBtn);
     let inputPhone = screen.getByLabelText("phone")
@@ -328,10 +256,6 @@ describe('GB user register Step by step', () => {
     await fireEvent.input(inputName, { target: { value:"Salvador"} });
     activateBtn = screen.getByText("CONTINUAR");
     await fireEvent.click(activateBtn);
-    let selectCurrency = screen.getByText("USD")
-    await fireEvent.click(selectCurrency);
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
     let inputPhone = screen.getByLabelText("phone")
     await fireEvent.input(inputPhone, { target: { value:"940212"} }); 
     activateBtn = screen.getByText("CONTINUAR");
@@ -357,10 +281,6 @@ describe('GB user register Step by step', () => {
     await fireEvent.click(activateBtn);
     let inputName = screen.getByLabelText("name")
     await fireEvent.input(inputName, { target: { value:"Salvador"} });
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
-    let selectCurrency = screen.getByText("USD")
-    await fireEvent.click(selectCurrency);
     activateBtn = screen.getByText("CONTINUAR");
     await fireEvent.click(activateBtn);
     let inputPhone = screen.getByLabelText("phone")
@@ -392,10 +312,6 @@ describe('GB user register Step by step', () => {
     await fireEvent.click(activateBtn);
     let inputName = screen.getByLabelText("name")
     await fireEvent.input(inputName, { target: { value:"Salvador"} });
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
-    let selectCurrency = screen.getByText("USD")
-    await fireEvent.click(selectCurrency);
     activateBtn = screen.getByText("CONTINUAR");
     await fireEvent.click(activateBtn);
     let inputPhone = screen.getByLabelText("phone")
@@ -433,10 +349,6 @@ describe('GB user register Step by step', () => {
     await fireEvent.input(inputName, { target: { value:"Salvador"} });
     activateBtn = screen.getByText("CONTINUAR");
     await fireEvent.click(activateBtn);
-    let selectCurrency = screen.getByText("USD")
-    await fireEvent.click(selectCurrency);
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
     let inputPhone = screen.getByLabelText("phone")
     await fireEvent.input(inputPhone, { target: { value:"940212"} }); 
     activateBtn = screen.getByText("CONTINUAR");
@@ -472,10 +384,6 @@ describe('GB user register Step by step', () => {
     await fireEvent.click(activateBtn);
     let inputName = screen.getByLabelText("name")
     await fireEvent.input(inputName, { target: { value:"Salvador"} });
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
-    let selectCurrency = screen.getByText("USD")
-    await fireEvent.click(selectCurrency);
     activateBtn = screen.getByText("CONTINUAR");
     await fireEvent.click(activateBtn);
     let inputPhone = screen.getByLabelText("phone")
@@ -518,10 +426,6 @@ describe('GB user register Step by step', () => {
     await fireEvent.click(activateBtn);
     let inputName = screen.getByLabelText("name")
     await fireEvent.input(inputName, { target: { value:"Salvador"} });
-    activateBtn = screen.getByText("CONTINUAR");
-    await fireEvent.click(activateBtn);
-    let selectCurrency = screen.getByText("USD")
-    await fireEvent.click(selectCurrency);
     activateBtn = screen.getByText("CONTINUAR");
     await fireEvent.click(activateBtn);
     let inputPhone = screen.getByLabelText("phone")

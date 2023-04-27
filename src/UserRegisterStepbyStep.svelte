@@ -3,7 +3,6 @@
   import Notifier from "./Notifier.svelte";
   import { onMount } from "svelte";
   import DateThreeSelect from "./Date3Select.svelte";
-
   //import moment from "moment";
   import momentx from "moment";
   let moment;
@@ -32,7 +31,10 @@
   let monthSelected = 1;
   let yearSelected = null;
   let daySelected = 1;
-
+  let currentYear = null;
+  let adultYear = null;
+  let maxYear = null;
+  
   const getAge = (birthday) => {
     var now = moment();
     var birthday_ = moment(birthday);
@@ -43,33 +45,33 @@
     let daysOfMonth = moment(`${yearSelected}-${monthSelected}-01`).daysInMonth();
     days = [];
     for (let i = 1; i <= daysOfMonth; i++) {days.push(i);}
-    /*if (mode != "first") {dateString = moment(`${yearSelected}-${monthSelected}-${daySelected}`).format("YYYY-MM-DD");
+    if (mode != "first") {
+      dateString = moment(`${yearSelected}-${monthSelected}-${daySelected}`).format("YYYY-MM-DD");
       user.date = dateString;
-    }*/
-    dateString = moment(`${yearSelected}-${monthSelected}-${daySelected}`).format("YYYY-MM-DD")
-    user.date = dateString;
-
+    }
+    //dateString = `${yearSelected}-${monthSelected}-${daySelected}`
+    //user.date = dateString;
   };
 
-  const currentYear = Number(moment().format("YYYY"));
-  const adultYear = currentYear - 19;
-  const maxYear = currentYear - 80;
-  for (let i = adultYear; i >= maxYear; i--) {
-    years.push(i);
-  }
-  yearSelected = years[0];
-  onChangeDate("first");
+  
 
   onMount(() => {
-    for (let i = 0; i < 12; i++) {
-      let month = moment()
-        .localeData("es")
-        .months(moment([0, i]), "");
+    currentYear = Number(moment().format("YYYY"));
+    adultYear = currentYear - 19;
+    maxYear = currentYear - 80;
+    for (let i = adultYear; i >= maxYear; i--) { //array de años
+      years.push(i);
+    }
+
+    yearSelected = years[0];
+    onChangeDate("first");
+
+    for (let i = 0; i < 12; i++) {//array de meses
+      let month = moment().localeData("es").months(moment([0, i]), "");
       months.push(month);
     }
     if (dateString && dateString.indexOf("-")) {
       let dates = dateString.split("-");
-      console.log(dates);
       yearSelected = Number(dates[0]);
       monthSelected = Number(dates[1]);
       daySelected = Number(dates[2]);
@@ -117,7 +119,6 @@
         platform,
         CURRENCIES_[active_currency]
       );
-      console.log("DATA", data);
       if (data.message == "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}" ||
         data.message == "{resp=Err, Id=2, Msg=El correo o el Usuario ya Exite}"
       ) {
@@ -153,34 +154,34 @@
     document.body.classList.remove("fixed-scroll");
     open = false;
   };
-  const NextStepEnterEmail = (e) => {
+  const nextStepEnterEmail = (e) => {
     if (e.charCode === 13) validateEmail();
   };
-  const NextStepEnterName = (e) => {
+  const nextStepEnterName = (e) => {
     if (e.charCode === 13) validateName();
   };
-  const NextStepEnterUsername = (e) => {
+  const nextStepEnterUsername = (e) => {
     if (e.charCode === 13) validateUsername();
   };
-  const NextStepEnterPhone = (e) => {
+  const nextStepEnterPhone = (e) => {
     if (e.charCode === 13) validatePhone();
   };
-  const NextStepEnterPassword = (e) => {
+  const nextStepEnterPassword = (e) => {
     if (e.charCode === 13) validatePassword();
   };
-  const NextStepEnterDate = (e) => {
+  const nextStepEnterDate = (e) => {
     if (e.charCode === 13) validateDate();
   };
-  const NextStepEnterCodeAgent = (e) => {
+  const nextStepEnterCodeAgent = (e) => {
     if (e.charCode === 13) validateCodeAgent();
   };
-  const NextStepEnterValidateSMS = (e) => {
+  const nextStepEnterValidateSMS = (e) => {
     if (e.charCode === 13) validateSMS();
   };
-  const NextStepEnterCurrency = (e) => {
+  const nextStepEnterCurrency = (e) => {
     if (e.charCode === 13) validateCurrency();
   };
-  const NextStepEnterCondition = (e) => {
+  const nextStepEnterCondition = (e) => {
     if (e.charCode === 13) validateCondition();
   };
 
@@ -233,9 +234,11 @@
   const validateDate = () => {
     if (!user.date)
       return showNotify("error", "Ingrese su fecha de nacimiento");
+      console.log("user date: ", user.date);
     if (getAge(user.date) < 18)
       return showNotify("error", "Debe ser mayor de edad");
     active_section = userType == "X" ? "codeAgent" : "validateSMS";
+    
     if (userType == "W") {
       preRegister();
     }
@@ -403,7 +406,7 @@
               type="text"
               maxlength="20"
               bind:value={user.username}
-              on:keypress={NextStepEnterUsername}
+              on:keypress={nextStepEnterUsername}
               on:keypress={validateSpaceKey}
               placeholder="Crear nombre de usuario"
             />
@@ -432,7 +435,7 @@
               class="u-input-email"
               type="text"
               bind:value={user.name}
-              on:keypress={NextStepEnterName}
+              on:keypress={nextStepEnterName}
               placeholder="Ingrese nombre y apellidos"
             />
             <span>El nombre y apellidos obligatorio</span>
@@ -462,7 +465,7 @@
                 class="u-input-email"
                 bind:value={user.phone}
                 on:keypress|preventDefault={(e) => phoneOnlyNumber(e)}
-                on:keypress={NextStepEnterPhone}
+                on:keypress={nextStepEnterPhone}
                 placeholder="Ingrese número de teléfono"
                 maxlength="10"
               />
@@ -489,7 +492,7 @@
               type="email"
               maxlength="30"
               bind:value={user.email}
-              on:keypress={NextStepEnterEmail}
+              on:keypress={nextStepEnterEmail}
               on:keypress={validateSpaceKey}
               on:input={emailLow}
               placeholder="Ingrese su correo electrónico"
@@ -522,7 +525,7 @@
               type="password"
               maxlength="20"
               bind:value={user.password}
-              on:keypress={NextStepEnterPassword}
+              on:keypress={nextStepEnterPassword}
               on:keypress={validateSpaceKey}
               placeholder="Contraseña"
             />
@@ -556,9 +559,9 @@
                 <option value={i} disabled={i == 0}>{month}</option>
               {/each}
             </select>
-            <select bind:value={yearSelected} on:change={onChangeDate}>
+            <select aria-label="birthday-year" bind:value={yearSelected} on:change={onChangeDate}>
               {#each years as year}
-                <option>{year}</option>
+                <option aria-label='birthday-year-option'>{year}</option>
               {/each}
             </select>
           </div>
@@ -566,6 +569,7 @@
             <button
               class="u-button {user.date ? 'u-active-button' : ''}"
               on:click={validateDate}
+              on:keypress={nextStepEnterDate}
             >
               CONTINUAR
             </button>
@@ -585,7 +589,7 @@
               type="number"
               maxlength="8"
               bind:value={user.codeAgent}
-              on:keypress={NextStepEnterCodeAgent}
+              on:keypress={nextStepEnterCodeAgent}
               placeholder="Ingresar código de agente"
             />
             <span>El código de agente es obligatorio</span>
@@ -608,10 +612,11 @@
           <div class="u-body">
             <input
               class="u-input-email"
+              aria-label="validation"
               type="number"
               maxlength="6"
               bind:value={user.validateSMS}
-              on:keypress={NextStepEnterValidateSMS}
+              on:keypress={nextStepEnterValidateSMS}
               placeholder="Ingresar código SMS"
             />
             <span>El código SMS es obligatorio</span>
@@ -633,7 +638,7 @@
           </div>
           <div class="u-body u-currency">
             <span>Monedas sugeridas</span>
-            <div class="u-coins" on:keypress={NextStepEnterCurrency}>
+            <div class="u-coins" on:keypress={nextStepEnterCurrency}>
               {#each currencies as currency}
                 <button
                   class="u-button-coins {active_currency == currency.code
@@ -663,10 +668,11 @@
           </div>
           <div class="u-terms-and-conditions u-body">
             <input
+              aria-label="terms"
               class="form-check-input"
               type="checkbox"
               bind:checked={conditions}
-              on:keypress={NextStepEnterCondition}
+              on:keypress={nextStepEnterCondition}
             />
             <span
               >Para convertirme en cliente, acepto los términos y condiciones</span

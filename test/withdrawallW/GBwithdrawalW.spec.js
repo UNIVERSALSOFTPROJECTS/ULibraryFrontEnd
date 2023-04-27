@@ -7,8 +7,7 @@ import ServerConnection from '../../src/js/server'
 jest.mock('axios');
 
 ServerConnection.setConfig({API:".",CLIENT_AUTH:"GOLD21GOLDENBET4A19028GOLDENBET1",CLIENT_CODE:"GOLD", domain:"goldenbet.com.pe", currency:"USD"})
-let user = {"balance":10,"username":"GoldenBetTest1","currency":"ARS","currency_id":18,"bono":0,"code":1138137,"token":"e247f3c51baa96eedb0c266d2935e2315131f36a7997e78f4227ff8be6ea83b5","serial":"8068160578275","agregatorToken":"637e8b1b1c90de353e98880e74f0ed41a168b1a9aa3ab1c77e0ddbf38242d0b32a01758cda6c446949ab654c00d2834bf113ac56bd0213ce8e850dd2b5af2abc","expireToken":1678480673923};
-let assetsUrl = "https://assets.apiusoft.com";
+let user = {"balance":10,"username":"GoldenBetTest1","currency":"ARS","currency_id":18,"bono":0,"code":1138137,"token":"c7f042051e2c580d61a73f31cafb405e764db6dad4ca954d5d7138b6a34f651a","serial":"8068160578275","agregatorToken":"637e8b1b1c90de353e98880e74f0ed41a168b1a9aa3ab1c77e0ddbf38242d0b32a01758cda6c446949ab654c00d2834bf113ac56bd0213ce8e850dd2b5af2abc","expireToken":1678480673923};let assetsUrl = "https://assets.apiusoft.com";
 let minAmount = 50;
 let maxAmount = 2000;
 
@@ -108,13 +107,9 @@ describe('GB DepositW', () => {
   });
 
   it('WHEN pending withdrawall RETURN error', async() => {
-    //const networkError = new Error('sssss');
     const networkError = {errorCode: "PENDING_WITHDRAWAL", message:"retiro pendiente"};
     axios.post.mockRejectedValueOnce(networkError);
-
-    render(Withdrawalw, { open: true, user, pendingWhitdrawall:false, minAmount, maxAmount, onOk:(r)=>{ }, onError: async (e)=>{ 
-      //expect(e.errorCode).toEqual('PENDING_WITHDRAWAL') ;
-    }});
+    render(Withdrawalw, { open: true, user, pendingWhitdrawall:false, minAmount, maxAmount, onOk:(r)=>{ }, onError: async (e)=>{ }});
       let validAmount = 50; 
       let validName = "Juan"; 
       let validDocument=7146327821;
@@ -137,14 +132,16 @@ describe('GB DepositW', () => {
         //screen.debug(undefined, Infinity);   //PARA VER EL HTML
         expect( screen.getByText("retiro pendiente") ).toBeInTheDocument();
       })
-      
   });
 
-  /*
-  it('WHEN all is ok RETURN ok', async() => {
-    const successResponse = {message:"deposito correcto"};
-    axios.post.mockResolvedValueOnce(successResponse);
-    render(Withdrawalw, { open: true, user, pendingWhitdrawall:false, minAmount, maxAmount, onOk:(r)=>{ }, onError: async (e)=>{  }});
+  
+  it('WHEN bad neco session  RETURN error', async() => {
+    const failedResponse = {errorCode: "UNKNOWED_ERROR", message:"2"};
+    axios.post.mockRejectedValueOnce(failedResponse);
+    render(Withdrawalw, { open: true, user, pendingWhitdrawall:false, minAmount, maxAmount, onOk:(r)=>{ }, onError: async (e)=>{ 
+      expect (e.errorCode).toEqual("UNKNOWED_ERROR")
+      expect (e.message).toEqual("2")
+     }});
       let validAmount = 50; 
       let validName = "Juan"; 
       let validDocument=7146327821;
@@ -162,11 +159,11 @@ describe('GB DepositW', () => {
       await fireEvent.input(inputAccount, { target: { value: validAccount} });
       const activateBtn = screen.getByText("SOLICITAR RETIRO");
       await fireEvent.click(activateBtn);
-      await waitFor (async ()=>{
-        expect( screen.getByText("deposito correcto") ).toBeInTheDocument();
-      })
+      
   });
-*/
+
+  //TO DO ALL IS OK
+
   
 
 });

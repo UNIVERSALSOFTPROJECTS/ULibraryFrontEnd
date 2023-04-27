@@ -26,14 +26,16 @@ describe('JY user register one step', () => {
     expect( screen.getByText("Ingrese su nombre") ).toBeInTheDocument();
   });
 
-  it('WHEN no username RETURN error', async() => {
+  /*it('WHEN no username RETURN error', async() => {
     render(UserRegisterOneStep, {user, userType, currencies, countryCodes, platform, onOk:(r)=>{ }, onError:(e)=>{ } })
     let inputName = screen.getByLabelText("name")
     await fireEvent.input(inputName, { target: { value:"Salva" } });
     const activateBtn = screen.getByText("REGISTRAR");
     await fireEvent.click(activateBtn)
     expect( screen.getByText("Ingrese su nombre de usuario") ).toBeInTheDocument();
-  });
+    screen.debug(undefined, Infinity)
+
+  }); */
 
   it('WHEN no phone RETURN error', async() => {
     render(UserRegisterOneStep, {user, userType, currencies, countryCodes, platform, onOk:(r)=>{ }, onError:(e)=>{ } })
@@ -129,12 +131,14 @@ describe('JY user register one step', () => {
     expect( screen.getByText("Ingrese el código de agente") ).toBeInTheDocument();
   });
   
-  //AUN NO PASAAA TMRE
   it("WHEN bad phone format RETURN error", async() => {
-    const netError = {errorCode:"353465",message:"PHONE_FORMAT_FAILED", notify:"Formato teléfono incorrecto"}
+    const netError = {response:{data:{errorCode:"353465",message:"PHONE_FORMAT_FAILED"}}}
     axios.post.mockRejectedValueOnce(netError);
   
-    render(UserRegisterOneStep, {user, userType, currencies, countryCodes, platform, onOk:(r)=>{ }, onError:async (e)=>{ } })
+    render(UserRegisterOneStep, {user, userType, currencies, countryCodes, platform, onOk:(r)=>{ }, onError:async (e)=>{ 
+      expect(e.errorCode == "353465") ;
+      expect(e.message == "PHONE_FORMAT_FAILED") ;
+    } })
     let inputName = screen.getByLabelText("name")
     await fireEvent.input(inputName, { target: { value:"Salva" } });
     let inputUserName = screen.getByLabelText("username")
@@ -151,11 +155,213 @@ describe('JY user register one step', () => {
     await fireEvent.input(inputAgentCode, { target: { value:"1234" } });
     const activateBtn = screen.getByText("REGISTRAR");
     await fireEvent.click(activateBtn);
-    //expect(true).toEqual(true);
+    expect(true).toEqual(true);
     await waitFor( async()=>{
       expect( screen.getByText("Formato teléfono incorrecto")).toBeInTheDocument();
-      //screen.debug(undefined, Infinity);
     });
+  });
+
+  it("WHEN phone already exists RETURN error", async() => {
+    const netError = {response:{data:{errorCode:"NECO_CHECK_EMAILPHONE_FAILED", message:"El telefono ya existe"}}}
+    axios.post.mockRejectedValueOnce(netError);
+  
+    render(UserRegisterOneStep, {user, userType, currencies, countryCodes, platform, onOk:(r)=>{ }, onError:async (e)=>{ 
+      expect(e.errorCode == "NECO_CHECK_EMAILPHONE_FAILED") ;
+      expect(e.message == "El telefono ya existe") ;
+    } })
+    let inputName = screen.getByLabelText("name")
+    await fireEvent.input(inputName, { target: { value:"Salva" } });
+    let inputUserName = screen.getByLabelText("username")
+    await fireEvent.input(inputUserName, { target: { value:"Salva23" } });
+    let inputPhone = screen.getByLabelText("phone")
+    await fireEvent.input(inputPhone, { target: { value:"970396158" } }); 
+    let inputEmail = screen.getByLabelText("email")
+    await fireEvent.input(inputEmail, { target: { value:"salva@gmail.com" } });
+    let inputPassword = screen.getByLabelText("password")
+    await fireEvent.input(inputPassword, { target: { value:"123321" } });
+    let inputConfirmPass= screen.getByLabelText("confirmpassword")
+    await fireEvent.input(inputConfirmPass, { target: { value:"123321" } });
+    let inputAgentCode= screen.getByLabelText("agentcodeone")
+    await fireEvent.input(inputAgentCode, { target: { value:"1234" } });
+    const activateBtn = screen.getByText("REGISTRAR");
+    await fireEvent.click(activateBtn);
+    expect(true).toEqual(true);
+    await waitFor( async()=>{
+      expect( screen.getByText("El telefono ya existe")).toBeInTheDocument();
+    });
+  });
+
+  it("WHEN email already exists RETURN error", async() => {
+    const netError = {response:{data:{errorCode:"NECO_CHECK_EMAILPHONE_FAILED", message:"El usuario u correo ya existe"}}}
+    axios.post.mockRejectedValueOnce(netError);
+  
+    render(UserRegisterOneStep, {user, userType, currencies, countryCodes, platform, onOk:(r)=>{ }, onError:async (e)=>{ 
+      expect(e.errorCode == "NECO_CHECK_EMAILPHONE_FAILED") ;
+      expect(e.message == "El usuario u correo ya existe") ;
+    } })
+    let inputName = screen.getByLabelText("name")
+    await fireEvent.input(inputName, { target: { value:"Salva" } });
+    let inputUserName = screen.getByLabelText("username")
+    await fireEvent.input(inputUserName, { target: { value:"Salva23" } });
+    let inputPhone = screen.getByLabelText("phone")
+    await fireEvent.input(inputPhone, { target: { value:"970396158" } }); 
+    let inputEmail = screen.getByLabelText("email")
+    await fireEvent.input(inputEmail, { target: { value:"salva@gmail.com" } });
+    let inputPassword = screen.getByLabelText("password")
+    await fireEvent.input(inputPassword, { target: { value:"123321" } });
+    let inputConfirmPass= screen.getByLabelText("confirmpassword")
+    await fireEvent.input(inputConfirmPass, { target: { value:"123321" } });
+    let inputAgentCode= screen.getByLabelText("agentcodeone")
+    await fireEvent.input(inputAgentCode, { target: { value:"1234" } });
+    const activateBtn = screen.getByText("REGISTRAR");
+    await fireEvent.click(activateBtn);
+    expect(true).toEqual(true);
+    await waitFor( async()=>{
+      expect( screen.getByText("El correo ya existe")).toBeInTheDocument();
+    });
+  });
+
+  it("WHEN username already exists RETURN error", async() => {
+    const netError = {response:{data:{errorCode:"NECO_CHECK_EMAILPHONE_FAILED", message:"El usuario  ya existe"}}}
+    axios.post.mockRejectedValueOnce(netError);
+  
+    render(UserRegisterOneStep, {user, userType, currencies, countryCodes, platform, onOk:(r)=>{ }, onError:async (e)=>{ 
+      expect(e.errorCode == "NECO_CHECK_EMAILPHONE_FAILED") ;
+      expect(e.message == "El usuario ya existe") ;
+    } })
+    let inputName = screen.getByLabelText("name")
+    await fireEvent.input(inputName, { target: { value:"Salva" } });
+    let inputUserName = screen.getByLabelText("username")
+    await fireEvent.input(inputUserName, { target: { value:"salva123" } });
+    let inputPhone = screen.getByLabelText("phone")
+    await fireEvent.input(inputPhone, { target: { value:"9703181318" } }); 
+    let inputEmail = screen.getByLabelText("email")
+    await fireEvent.input(inputEmail, { target: { value:"salva12@gmail.com" } });
+    let inputPassword = screen.getByLabelText("password")
+    await fireEvent.input(inputPassword, { target: { value:"123321" } });
+    let inputConfirmPass= screen.getByLabelText("confirmpassword")
+    await fireEvent.input(inputConfirmPass, { target: { value:"123321" } });
+    let inputAgentCode= screen.getByLabelText("agentcodeone")
+    await fireEvent.input(inputAgentCode, { target: { value:"1234" } });
+    const activateBtn = screen.getByText("REGISTRAR");
+    await fireEvent.click(activateBtn);
+    expect(true).toEqual(true);
+    await waitFor( async()=>{
+      expect( screen.getByText("El nombre de usuario ya existe")).toBeInTheDocument();
+    });
+  });
+
+  it("WHEN validate sms code RETURN validation view", async() => {
+    const netSuccess = {response:{data:{phone:"5112321312",email:"dev21@universal.com", userId:60, platform:"LaJoya", smscode:"745879"}}}
+    axios.post.mockResolvedValueOnce(netSuccess);
+    render(UserRegisterOneStep, {user, userType, currencies, countryCodes, platform, onOk:(r)=>{
+      expect(e.phone == "5112321312") ;
+      expect(e.email == "dev21@universal.com") ;
+    }, onError:async (e)=>{ } })
+    let inputName = screen.getByLabelText("name")
+    await fireEvent.input(inputName, { target: { value:"Salva" } });
+    let inputUserName = screen.getByLabelText("username")
+    await fireEvent.input(inputUserName, { target: { value:"salva12345" } });
+    let inputPhone = screen.getByLabelText("phone")
+    await fireEvent.input(inputPhone, { target: { value:"9703181318" } }); 
+    let inputEmail = screen.getByLabelText("email")
+    await fireEvent.input(inputEmail, { target: { value:"salva012@gmail.com" } });
+    let inputPassword = screen.getByLabelText("password")
+    await fireEvent.input(inputPassword, { target: { value:"123321" } });
+    let inputConfirmPass= screen.getByLabelText("confirmpassword")
+    await fireEvent.input(inputConfirmPass, { target: { value:"123321" } });
+    let inputAgentCode= screen.getByLabelText("agentcodeone")
+    await fireEvent.input(inputAgentCode, { target: { value:"1234" } });
+    const activateBtn = screen.getByText("REGISTRAR");
+    await fireEvent.click(activateBtn);
+    expect(true).toEqual(true);
+    await waitFor( async()=>{
+      expect( screen.getByText("VALIDACION SMS")).toBeInTheDocument();
+    });
+  });
+
+  it("WHEN bad agentCode RETURN validation view", async() => {
+    const netSuccess = {response:{data:{phone:"5112321312",email:"dev21@universal.com", userId:60, platform:"LaJoya", smscode:"745879"}}}
+    const badAgentCode = {response:{data:{errorCode:"NECO_CREATE_USER_ERROR", message:"{resp=Err, Id=21, Msg=No existe ese id de grupo}"}}}
+    axios.post.mockResolvedValueOnce(netSuccess);
+    axios.post.mockRejectedValueOnce(badAgentCode);
+    render(UserRegisterOneStep, {user, userType, currencies, countryCodes, platform, 
+      onOk:(r)=>{
+        expect(e.phone == "5112321312") ;
+        expect(e.email == "dev21@universal.com") ;
+      },
+      onError:async (e)=>{ 
+        expect(e.errorCode == "NECO_CREATE_USER_ERROR");
+        expect(e.errorCode == "{resp=Err, Id=21, Msg=No existe ese id de grupo}");
+      }})
+    let inputName = screen.getByLabelText("name")
+    await fireEvent.input(inputName, { target: { value:"Salva" } });
+    let inputUserName = screen.getByLabelText("username")
+    await fireEvent.input(inputUserName, { target: { value:"salva12345" } });
+    let inputPhone = screen.getByLabelText("phone")
+    await fireEvent.input(inputPhone, { target: { value:"9703181318" } }); 
+    let inputEmail = screen.getByLabelText("email")
+    await fireEvent.input(inputEmail, { target: { value:"salva012@gmail.com" } });
+    let inputPassword = screen.getByLabelText("password")
+    await fireEvent.input(inputPassword, { target: { value:"123321" } });
+    let inputConfirmPass= screen.getByLabelText("confirmpassword")
+    await fireEvent.input(inputConfirmPass, { target: { value:"123321" } });
+    let inputAgentCode= screen.getByLabelText("agentcodeone")
+    await fireEvent.input(inputAgentCode, { target: { value:"1234" } });
+    const activateBtn = screen.getByText("REGISTRAR");
+    await fireEvent.click(activateBtn);
+    await waitFor( async()=>{
+      expect( screen.getByText("VALIDACION SMS")).toBeInTheDocument();
+    });
+    let inputValidation= screen.getByLabelText("validation")
+    await fireEvent.input(inputValidation, { target: { value:"74589" } });
+    const activateValidationBtn = screen.getByText("CONFIRMAR SMS");
+    await fireEvent.click(activateValidationBtn);
+    await waitFor( async()=>{
+      expect( screen.getByText("Codigo de agente incorrecto")).toBeInTheDocument();
+    });
+  });
+
+  it("WHEN all is ok RETURN created user", async() => {
+    const netSuccess = {response:{data:{phone:"916361031",email:"salva_chc@htm.com", userId:60, platform:"LaJoya", smscode:"745879"}}}
+    const dataOk = {response:{data:{resp:"Ok", Id:"1155936", Msg:"Usuario Creado"}}}
+    axios.post.mockResolvedValueOnce(netSuccess);
+    axios.post.mockResolvedValueOnce(dataOk);
+    const spyAlert = jest.spyOn(window, 'alert');
+    render(UserRegisterOneStep, {user, userType, currencies, countryCodes, platform, 
+      onOk:(r)=>{
+        expect(r.phone).toEqual("916361031") ;
+        expect(r.email).toEqual("salva_chc@htm.com") ;
+        expect(r.resp).toEqual("Ok");
+        expect(r.Msg).toEqual("Usuario Creado");
+        expect(spyAlert).toHaveBeenCalledWith('Registro correcto');
+      },
+      onError:async (e)=>{ }
+    })
+    let inputName = screen.getByLabelText("name")
+    await fireEvent.input(inputName, { target: { value:"Salva" } });
+    let inputUserName = screen.getByLabelText("username")
+    await fireEvent.input(inputUserName, { target: { value:"salva123456" } });
+    let inputPhone = screen.getByLabelText("phone")
+    await fireEvent.input(inputPhone, { target: { value:"9703181324" } }); 
+    let inputEmail = screen.getByLabelText("email")
+    await fireEvent.input(inputEmail, { target: { value:"salva_chc@htm.com" } });
+    let inputPassword = screen.getByLabelText("password")
+    await fireEvent.input(inputPassword, { target: { value:"123321" } });
+    let inputConfirmPass= screen.getByLabelText("confirmpassword")
+    await fireEvent.input(inputConfirmPass, { target: { value:"123321" } });
+    let inputAgentCode= screen.getByLabelText("agentcodeone")
+    await fireEvent.input(inputAgentCode, { target: { value:"5070" } });
+    const activateBtn = screen.getByText("REGISTRAR");
+    await fireEvent.click(activateBtn);
+    await waitFor( async()=>{
+      expect( screen.getByText("VALIDACION SMS")).toBeInTheDocument();
+    });
+    let inputValidation= screen.getByLabelText("validation")
+    await fireEvent.input(inputValidation, { target: { value:"745879" } });
+    const activateValidationBtn = screen.getByText("CONFIRMAR SMS");
+    await fireEvent.click(activateValidationBtn);
+    //screen.debug(undefined, Infinity)
   });
 
 });

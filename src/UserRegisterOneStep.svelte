@@ -86,7 +86,7 @@
         platform
       );
       active_section = "validateSMS";
-      setTimeout( ()=>{document.getElementById(element).focus();}, 1000);
+      //setTimeout( ()=>{document.getElementById(element).focus();}, 1000);
     } catch (e) {
       console.log("errorxx: ", e);
       let messagge = "Error desconocido en Preregistro UNIVERSAL";
@@ -281,6 +281,7 @@
     <span>VALIDACION SMS</span>
     <div class="u-section-code-agent">
       <input
+        aria-label="validation"
         id="sms-code"
         type="text"
         bind:value={user.validateSMS}
