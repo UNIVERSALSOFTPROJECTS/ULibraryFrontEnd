@@ -133,7 +133,7 @@
       } else if (data.errorCode == "SMS_CODE_INVALID") {
         active_section = "validateSMS";
         return showNotify("error", "Código SMS incorrecto");
-      } else if (data.errorCode == "CREATE_USER_FAILED") {
+      } else if (data.message == "{resp=Err, Id=21, Msg=No existe ese id de grupo}") {
         active_section = "codeAgent";
         return showNotify("error", "Código de agente incorrecto");
       }
