@@ -25,14 +25,14 @@
     };
     const getPendingWithdrawal = async(token) => {
         let resp_pending = await ServerConnection.wallet.checkPreviewWithdrawal(token);
-        console.log("pending", resp_pending);
         if(resp_pending.data.monto) pendingWhitdrawall = resp_pending.data; // si tiene monto quiere decir que tiene un retiro pendiente
+    
     };
-    const duplicateSession=()=>{
+    /*const duplicateSession=()=>{
         alert("SESION ABIERTA EN OTRO DISPOSITIVO");
         location.reload();
         return ;
-    };
+    };*/
 
     const cashout = async()=>{
         pendingWhitdrawall=null;
@@ -41,8 +41,9 @@
             let resp_withdrawal = null;
             await getPendingWithdrawal(user.token);
             if(!pendingWhitdrawall ){
+
                 resp_withdrawal = await ServerConnection.wallet.retailWithdrawal(user.token, amount);
-                console.log("resp withdra ",resp_withdrawal.data);
+                
                 await getPendingWithdrawal(user.token);
                 onOk(resp_withdrawal?resp_withdrawal:pendingWhitdrawall);
             }else{
@@ -51,9 +52,9 @@
             let { data } = await ServerConnection.user.getBalance(user.agregatorToken);
             user.balance = data.balance;
         } catch (e_withdrawal) {
-            console.log(e_withdrawal);
-            if(e_withdrawal.response.data.message != 'RET_PEND') onError(e_withdrawal.response.data.message)
-            else if(e_withdrawal.response.data.errorCode=='OLD_TOKEN') duplicateSession()
+            console.log("e_withdrawal: ", e_withdrawal)
+            if(e_withdrawal.response.data.errorCode=='OLD_TOKEN') onError("DUPLICATE_SESSION"); 
+            else if(e_withdrawal.response.data.message != 'RET_PEND') onError(e_withdrawal.response.data.message);
             else onError(e_withdrawal.response.data)
         }
        
@@ -76,13 +77,12 @@
     };
 
     const validateData = () => {
-        let msg = "Retiro exitoso"
+        let msg = "-"
         if(!amount || amount ==='') msg = "Ingrese el monto";
         else if(amount < minAmount || amount > maxAmount)  msg = "Monto mínimo " +minAmount +" "+ user.currency + ", máximo " + maxAmount+" "+user.currency;
-        if(msg !== "Retiro exitoso") {return notify = util.getNotify("error",msg);}
-        else{
-            cashout();
-        }
+        
+        if(msg !== "-") {return notify = util.getNotify("error",msg);}
+        else{ cashout();}
     }
 
 </script>

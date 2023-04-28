@@ -88,7 +88,7 @@
       active_section = "validateSMS";
       //setTimeout( ()=>{document.getElementById(element).focus();}, 1000);
     } catch (e) {
-      console.log("errorxx: ", e);
+      console.log("error: ", e);
       let messagge = "Error desconocido en Preregistro UNIVERSAL";
       if (e == "ORG_MANDATORY") {
         messagge = "ORG es obligatorio";

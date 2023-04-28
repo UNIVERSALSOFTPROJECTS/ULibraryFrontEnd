@@ -234,7 +234,6 @@
   const validateDate = () => {
     if (!user.date)
       return showNotify("error", "Ingrese su fecha de nacimiento");
-      console.log("user date: ", user.date);
     if (getAge(user.date) < 18)
       return showNotify("error", "Debe ser mayor de edad");
     active_section = userType == "X" ? "codeAgent" : "validateSMS";
