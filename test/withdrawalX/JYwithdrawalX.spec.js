@@ -43,37 +43,80 @@ describe('JY WithdrwalX', () => {
     expect( screen.getByText(message) ).toBeInTheDocument();
   });
  
-  /*
   it('WHEN pending withdrawal RETURN error', async() => {
-    let amount=20;
-    axios.post.mockResolvedValue({e_withdrawal:{errorCode:"6C54PWQFE7", message:"PENDING_WITHDRAWAL"}});
+    let amount=50;
+    axios.get.mockRejectedValue({response:{data: {errorCode:"6C54PWQFE7", message:"PENDING_WITHDRAWAL"}}});
     render(Withdrawalx, { open: true, user, pendingWhitdrawall:true, minAmount, maxAmount,
       onOk:()=>{},
-      onError:(e)=>{ 
-        console.log("error: ",e);
-        expect(e.message).toEqual('PENDING_WITHDRAWAL') 
-      } 
-    });
-    const input = screen.getByLabelText("amount_input");
+      onError:(e_withdrawal)=>{ 
+        expect(e_withdrawal).toEqual('PENDING_WITHDRAWAL') 
+    }});
+    const input = screen.getByLabelText("amount");
     const activateBtn = screen.getByText("SOLICITAR RETIRO");
     await fireEvent.input(input, { target: { value:amount } });
     await fireEvent.click(activateBtn)
   });
 
-  it('WHEN valid amount RETURN ok', async() => {
-    let amount = 20.00;
-    console.log("balance previo" + user.balance);
-    user.balance += user.balance + amount;
-    axios.post.mockResolvedValue({data:{resp:'ok'}});
-    render(Withdrawalx, { open: true, user, pendingWhitdrawall:false, minAmount, maxAmount,
-       onOk:(data)=>{ expect(user.balance).toEqual(data.saldo) },
-       onError:()=>{ } 
-    })
-    const input = screen.getByLabelText("amount_value");
-    await fireEvent.input(input, { target: { value:amount } });
+  it('WHEN old token withdrawal RETURN error', async() => {
+    let amount=50;
+    axios.get.mockResolvedValue({data:{resp:'ok'}});
+    axios.post.mockRejectedValue({response:{data: {errorCode:"OLD_TOKEN"}}});
+    render(Withdrawalx, { open: true, user, pendingWhitdrawall:true, minAmount, maxAmount,
+      onOk:()=>{},
+      onError:(e_withdrawal)=>{ 
+        expect(e_withdrawal).toEqual('DUPLICATE_SESSION') 
+    }});
+    const input = screen.getByLabelText("amount");
     const activateBtn = screen.getByText("SOLICITAR RETIRO");
+    await fireEvent.input(input, { target: { value:amount } });
     await fireEvent.click(activateBtn)
-    console.log("saldo actual" + data.saldo);
+    //screen.debug(undefined, Infinity)
   });
-  */
+
+  it('WHEN unknowed error message at withdrawal RETURN error', async() => {
+    let amount=50;
+    let message="mensaje de error desconocido al retirar";
+    axios.get.mockResolvedValue({data:{resp:'ok'}});
+    axios.post.mockRejectedValue({response:{data: {message:message}}});
+    render(Withdrawalx, { open: true, user, pendingWhitdrawall:true, minAmount, maxAmount,
+      onOk:()=>{},
+      onError:(e_withdrawal)=>{ 
+        expect(e_withdrawal).toEqual(message) 
+    }});
+    const input = screen.getByLabelText("amount");
+    const activateBtn = screen.getByText("SOLICITAR RETIRO");
+    await fireEvent.input(input, { target: { value:amount } });
+    await fireEvent.click(activateBtn)
+  });
+
+  it('WHEN unknowed error at withdrawal RETURN error', async() => {
+    let amount=50;
+    let message="error al realizar retiro";
+    axios.get.mockResolvedValue({data:{resp:'ok'}});
+    axios.post.mockRejectedValue({response:{data: {message}}});
+    render(Withdrawalx, { open: true, user, pendingWhitdrawall:true, minAmount, maxAmount,
+      onOk:()=>{},
+      onError:(e_withdrawal)=>{ 
+        expect(e_withdrawal).toEqual(message) 
+    }});
+    const input = screen.getByLabelText("amount");
+    const activateBtn = screen.getByText("SOLICITAR RETIRO");
+    await fireEvent.input(input, { target: { value:amount } });
+    await fireEvent.click(activateBtn)
+  });
+
+  it('WHEN all is ok RETURN ok', async() => {
+    let amount=50;
+    axios.get.mockResolvedValue({data:{resp:'ok'}});
+    axios.post.mockResolvedValue({data:{resp:'ok'}});
+    render(Withdrawalx, { open: true, user, pendingWhitdrawall:true, minAmount, maxAmount,
+      onOk:(withdrawalOk)=>{
+        expect(withdrawalOk.data.resp).toEqual('ok') },
+      onError:()=>{ }});
+    const input = screen.getByLabelText("amount");
+    const activateBtn = screen.getByText("SOLICITAR RETIRO");
+    await fireEvent.input(input, { target: { value:amount } });
+    await fireEvent.click(activateBtn)
+  });
+
 });

@@ -75,6 +75,38 @@ describe('FO WithdrwalX', () => {
     //screen.debug(undefined, Infinity)
   });
 
+  it('WHEN unknowed error message at withdrawal RETURN error', async() => {
+    let amount=50;
+    let message="mensaje de error desconocido al retirar";
+    axios.get.mockResolvedValue({data:{resp:'ok'}});
+    axios.post.mockRejectedValue({response:{data: {message:message}}});
+    render(Withdrawalx, { open: true, user, pendingWhitdrawall:true, minAmount, maxAmount,
+      onOk:()=>{},
+      onError:(e_withdrawal)=>{ 
+        expect(e_withdrawal).toEqual(message) 
+    }});
+    const input = screen.getByLabelText("amount");
+    const activateBtn = screen.getByText("SOLICITAR RETIRO");
+    await fireEvent.input(input, { target: { value:amount } });
+    await fireEvent.click(activateBtn)
+  });
+
+  it('WHEN unknowed error at withdrawal RETURN error', async() => {
+    let amount=50;
+    let message="error al realizar retiro";
+    axios.get.mockResolvedValue({data:{resp:'ok'}});
+    axios.post.mockRejectedValue({response:{data: {message}}});
+    render(Withdrawalx, { open: true, user, pendingWhitdrawall:true, minAmount, maxAmount,
+      onOk:()=>{},
+      onError:(e_withdrawal)=>{ 
+        expect(e_withdrawal).toEqual(message) 
+    }});
+    const input = screen.getByLabelText("amount");
+    const activateBtn = screen.getByText("SOLICITAR RETIRO");
+    await fireEvent.input(input, { target: { value:amount } });
+    await fireEvent.click(activateBtn)
+  });
+
   it('WHEN all is ok RETURN ok', async() => {
     let amount=50;
     axios.get.mockResolvedValue({data:{resp:'ok'}});

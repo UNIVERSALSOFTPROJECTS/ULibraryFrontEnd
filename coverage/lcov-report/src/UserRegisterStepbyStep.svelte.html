@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.8% </span>
+                <span class="strong">80.54% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1570/1943</span>
+                <span class='fraction'>1573/1953</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.05% </span>
+                <span class="strong">60.91% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>486/796</span>
+                <span class='fraction'>491/806</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.43% </span>
+                <span class="strong">68.71% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>134/193</span>
+                <span class='fraction'>134/195</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.13% </span>
+                <span class="strong">83.92% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1490/1771</span>
+                <span class='fraction'>1493/1779</span>
             </div>
         
             
@@ -1012,7 +1012,8 @@
 <a name='L947'></a><a href='#L947'>947</a>
 <a name='L948'></a><a href='#L948'>948</a>
 <a name='L949'></a><a href='#L949'>949</a>
-<a name='L950'></a><a href='#L950'>950</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L950'></a><a href='#L950'>950</a>
+<a name='L951'></a><a href='#L951'>951</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
@@ -1961,6 +1962,7 @@
 <span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&lt;script&gt;
   import ServerConnection from "./js/server";
   import Notifier from "./Notifier.svelte";
@@ -1979,6 +1981,7 @@
   export let userType;
   export let countryCodes;
   export let onOk;
+  export let onError;
   export let currencies;
   export let platform;
   //TODO: cargar todas las menedas.
@@ -2022,8 +2025,8 @@
     currentYear = Number(moment().format("YYYY"));
     adultYear = currentYear - 19;
     maxYear = currentYear - 80;
-    for (let i = adultYear; i &gt;= maxYear; i--) { //array de años
-      years.push(i);<span class="branch-0 cbranch-no" title="branch not covered" ></span>
+    for (let i = adultYear; i &gt;= maxYear; i--) { //array de años<span class="branch-0 cbranch-no" title="branch not covered" ></span>
+      years.push(i);
     }
 &nbsp;
     yearSelected = years[0];
@@ -2037,13 +2040,13 @@
       let dates = dateString.split("-");
       yearSelected = Number(dates[0]);
       monthSelected = Number(dates[1]);
-      daySelected = Number(dates[2]);
-    } else if (dateString &amp;&amp; dateString.indexOf("/")) {<span class="branch-1 cbranch-no" title="branch not covered" ></span>
+      daySelected = Number(dates[2]);<span class="branch-1 cbranch-no" title="branch not covered" ></span>
+    } else if (dateString &amp;&amp; dateString.indexOf("/")) {
       let dates = dateString.split("/");
       yearSelected = dates[2];
       monthSelected = dates[1];
-      daySelected = dates[0];
-   <span class="missing-if-branch" title="if path not taken" >I</span> }<span class="cstat-no" title="statement not covered" ></span>
+   <span class="missing-if-branch" title="if path not taken" >I</span>   daySelected <span class="cstat-no" title="statement not covered" >= dates[0];</span>
+    }
     user.date = dateString;
   });
 &nbsp;
@@ -2058,19 +2061,19 @@
 &nbsp;
   const register = async () =&gt; {
     if (currencies.length == 1) active_currency = currencies[0].code;
-    //if( userType=="W" &amp;&amp; !codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
-    try {<span class="fstat-no" title="function not covered" ></span>
+    //if(<span class="fstat-no" title="function not covered" > userType=="W" &amp;&amp; !</span>codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
+    try {
       //if(userType=="W") user.codeAgent=codeAgent;
       if( userType=='W'){
         user.codeAgent = currencies.find(
           (e) =&gt; e.code == active_currency
         ).codeAgent;
-      } 
-      <span class="cstat-no" title="statement not covered" ></span>
-      if (!use<span class="fstat-no" title="function not covered" >r.codeA</span>gent) return alert("CODIGO AGENTE OBLOGATIRO");
+      } <span class="cstat-no" title="statement not covered" ></span>
+      <span class="fstat-no" title="function not covered" ></span>
+<span class="cstat-no" title="statement not covered" >      if (!user.codeAgent)</span> return alert("CODIGO AGENTE OBLOGATIRO");
 <span class="cstat-no" title="statement not covered" >      let { data } = await</span> ServerConnection.user.register(
-<span class="cstat-no" title="statement not covered" >        user.username,</span>
-<span class="cstat-no" title="statement not covered" >        user.name</span>,
+<span class="cstat-no" title="statement not covered" >        user.user</span>name,
+<span class="cstat-no" title="statement not covered" >        user.name,</span>
 <span class="cstat-no" title="statement not covered" >        user.countryCode,</span>
 <span class="cstat-no" title="statement not covered" >        user.countryCode + user.phone,</span>
 <span class="cstat-no" title="statement not covered" >        user.email,</span>
@@ -2079,33 +2082,33 @@
 <span class="cstat-no" title="statement not covered" >        user.codeAgent,</span>
 <span class="cstat-no" title="statement not covered" >        user.validateSMS,</span>
 <span class="cstat-no" title="statement not covered" >        userType,</span>
-<span class="cstat-no" title="statement not covered" >        platform,</span>
-        CURRENCIES_[active_currency]
-      );<span class="fstat-no" title="function not covered" ></span>
-<span class="cstat-no" title="statement not covered" >      if (data.message == "{resp=Err,</span> Id=1, Msg=El correo o el Usuario ya Exite}" ||
-<span class="cstat-no" title="statement not covered" >        data.message == "{r</span>esp=Err, Id=2, Msg=El correo o el Usuario ya Exite}"
+        platform,
+        CURREN<span class="fstat-no" title="function not covered" >CIES_[</span>active_currency]
+<span class="cstat-no" title="statement not covered" >      );</span>
+<span class="cstat-no" title="statement not covered" >      if (data.message == "</span>{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}" ||
+<span class="cstat-no" title="statement not covered" >        data.message == "</span>{resp=Err, Id=2, Msg=El correo o el Usuario ya Exite}"
 <span class="cstat-no" title="statement not covered" >      ) {</span>
-<span class="cstat-no" title="statement not covered" >        active_section = "em</span>ail";
-        return showNotify("error", "Este correo ya esta en uso");
-      } else i<span class="fstat-no" title="function not covered" >f (</span>
-<span class="cstat-no" title="statement not covered" >        data.message == "{resp=Err, Id=1, Msg=Usuario ya Exite}" ||</span>
-<span class="cstat-no" title="statement not covered" >        data.message == "{resp=Err, Id=2, Msg=U</span>suario ya Exite}"
+        active_section = "email";
+        return<span class="fstat-no" title="function not covered" > showNo</span>tify("error", "Este correo ya esta en uso");
+<span class="cstat-no" title="statement not covered" >      } else if (</span>
+<span class="cstat-no" title="statement not covered" >        data.message == "{resp=Err, Id=1, Msg=U</span>suario ya Exite}" ||
+        data.message == "{resp=Err, Id=2, Msg=Usuario ya Exite}"
       ) {
-        active_section = "user";
-        return<span class="fstat-no" title="function not covered" > showNot</span>ify("error", "Este nombre de usuario ay existe");
-<span class="cstat-no" title="statement not covered" >      } else if (d<span class="cstat-no" title="statement not covered" >ata.errorCode == "</span></span>SMS_CODE_INVALID") {
+        active<span class="fstat-no" title="function not covered" >_section</span> = "user";
+<span class="cstat-no" title="statement not covered" >        return sho<span class="cstat-no" title="statement not covered" >wNotify("error", "</span></span>Este nombre de usuario ay existe");
+      } else if (data.errorCode == "SMS_CODE_INVALID") {
         active_section = "validateSMS";
         return showNotify("error", "Código SMS incorrecto");
-      } else if (data.errorCode == "CREATE_USER_FAILED") {
-<span class="cstat-no" title="statement not covered" >        active_section = "codeAgent";</span>
+<span class="cstat-no" title="statement not covered" >      } else if (data.message == "{resp=Err, Id=21, Msg=No existe ese id de grupo}") {</span>
+        active_section = "codeAgent";
         return showNotify("error", "Código de agente incorrecto");
       }
       active_section = "welcome";
     } catch (e) {
       console.log("registermsg", e);
       return showNotify("error", "Error al crear usuario");
-    }
-<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+  };
 &nbsp;
   const showNotify = (type, message) =&gt; {
     notify = { display: true, type, message };
@@ -2194,8 +2197,8 @@
     active_section = "date";
   };
 &nbsp;
-  const validateDate = () =&gt; {
-   <span class="missing-if-branch" title="else path not taken" >E</span> if (!user.date)
+  c<span class="missing-if-branch" title="else path not taken" >E</span>onst validateDate = () =&gt; {
+    if (!user.date)
       return showNotify("error", "Ingrese su fecha de nacimiento");
     if (getAge(user.date) &lt; 18)
       return showNotify("error", "Debe ser mayor de edad");
@@ -2300,8 +2303,8 @@
             &gt;
           &lt;/div&gt;
           &lt;div class="progress vertical"&gt;
-            &lt;div class="u-circle {user.email ? 'u-category-select' : ''}" /&gt;
-   <span class="missing-if-branch" title="else path not taken" >E</span>         &lt;label class="form-check-label" for="flexCheckDefault"
+   <span class="missing-if-branch" title="else path not taken" >E</span>         &lt;div class="u-circle {user.email ? 'u-category-select' : ''}" /&gt;
+            &lt;label class="form-check-label" for="flexCheckDefault"
               &gt;Ingresa tu correo&lt;/label
             &gt;
           &lt;/div&gt;
@@ -2311,12 +2314,12 @@
             &lt;label class="form-check-label" for="flexCheckDefault"
               &gt;Crea tu contraseña&lt;/label
             &gt;
-          &lt;/div&gt;
-   <span class="missing-if-branch" title="if path not taken" >I</span>       &lt;div class="progress vertical"&gt;
-<span class="cstat-no" title="statement not covered" >            &lt;div class="u-circle {user.date ? 'u-c</span>ategory-select' : ''}" /&gt;
+   <span class="missing-if-branch" title="if path not taken" >I</span>       &lt;/div&gt;
+<span class="cstat-no" title="statement not covered" >          &lt;div class="progress vertical"&gt;</span>
+            &lt;div class="u-circle {user.date ? 'u-category-select' : ''}" /&gt;
             &lt;label class="form-check-label" for="flexCheckDefault"
-              &gt;Fecha de nacimiento&lt;/label
-            &gt;<span class="branch-1 cbranch-no" title="branch not covered" ></span>
+              &gt;Fecha de nacimiento&lt;/label<span class="branch-1 cbranch-no" title="branch not covered" ></span>
+            &gt;
           &lt;/div&gt;
           {#if userType == "X"}
             &lt;div class="progress vertical"&gt;
@@ -2426,8 +2429,8 @@
                 aria-label="phone"
                 class="u-input-email"
                 bind:value={user.phone}
-                on:keypress|preventDefault={(e) =&gt; phoneOnlyNumber(e)}
-    <span class="missing-if-branch" title="else path not taken" >E</span>            on:keypress={nextStepEnterPhone}
+    <span class="missing-if-branch" title="else path not taken" >E</span>            on:keypress|preventDefault={(e) =&gt; phoneOnlyNumber(e)}
+                on:keypress={nextStepEnterPhone}
                 placeholder="Ingrese número de teléfono"
                 maxlength="10"
               /&gt;
@@ -2442,8 +2445,8 @@
           &lt;/div&gt;
         &lt;/div&gt;
         &lt;!--Fin de componente user--&gt;
-      {/if}
-   <span class="missing-if-branch" title="else path not taken" >E</span>   {#if active_section == "email"}
+   <span class="missing-if-branch" title="else path not taken" >E</span>   {/if}
+      {#if active_section == "email"}
         &lt;!--Componente de correo--&gt;
         &lt;div class="u-date-new"&gt;
           &lt;div class="u-header"&gt;&lt;span&gt;CORREO ELECTRONICO&lt;/span&gt;&lt;/div&gt;
@@ -2465,16 +2468,16 @@
           &lt;/div&gt;
           &lt;div class="u-button-control"&gt;
             &lt;button
-              class="u-button {user.email ? 'u-active-button' : ''}"
-            <span class="missing-if-branch" title="else path not taken" >E</span>  on:click={validateEmail}
+            <span class="missing-if-branch" title="else path not taken" >E</span>  class="u-button {user.email ? 'u-active-button' : ''}"
+<span class="cstat-no" title="statement not covered" >              on:click={validateEmail}</span>
 <span class="cstat-no" title="statement not covered" >            &gt;</span>
-<span class="cstat-no" title="statement not covered" >              CONTINUAR&lt;/b</span>utton
-<span class="cstat-no" title="statement not covered" >            &gt;</span>
+<span class="cstat-no" title="statement not covered" >              CONTINUAR&lt;/button</span>
+            &gt;
           &lt;/div&gt;
         &lt;/div&gt;
         &lt;!--Fin de componente correo--&gt;
-      {/if}
-<span class="cstat-no" title="statement not covered" >      {#if active_section </span>== "password"}
+<span class="cstat-no" title="statement not covered" >      {/if}</span>
+      {#if active_section == "password"}
         &lt;!--Componente de contraseña--&gt;
         &lt;div class="u-date-new"&gt;
           &lt;div class="u-header"&gt;
@@ -2533,12 +2536,12 @@
               on:click={validateDate}
               on:keypress={nextStepEnterDate}
             &gt;
-              CONTINUAR
-   <span class="missing-if-branch" title="if path not taken" >I</span>         &lt;/button&gt;<span class="cstat-no" title="statement not covered" ></span>
-          &lt;/div&gt;
-   <span class="missing-if-branch" title="if path not taken" >I</span>     &lt;/div&gt;
-<span class="cstat-no" title="statement not covered" >        &lt;!--Fin de componente correo--&gt;</span>
-<span class="cstat-no" title="statement not covered" >      {/if}</span>
+   <span class="missing-if-branch" title="if path not taken" >I</span>           CONTINUAR<span class="cstat-no" title="statement not covered" ></span>
+            &lt;/button&gt;
+   <span class="missing-if-branch" title="if path not taken" >I</span>       &lt;/div&gt;
+<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;!--Fin de componente corre</span>o--&gt;
+      {/if}
       {#if userType == "X" &amp;&amp; active_section == "codeAgent"}
         &lt;!--Componente de user--&gt;
         &lt;div class="u-date-new"&gt;
@@ -2643,8 +2646,8 @@
           &lt;div class="u-button-control"&gt;
             &lt;button
               class="u-button {conditions == true ? 'u-active-button' : ''}"
-              on:click={validateCondition}&gt;ACEPTAR Y REGISTRAR&lt;/button
-   <span class="missing-if-branch" title="else path not taken" >E</span>         &gt;
+   <span class="missing-if-branch" title="else path not taken" >E</span>           on:click={validateCondition}&gt;ACEPTAR Y REGISTRAR&lt;/button
+            &gt;
           &lt;/div&gt;
         &lt;/div&gt;
         &lt;!--Fin de componente terminos--&gt;
@@ -2660,8 +2663,8 @@
             &lt;span&gt;{user.username}&lt;/span&gt;
           &lt;/div&gt;
           &lt;div class="u-button-control"&gt;
-            &lt;button class="u-button u-active-button" on:click={welcome}
-              &gt;BIENVENID@!&lt;/button<span class="branch-1 cbranch-no" title="branch not covered" ></span>
+            &lt;button class="u-button u-active-button" on:click={welcome}<span class="branch-1 cbranch-no" title="branch not covered" ></span>
+              &gt;BIENVENID@!&lt;/button
             &gt;
           &lt;/div&gt;
         &lt;/div&gt;
@@ -2769,8 +2772,8 @@
     .u-circle-final {
       width: 20px;
       height: 20px;
-      border-radius: 1rem;
-   <span class="missing-if-branch" title="else path not taken" >E</span>   border: 1px solid #f1bf00;
+   <span class="missing-if-branch" title="else path not taken" >E</span>   border-radius: 1rem;
+      border: 1px solid #f1bf00;
     }
     /*Estilos lado de la data*/
     .u-date-new {
@@ -2781,12 +2784,12 @@
       height: 100%;
       border-bottom-right-radius: 0.5rem;
       border-top-right-radius: 0.5rem;
-      border: 1px solid  var(--u-userregister-mydata-title);
-   <span class="missing-if-branch" title="if path not taken" >I</span> }
-<span class="cstat-no" title="statement not covered" >    .u-header {</span>
+   <span class="missing-if-branch" title="if path not taken" >I</span>   border: 1px solid  var(--u-userregister-mydata-title);
+<span class="cstat-no" title="statement not covered" >    }</span>
+    .u-header {
       color: black;
-      padding: 0.5rem;
-      font-weight: 700;<span class="branch-1 cbranch-no" title="branch not covered" ></span>
+      padding: 0.5rem;<span class="branch-1 cbranch-no" title="branch not covered" ></span>
+      font-weight: 700;
       border-top-right-radius: 0.5rem;
       background-color: var(--u-userregister-mydata-title);
     } 
@@ -2892,19 +2895,19 @@
       height: 27px;
       font-size: 28px;
       font-weight: 800;
-      display: flex;
-   <span class="missing-if-branch" title="if path not taken" >I</span>   justify-content: center;<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
+   <span class="missing-if-branch" title="if path not taken" >I</span>   display: flex;<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
+      justify-content: center;
       align-items: center;
-      border-radius: 2px;
-   <span class="missing-if-branch" title="if path not taken" >I</span>   cursor: pointer;<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
+   <span class="missing-if-branch" title="if path not taken" >I</span>   border-radius: 2px;<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
+      cursor: pointer;
     }
     .u-opt-select {
-      background-color: #f1bf00;
-   <span class="missing-if-branch" title="if path not taken" >I</span> }<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
+   <span class="missing-if-branch" title="if path not taken" >I</span>   background-color: #f1bf00;<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
+    }
     .u-category-select {
       background-color: white;
-    }
-    .u-category-select-final {<span class="branch-0 cbranch-no" title="branch not covered" ></span>
+    }<span class="branch-0 cbranch-no" title="branch not covered" ></span>
+    .u-category-select-final {
       background-color: rgb(231, 238, 28);
     }
     
@@ -2917,7 +2920,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-04-28T00:27:57.846Z
+                at 2023-04-29T15:23:59.965Z
             </div>
         <script src="../prettify.js"></script>
         <script>

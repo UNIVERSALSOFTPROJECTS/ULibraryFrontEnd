@@ -16,6 +16,7 @@
   export let userType;
   export let countryCodes;
   export let onOk;
+  export let onError;
   export let currencies;
   export let platform;
   //TODO: cargar todas las menedas.
