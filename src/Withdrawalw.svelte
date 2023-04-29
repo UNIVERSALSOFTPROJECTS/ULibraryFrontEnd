@@ -35,8 +35,9 @@
             notify = util.getNotify("success",data.MSG);
             data = await ServerConnection.user.getBalance(user.agregatorToken);
             user.balance = data.balance;
+            onOk(data);
         } catch (error) {
-            //onError(error);
+            onError(error);
             let msg = "Error al hacer retiro";
             if(error.errorCode && error.errorCode == 'PENDING_WITHDRAWAL' ) {
                 msg = error.message
