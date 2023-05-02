@@ -253,7 +253,7 @@
     if (getAge(user.date) < 18)
       return showNotify("error", "Debe ser mayor de edad");
     active_section = userType == "X" ? "codeAgent" : "validateSMS";
-
+    
     if (userType == "W") {
       preRegister();
     }
