@@ -7,8 +7,8 @@
   import momentx from "moment";
   let moment;
   if (!momentx) moment = require("moment");
-  else moment=momentx;
-    
+  else moment = momentx;
+
   export let dateString = null; //YYYY-MM-DD
   export let logoUrl;
   export let open;
@@ -35,7 +35,7 @@
   let currentYear = null;
   let adultYear = null;
   let maxYear = null;
-  
+
   const getAge = (birthday) => {
     var now = moment();
     var birthday_ = moment(birthday);
@@ -43,32 +43,40 @@
     return years;
   };
   const onChangeDate = (mode) => {
-    let daysOfMonth = moment(`${yearSelected}-${monthSelected}-01`).daysInMonth();
+    let daysOfMonth = moment(
+      `${yearSelected}-${monthSelected}-01`
+    ).daysInMonth();
     days = [];
-    for (let i = 1; i <= daysOfMonth; i++) {days.push(i);}
+    for (let i = 1; i <= daysOfMonth; i++) {
+      days.push(i);
+    }
     if (mode != "first") {
-      dateString = moment(`${yearSelected}-${monthSelected}-${daySelected}`).format("YYYY-MM-DD");
+      dateString = moment(
+        `${yearSelected}-${monthSelected}-${daySelected}`
+      ).format("YYYY-MM-DD");
       user.date = dateString;
     }
     //dateString = `${yearSelected}-${monthSelected}-${daySelected}`
     //user.date = dateString;
   };
 
-  
-
   onMount(() => {
     currentYear = Number(moment().format("YYYY"));
     adultYear = currentYear - 19;
     maxYear = currentYear - 80;
-    for (let i = adultYear; i >= maxYear; i--) { //array de años
+    for (let i = adultYear; i >= maxYear; i--) {
+      //array de años
       years.push(i);
     }
 
     yearSelected = years[0];
     onChangeDate("first");
 
-    for (let i = 0; i < 12; i++) {//array de meses
-      let month = moment().localeData("es").months(moment([0, i]), "");
+    for (let i = 0; i < 12; i++) {
+      //array de meses
+      let month = moment()
+        .localeData("es")
+        .months(moment([0, i]), "");
       months.push(month);
     }
     if (dateString && dateString.indexOf("-")) {
@@ -99,12 +107,12 @@
     //if( userType=="W" && !codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
     try {
       //if(userType=="W") user.codeAgent=codeAgent;
-      if( userType=='W'){
+      if (userType == "W") {
         user.codeAgent = currencies.find(
           (e) => e.code == active_currency
         ).codeAgent;
-      } 
-      
+      }
+
       if (!user.codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
       let { data } = await ServerConnection.user.register(
         user.username,
@@ -120,7 +128,9 @@
         platform,
         CURRENCIES_[active_currency]
       );
-      if (data.message == "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}" ||
+      if (
+        data.message ==
+          "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}" ||
         data.message == "{resp=Err, Id=2, Msg=El correo o el Usuario ya Exite}"
       ) {
         active_section = "email";
@@ -134,7 +144,9 @@
       } else if (data.errorCode == "SMS_CODE_INVALID") {
         active_section = "validateSMS";
         return showNotify("error", "Código SMS incorrecto");
-      } else if (data.message == "{resp=Err, Id=21, Msg=No existe ese id de grupo}") {
+      } else if (
+        data.message == "{resp=Err, Id=21, Msg=No existe ese id de grupo}"
+      ) {
         active_section = "codeAgent";
         return showNotify("error", "Código de agente incorrecto");
       }
@@ -193,14 +205,17 @@
     }
   };
   const validateUsername = (e) => {
-    if (!user.username) return showNotify("error", "Ingrese un nombre de usuario");
-    if (!/^[A-Za-z0-9_]+$/.test(user.username)) return showNotify("error", "Sólo letras, números y guión bajo");
+    if (!user.username)
+      return showNotify("error", "Ingrese un nombre de usuario");
+    if (!/^[A-Za-z0-9_]+$/.test(user.username))
+      return showNotify("error", "Sólo letras, números y guión bajo");
     active_section = "name";
   };
 
   const validateName = (e) => {
     if (!user.name) return showNotify("error", "Ingrese nombre y apellidos");
-    if (! /^[A-Za-zúéáíóüÜÑñÓÍÚÁÉ  ]*$/.test(user.name)) return showNotify("error", "Ingrese letras solamente"); 
+    if (!/^[A-Za-zúéáíóüÜÑñÓÍÚÁÉ  ]*$/.test(user.name))
+      return showNotify("error", "Ingrese letras solamente");
     if (currencies.length > 1) active_section = "currency";
     else active_section = "phone";
   };
@@ -238,7 +253,7 @@
     if (getAge(user.date) < 18)
       return showNotify("error", "Debe ser mayor de edad");
     active_section = userType == "X" ? "codeAgent" : "validateSMS";
-    
+
     if (userType == "W") {
       preRegister();
     }
@@ -257,7 +272,11 @@
     } catch (e) {
       console.log("errorxxx: ", e);
       let messagge = "Error desconocido en Preregistro";
-      if (e.response && e.response.data && e.response.data.message == "PHONE_FORMAT_FAILED") {
+      if (
+        e.response &&
+        e.response.data &&
+        e.response.data.message == "PHONE_FORMAT_FAILED"
+      ) {
         active_section = "phone";
         messagge = "Formato Telefono incorrecto";
       } else if (e.response.data.message == "El telefono ya existe") {
@@ -297,6 +316,7 @@
     register();
   };
 </script>
+
 <div class="u-userregister-stepbystep u-main-content-general">
   <div class="u-content-logo"><img class="logo" src={logoUrl} alt="" /></div>
   <div class="u-main-general">
@@ -429,6 +449,20 @@
           <div class="u-header">
             <span>NOMBRE Y APELLIDOS</span>
           </div>
+          <button class="u-back">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrow-left-circle-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"
+              />
+            </svg>
+          </button>
           <div class="u-body">
             <input
               aria-label="name"
@@ -453,11 +487,29 @@
         <!--Componente de user-->
         <div class="u-date-new">
           <div class="u-header"><span>NUMERO DE TELEFONO</span></div>
+          <button class="u-back">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrow-left-circle-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"
+              />
+            </svg>
+          </button>
           <div class="u-body">
             <div style="display:flex;align-items: flex-end;">
-              <select class="u-input-email" style="margin-right:0.5rem;color:#909090"  bind:value={user.countryCode}>
+              <select
+                class="u-input-email"
+                style="margin-right:0.5rem;color:#909090"
+                bind:value={user.countryCode}
+              >
                 {#each countryCodes as code}
-                <option>+{code}</option>
+                  <option>+{code}</option>
                 {/each}
               </select>
               <input
@@ -485,6 +537,20 @@
         <!--Componente de correo-->
         <div class="u-date-new">
           <div class="u-header"><span>CORREO ELECTRONICO</span></div>
+          <button class="u-back">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrow-left-circle-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"
+              />
+            </svg>
+          </button>
           <div class="u-body">
             <input
               aria-label="email"
@@ -518,6 +584,20 @@
           <div class="u-header">
             <span>CONTRASEÑA</span>
           </div>
+          <button class="u-back">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrow-left-circle-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"
+              />
+            </svg>
+          </button>
           <div class="u-body">
             <input
               aria-label="password"
@@ -546,12 +626,29 @@
         <!--Componente de correo-->
         <div class="u-date-new">
           <div class="u-header"><span>FECHA DE NACIMIENTO</span></div>
-            <!--DateThreeSelect bind:dateString={user.birthday} /-->
-
-          <div class="select-date u-body" >
-            <select aria-label="daySelected" bind:value={daySelected} on:change={onChangeDate}>
+          <!--DateThreeSelect bind:dateString={user.birthday} /-->
+          <button class="u-back">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrow-left-circle-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"
+              />
+            </svg>
+          </button>
+          <div class="select-date u-body">
+            <select
+              aria-label="daySelected"
+              bind:value={daySelected}
+              on:change={onChangeDate}
+            >
               {#each days as day}
-                <option aria-label="dayOption" >{day}</option>
+                <option aria-label="dayOption">{day}</option>
               {/each}
             </select>
             <select bind:value={monthSelected} on:change={onChangeDate}>
@@ -559,9 +656,13 @@
                 <option value={i} disabled={i == 0}>{month}</option>
               {/each}
             </select>
-            <select aria-label="birthday-year" bind:value={yearSelected} on:change={onChangeDate}>
+            <select
+              aria-label="birthday-year"
+              bind:value={yearSelected}
+              on:change={onChangeDate}
+            >
               {#each years as year}
-                <option aria-label='birthday-year-option'>{year}</option>
+                <option aria-label="birthday-year-option">{year}</option>
               {/each}
             </select>
           </div>
@@ -583,6 +684,20 @@
           <div class="u-header">
             <span>CODIGO DE AGENTE</span>
           </div>
+          <button class="u-back">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrow-left-circle-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"
+              />
+            </svg>
+          </button>
           <div class="u-body">
             <input
               class="u-input-email"
@@ -609,6 +724,20 @@
           <div class="u-header">
             <span>VALIDACION SMS</span>
           </div>
+          <button class="u-back">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrow-left-circle-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"
+              />
+            </svg>
+          </button>
           <div class="u-body">
             <input
               class="u-input-email"
@@ -636,6 +765,20 @@
           <div class="u-header">
             <span>ESTABLECER MONEDA</span>
           </div>
+          <button class="u-back">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrow-left-circle-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"
+              />
+            </svg>
+          </button>
           <div class="u-body u-currency">
             <span>Monedas sugeridas</span>
             <div class="u-coins" on:keypress={nextStepEnterCurrency}>
@@ -666,6 +809,20 @@
           <div class="u-header">
             <span>CONFIRMAR TÉRMINOS Y CONDICIONES</span>
           </div>
+          <button class="u-back">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrow-left-circle-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"
+              />
+            </svg>
+          </button>
           <div class="u-terms-and-conditions u-body">
             <input
               aria-label="terms"
@@ -693,6 +850,20 @@
           <div class="u-header">
             <span>BIENVENID@ A LA PLATAFORMA</span>
           </div>
+          <button class="u-back">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrow-left-circle-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"
+              />
+            </svg>
+          </button>
           <div class="u-welcome u-body">
             <span>¡BIENVENID@!</span>
             <span>{user.username}</span>
@@ -719,19 +890,32 @@
 />
 
 <style>
-
-
-:root{
-    --u-userregister-stepbystep-bg-menu: var(--universal-userregister-stepbystep-bg-menu, #000);
-    --u-userregister-stepbystep-bg-menu-title-principal: var(--universal-userregister-stepbystep-bg-menu-title-principal,#f1bf00);
-    --u-userregister-mydata-title: var( --universal-userregister-mydata-title, rgb(198, 194, 195) ) ;
-    --u-userregister-stepprogress-subtitle-color: var(--universal-userregister-stepprogress-subtitle-color,#fff) ;
-    --u-userregister-databydata-bg-menu: var( --universal-userregister-databydata-bg-menu, #fff);
-}
+  :root {
+    --u-userregister-stepbystep-bg-menu: var(
+      --universal-userregister-stepbystep-bg-menu,
+      #000
+    );
+    --u-userregister-stepbystep-bg-menu-title-principal: var(
+      --universal-userregister-stepbystep-bg-menu-title-principal,
+      #f1bf00
+    );
+    --u-userregister-mydata-title: var(
+      --universal-userregister-mydata-title,
+      rgb(198, 194, 195)
+    );
+    --u-userregister-stepprogress-subtitle-color: var(
+      --universal-userregister-stepprogress-subtitle-color,
+      #fff
+    );
+    --u-userregister-databydata-bg-menu: var(
+      --universal-userregister-databydata-bg-menu,
+      #fff
+    );
+  }
   .u-input-email:focus-visible {
     outline: 0;
-}
-@media only screen and (max-width: 1200px) {
+  }
+  @media only screen and (max-width: 1200px) {
     input:focus-visible {
       outline: 0;
     }
@@ -807,7 +991,7 @@
       border-bottom-left-radius: 0.5rem;
       border-top-right-radius: 0.5rem;
       border-top-left-radius: 0.5rem;
-      border: 1px solid  var(--u-userregister-mydata-title);
+      border: 1px solid var(--u-userregister-mydata-title);
     }
     .u-header {
       color: black;
@@ -816,12 +1000,12 @@
       border-top-right-radius: 0.5rem;
       border-top-left-radius: 0.5rem;
       background-color: var(--u-userregister-mydata-title);
-    } 
+    }
     .u-body {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items:flex-start;
+      align-items: flex-start;
       padding: 0.5rem;
       height: 70%;
     }
@@ -839,7 +1023,7 @@
       border-bottom: 1px solid #727272;
       font-weight: 800;
     }
-    .u-input-tall{
+    .u-input-tall {
       width: 100%;
     }
     .select-date {
@@ -889,7 +1073,7 @@
       color: #9a9797;
       font-size: 1rem;
     }
-    
+
     .u-button-control {
       display: flex;
       justify-content: center;
@@ -935,7 +1119,15 @@
     .u-category-select-final {
       background-color: rgb(231, 238, 28);
     }
-    
+    .u-back {
+      width: 10%;
+      background-color: transparent;
+      border: none;
+      margin-top: 0.5rem;
+      margin-left: 0.3rem;
+      border-radius: 50%;
+      cursor: pointer;
+    }
   }
   @media only screen and (min-width: 1200px) {
     input:focus-visible {
@@ -1025,7 +1217,7 @@
       height: 100%;
       border-bottom-right-radius: 0.5rem;
       border-top-right-radius: 0.5rem;
-      border: 1px solid  var(--u-userregister-mydata-title);
+      border: 1px solid var(--u-userregister-mydata-title);
     }
     .u-header {
       color: black;
@@ -1033,12 +1225,12 @@
       font-weight: 700;
       border-top-right-radius: 0.5rem;
       background-color: var(--u-userregister-mydata-title);
-    } 
+    }
     .u-body {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items:flex-start;
+      align-items: flex-start;
       padding: 0.5rem;
       height: 70%;
     }
@@ -1056,7 +1248,7 @@
       border-bottom: 1px solid #727272;
       font-weight: 800;
     }
-    .u-input-tall{
+    .u-input-tall {
       width: 100%;
     }
     .select-date {
@@ -1106,7 +1298,7 @@
       color: #9a9797;
       font-size: 1rem;
     }
-    
+
     .u-button-control {
       display: flex;
       justify-content: center;
@@ -1151,6 +1343,14 @@
     .u-category-select-final {
       background-color: rgb(231, 238, 28);
     }
-    
+    .u-back {
+      width: 10%;
+      background-color: transparent;
+      border: none;
+      margin-top: 0.5rem;
+      margin-left: 0.3rem;
+      border-radius: 50%;
+      cursor: pointer;
+    }
   }
 </style>
