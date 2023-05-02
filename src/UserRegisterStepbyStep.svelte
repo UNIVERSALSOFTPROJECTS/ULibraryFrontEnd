@@ -731,6 +731,212 @@
   .u-input-email:focus-visible {
     outline: 0;
 }
+@media only screen and (max-width: 1200px) {
+    input:focus-visible {
+      outline: 0;
+    }
+    .u-main-content-general {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .u-main-general {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+    .u-content-logo {
+      height: 80px;
+    }
+    .logo {
+      width: 100%;
+      height: 100%;
+    }
+    .u-info {
+      display: none;
+    }
+    .u-text-title {
+      display: flex;
+      flex-direction: column;
+      color: var(--u-userregister-stepbystep-bg-menu-title-principal);
+      font-weight: 600;
+      font-family: montserrat;
+      padding: 0.5rem;
+    }
+    .u-wrapp-progress {
+      font-size: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      height: 100%;
+      gap: 0.4rem;
+    }
+    .progress {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+    .u-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 1rem;
+      border: 1px solid white;
+    }
+    .u-star {
+      background-color: white;
+    }
+    .u-circle-final {
+      width: 20px;
+      height: 20px;
+      border-radius: 1rem;
+      border: 1px solid #f1bf00;
+    }
+    /*Estilos lado de la data*/
+    .u-date-new {
+      display: flex;
+      flex-direction: column;
+      background-color: var(--u-userregister-databydata-bg-menu);
+      width: 100%;
+      height: 100%;
+      border-bottom-right-radius: 0.5rem;
+      border-bottom-left-radius: 0.5rem;
+      border-top-right-radius: 0.5rem;
+      border-top-left-radius: 0.5rem;
+      border: 1px solid  var(--u-userregister-mydata-title);
+    }
+    .u-header {
+      color: black;
+      padding: 0.5rem;
+      font-weight: 700;
+      border-top-right-radius: 0.5rem;
+      border-top-left-radius: 0.5rem;
+      background-color: var(--u-userregister-mydata-title);
+    } 
+    .u-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items:flex-start;
+      padding: 0.5rem;
+      height: 70%;
+    }
+    .u-currency {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+    .u-input-email {
+      border: none;
+      font-size: 1rem;
+      letter-spacing: -1px;
+      border-bottom: 1px solid #727272;
+      font-weight: 800;
+    }
+    .u-input-tall{
+      width: 100%;
+    }
+    .select-date {
+      display: grid;
+      grid-template-columns: 31% 31% 31%;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    select {
+      height: 2.8em;
+      border-radius: 0.4rem;
+    }
+    .u-terms-and-conditions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: black;
+    }
+    .u-welcome {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      font-weight: 700;
+      text-align: center;
+      color: rgb(122, 122, 122);
+    }
+    .u-coins {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      width: 80%;
+      height: 3rem;
+      gap: 1rem;
+    }
+    .u-button-coins {
+      background-color: #f1f6f9;
+      border: none;
+      height: 100%;
+      width: 6rem;
+      border-radius: 0.3rem;
+    }
+    .u-body span {
+      color: #9a9797;
+      font-size: 1rem;
+    }
+    
+    .u-button-control {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+    .u-button {
+      width: 90%;
+      border: none;
+      height: 2rem;
+      border-radius: 0.2rem;
+      background-color: white;
+      color: black;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+    }
+    .u-active-button {
+      background-color: #f1bf00;
+    }
+    .u-close {
+      margin-left: 0.5rem;
+      text-align: center;
+      border: none;
+      background: #bd992a;
+      color: black;
+      width: 24px;
+      height: 27px;
+      font-size: 28px;
+      font-weight: 800;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    .u-opt-select {
+      background-color: #f1bf00;
+    }
+    .u-category-select {
+      background-color: white;
+    }
+    .u-category-select-final {
+      background-color: rgb(231, 238, 28);
+    }
+    
+  }
   @media only screen and (min-width: 1200px) {
     input:focus-visible {
       outline: 0;

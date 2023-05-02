@@ -921,6 +921,7 @@
     "typed-styles": "^0.0.7",
     "typedarray": "^0.0.6",
     "typedarray-to-buffer": "^3.1.5",
+    "u-library": "github:UNIVERSALSOFTPROJECTS/ULibraryFrontEnd",
     "unbox-primitive": "^1.0.1",
     "unfetch": "^4.2.0",
     "unicode-canonical-property-names-ecmascript": "^1.0.4",
