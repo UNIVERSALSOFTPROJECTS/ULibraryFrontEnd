@@ -228,8 +228,8 @@
   const validatePhone = () => {
     if (!user.phone)
       return showNotify("error", "Ingrese su numero de telefono");
-    else if (user.phone.length < 6)
-      return showNotify("error", "Mínimo 6 digitos para el teléfono");
+    else if (user.phone.length < 7)
+      return showNotify("error", "Mínimo 7 digitos para el teléfono");
     active_section = "email";
   };
 
@@ -315,6 +315,45 @@
       return showNotify("error", "Acepte los términos y condiciones");
     register();
   };
+
+  const backToUserSecction = ( ) => {
+    active_section = "user";
+  }
+
+  const backToNameSecction = ( ) => {
+    if(userType == "X") active_section = "name";
+    else active_section = "currency"
+  }
+
+  const backToPhoneSecction = ( ) => {
+    active_section = "phone";
+  }
+
+  const backToEmailSecction = ( ) => {
+    active_section = "email";
+  }
+
+  const backToPasswordSecction = ( ) => {
+    active_section = "password";
+  }
+
+  const backToDateSecction = ( ) => {
+    active_section = "date";
+  }
+
+  const backToAgentCodeSecction = ( ) => {
+    active_section = "codeAgent";
+  }
+
+  const backToValidationSecction = ( ) => {
+    active_section = "validateSMS";
+  }
+
+  const backToConditionsSecction = ( ) => {
+    active_section = "conditions";
+  }
+
+
 </script>
 
 <div class="u-userregister-stepbystep u-main-content-general">
@@ -449,7 +488,7 @@
           <div class="u-header">
             <span>NOMBRE Y APELLIDOS</span>
           </div>
-          <button class="u-back">
+          <button on:click={backToUserSecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -487,7 +526,7 @@
         <!--Componente de user-->
         <div class="u-date-new">
           <div class="u-header"><span>NUMERO DE TELEFONO</span></div>
-          <button class="u-back">
+          <button on:click={backToNameSecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -537,7 +576,7 @@
         <!--Componente de correo-->
         <div class="u-date-new">
           <div class="u-header"><span>CORREO ELECTRONICO</span></div>
-          <button class="u-back">
+          <button on:click={backToPhoneSecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -584,7 +623,7 @@
           <div class="u-header">
             <span>CONTRASEÑA</span>
           </div>
-          <button class="u-back">
+          <button on:click={backToEmailSecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -627,7 +666,7 @@
         <div class="u-date-new">
           <div class="u-header"><span>FECHA DE NACIMIENTO</span></div>
           <!--DateThreeSelect bind:dateString={user.birthday} /-->
-          <button class="u-back">
+          <button on:click={backToPasswordSecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -684,7 +723,7 @@
           <div class="u-header">
             <span>CODIGO DE AGENTE</span>
           </div>
-          <button class="u-back">
+          <button on:click={backToDateSecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -724,7 +763,7 @@
           <div class="u-header">
             <span>VALIDACION SMS</span>
           </div>
-          <button class="u-back">
+          <button on:click={backToAgentCodeSecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -765,7 +804,7 @@
           <div class="u-header">
             <span>ESTABLECER MONEDA</span>
           </div>
-          <button class="u-back">
+          <button on:click={backToNameSecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -809,7 +848,7 @@
           <div class="u-header">
             <span>CONFIRMAR TÉRMINOS Y CONDICIONES</span>
           </div>
-          <button class="u-back">
+          <button on:click={backToValidationSecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -850,20 +889,6 @@
           <div class="u-header">
             <span>BIENVENID@ A LA PLATAFORMA</span>
           </div>
-          <button class="u-back">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-arrow-left-circle-fill"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"
-              />
-            </svg>
-          </button>
           <div class="u-welcome u-body">
             <span>¡BIENVENID@!</span>
             <span>{user.username}</span>
