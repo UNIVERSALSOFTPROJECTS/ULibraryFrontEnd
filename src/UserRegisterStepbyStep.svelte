@@ -99,7 +99,7 @@
     //if( userType=="W" && !codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
     try {
       //if(userType=="W") user.codeAgent=codeAgent;
-      if( userType=='W'){
+      if( userType=='W' || userType == 'X'){
         user.codeAgent = currencies.find(
           (e) => e.code == active_currency
         ).codeAgent;
@@ -239,7 +239,7 @@
       return showNotify("error", "Debe ser mayor de edad");
     active_section = userType == "X" ? "codeAgent" : "validateSMS";
     
-    if (userType == "W") {
+    if (userType == "W" || userType == "X") {
       preRegister();
     }
   };
