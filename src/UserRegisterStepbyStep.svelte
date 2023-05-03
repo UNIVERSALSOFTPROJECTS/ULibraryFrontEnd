@@ -320,7 +320,12 @@
     active_section = "user";
   }
 
-  const backToNameSecction = ( ) => {
+  const backToNameOrCurrencySecction = ( ) => {
+    if(userType == "X") active_section = "name";
+    else active_section = "currency";
+  }
+
+  const backToNameSecctionFromCurrency = ( ) => {
     active_section = "name";
   }
 
@@ -348,8 +353,8 @@
     active_section = "validateSMS";
   }
 
-  const backToConditionsSecction = ( ) => {
-    active_section = "conditions";
+  const backToCurrencySecction = ( ) => {
+    active_section = "currency";
   }
 
 
@@ -525,7 +530,7 @@
         <!--Componente de user-->
         <div class="u-date-new">
           <div class="u-header"><span>NUMERO DE TELEFONO</span></div>
-          <button on:click={backToNameSecction} class="u-back">
+          <button on:click={backToNameOrCurrencySecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -803,7 +808,7 @@
           <div class="u-header">
             <span>ESTABLECER MONEDA</span>
           </div>
-          <button on:click={backToNameSecction} class="u-back">
+          <button on:click={backToNameSecctionFromCurrency} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
