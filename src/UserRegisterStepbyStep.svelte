@@ -321,8 +321,7 @@
   }
 
   const backToNameSecction = ( ) => {
-    if(userType == "X") active_section = "name";
-    else active_section = "currency"
+    active_section = "name";
   }
 
   const backToPhoneSecction = ( ) => {
