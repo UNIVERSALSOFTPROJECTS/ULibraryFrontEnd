@@ -107,7 +107,7 @@
     //if( userType=="W" && !codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
     try {
       //if(userType=="W") user.codeAgent=codeAgent;
-      if (userType == "W" || userType == "X") {
+      if (userType == "W") {
         user.codeAgent = currencies.find(
           (e) => e.code == active_currency
         ).codeAgent;
@@ -297,9 +297,8 @@
   };
 
   const validateCodeAgent = async () => {
-    if (!user.codeAgent)
-      return showNotify("error", "Ingrese el codigo de agente");
-      preRegister();
+    if (!user.codeAgent) return showNotify("error", "Ingrese el codigo de agente");
+    preRegister();
   };
   const validateSMS = () => {
     if (!user.validateSMS) return showNotify("error", "Ingrese el codigo SMS");
