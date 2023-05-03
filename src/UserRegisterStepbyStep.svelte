@@ -254,9 +254,10 @@
       return showNotify("error", "Debe ser mayor de edad");
     active_section = userType == "X" ? "codeAgent" : "validateSMS";
     
-    if (userType == "W" || userType == "X") {
+    if (userType == "W") {
       preRegister();
     }
+
   };
 
   const preRegister = async () => {
@@ -298,7 +299,7 @@
   const validateCodeAgent = async () => {
     if (!user.codeAgent)
       return showNotify("error", "Ingrese el codigo de agente");
-    preRegister();
+      preRegister();
   };
   const validateSMS = () => {
     if (!user.validateSMS) return showNotify("error", "Ingrese el codigo SMS");
