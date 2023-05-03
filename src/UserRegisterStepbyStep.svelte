@@ -322,7 +322,7 @@
 
   const backToNameOrCurrencySecction = ( ) => {
     if(userType == "X") active_section = "name";
-    else active_section = "currency";
+    else if(userType == "W") active_section = "currency";
   }
 
   const backToNameSecctionFromCurrency = ( ) => {
