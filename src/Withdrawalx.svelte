@@ -17,7 +17,7 @@
     let notify = {};
     
     onMount(()=>{
-        pendingWhitdrawall = false;
+        getPendingWithdrawal();
     })
 
     const closeModal = () => {

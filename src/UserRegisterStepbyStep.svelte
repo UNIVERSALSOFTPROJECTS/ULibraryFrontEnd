@@ -300,6 +300,7 @@
     if (!user.codeAgent) return showNotify("error", "Ingrese el codigo de agente");
     preRegister();
   };
+
   const validateSMS = () => {
     if (!user.validateSMS) return showNotify("error", "Ingrese el codigo SMS");
     active_section = "conditions";
