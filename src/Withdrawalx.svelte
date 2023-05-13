@@ -71,7 +71,12 @@
         //copyText.select();
         //copyText.setSelectionRange(0, 99999); // For mobile devices
         // Copy the text inside the text field
-        navigator.clipboard.writeText(pendingWhitdrawall.codigo);
+        const copyUser = "Usuario: " + user.username + ", ";
+        const copyId = "Id: " + user.code + ", ";
+        const copyCode = "Codigo Retiro: " + pendingWhitdrawall.codigo;
+        const finalMessage = copyUser + copyId + copyCode;
+        //navigator.clipboard.writeText(pendingWhitdrawall.codigo);
+        navigator.clipboard.writeText(finalMessage);
     };
 
     const validateData = () => {
