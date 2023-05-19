@@ -21,6 +21,7 @@
     })
 
     const closeModal = () => {
+        console.log("Cerrando Modal.");
         open = false;
     };
     const getPendingWithdrawal = async(token) => {
