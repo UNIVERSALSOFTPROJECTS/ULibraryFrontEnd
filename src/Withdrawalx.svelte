@@ -17,7 +17,7 @@
     let notify = {};
     
     onMount(()=>{
-        getPendingWithdrawal();
+        getPendingWithdrawal(user.token);
     })
 
     const closeModal = () => {
