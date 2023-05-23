@@ -27,18 +27,11 @@
     const getPendingWithdrawal = async(token) => {
         let resp_pending = await ServerConnection.wallet.checkPreviewWithdrawal(token);
         if(resp_pending.data.monto) pendingWhitdrawall = resp_pending.data; // si tiene monto quiere decir que tiene un retiro pendiente
-    
     };
-    /*const duplicateSession=()=>{
-        alert("SESION ABIERTA EN OTRO DISPOSITIVO");
-        location.reload();
-        return ;
-    };*/
 
     const cashout = async()=>{
         pendingWhitdrawall=null;
         try {
-           
             let resp_withdrawal = null;
             await getPendingWithdrawal(user.token);
             if(!pendingWhitdrawall ){
@@ -56,7 +49,6 @@
             else if(e_withdrawal.response.data.message != 'RET_PEND') onError(e_withdrawal.response.data.message);
             else onError(e_withdrawal.response.data)
         }
-       
     };
 
     const validateAmount = (event) => {
@@ -67,16 +59,10 @@
     };
 
     const copyCodeWhitdrawall = () => {
-        //let copyText = document.getElementById("myInput");
-        // Select the text field
-        //copyText.select();
-        //copyText.setSelectionRange(0, 99999); // For mobile devices
-        // Copy the text inside the text field
         const copyUser = "Usuario: " + user.username + ", ";
         const copyId = "Id: " + user.code + ", ";
         const copyCode = "Codigo Retiro: " + pendingWhitdrawall.codigo;
         const finalMessage = copyUser + copyId + copyCode;
-        //navigator.clipboard.writeText(pendingWhitdrawall.codigo);
         navigator.clipboard.writeText(finalMessage);
     };
 
@@ -84,7 +70,6 @@
         let msg = "-"
         if(!amount || amount ==='') msg = "Ingrese el monto";
         else if(amount < minAmount || amount > maxAmount)  msg = "Monto mínimo " +minAmount +" "+ user.currency + ", máximo " + maxAmount+" "+user.currency;
-        
         if(msg !== "-") {return notify = util.getNotify("error",msg);}
         else{ cashout();}
     }
