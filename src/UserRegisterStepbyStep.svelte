@@ -496,8 +496,8 @@
           <button on:click={backToUserSecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
+              width="25"
+              height="25"
               fill="currentColor"
               class="bi bi-arrow-left-circle-fill"
               viewBox="0 0 16 16"
@@ -534,8 +534,8 @@
           <button on:click={backToNameOrCurrencySecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
+              width="25"
+              height="25"
               fill="currentColor"
               class="bi bi-arrow-left-circle-fill"
               viewBox="0 0 16 16"
@@ -584,8 +584,8 @@
           <button on:click={backToPhoneSecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
+              width="25"
+              height="25"
               fill="currentColor"
               class="bi bi-arrow-left-circle-fill"
               viewBox="0 0 16 16"
@@ -631,8 +631,8 @@
           <button on:click={backToEmailSecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
+              width="25"
+              height="25"
               fill="currentColor"
               class="bi bi-arrow-left-circle-fill"
               viewBox="0 0 16 16"
@@ -674,8 +674,8 @@
           <button on:click={backToPasswordSecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
+              width="25"
+              height="25"
               fill="currentColor"
               class="bi bi-arrow-left-circle-fill"
               viewBox="0 0 16 16"
@@ -731,8 +731,8 @@
           <button on:click={backToDateSecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
+              width="25"
+              height="25"
               fill="currentColor"
               class="bi bi-arrow-left-circle-fill"
               viewBox="0 0 16 16"
@@ -771,8 +771,8 @@
           <button on:click={backToAgentCodeSecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
+              width="25"
+              height="25"
               fill="currentColor"
               class="bi bi-arrow-left-circle-fill"
               viewBox="0 0 16 16"
@@ -812,8 +812,8 @@
           <button on:click={backToNameSecctionFromCurrency} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
+              width="25"
+              height="25"
               fill="currentColor"
               class="bi bi-arrow-left-circle-fill"
               viewBox="0 0 16 16"
@@ -856,8 +856,8 @@
           <button on:click={backToValidationSecction} class="u-back">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
+              width="25"
+              height="25"
               fill="currentColor"
               class="bi bi-arrow-left-circle-fill"
               viewBox="0 0 16 16"
@@ -1164,18 +1164,14 @@
       outline: 0;
     }
     .u-main-content-general {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      display: grid;
+      justify-items: center;
     }
     .u-main-general {
       display: flex;
-      flex-direction: row;
-      justify-content: center;
     }
     .u-content-logo {
-      height: 100px;
+      height: 80px;
     }
     .logo {
       width: 100%;
@@ -1183,45 +1179,34 @@
     }
     .u-content-info {
       display: grid;
-      grid-template-columns: 50% 50%;
+      grid-template-columns: 46% 54%;
       align-items: center;
-      width: 35rem;
+      width: 40rem;
     }
     .u-info {
-      display: flex;
-      flex-direction: column;
+      display: grid;
       background-color: var(--u-userregister-stepbystep-bg-menu);
       color: var(--u-userregister-stepprogress-subtitle-color);
-      width: 100%;
-      height: 100%;
-      padding-left: 0.5rem;
-      border-bottom-left-radius: 0.5rem;
-      border-top-left-radius: 0.5rem;
+      padding: 1rem;
+      border-radius: 10px 0 0 10px;
     }
     .u-text-title {
-      display: flex;
-      flex-direction: column;
+      display: grid;
       color: var(--u-userregister-stepbystep-bg-menu-title-principal);
       font-weight: 600;
       font-family: montserrat;
-      padding: 0.5rem;
+      font-size: 1.1rem;
     }
     .u-wrapp-progress {
-      font-size: 1rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      height: 100%;
-      gap: 0.4rem;
+      display: grid;
+      gap: 0.75rem;
+      padding: 1rem 0;
     }
     .progress {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
+      display: grid;
       gap: 0.5rem;
-      padding-bottom: 0.5rem;
+      grid-template-columns: 2rem 1fr;
+      align-items: center;
     }
     .u-circle {
       width: 20px;
@@ -1233,21 +1218,20 @@
       background-color: white;
     }
     .u-circle-final {
-      width: 20px;
-      height: 20px;
+      width: 1.5rem;
+      height: 1.5rem;
       border-radius: 1rem;
       border: 1px solid #f1bf00;
     }
     /*Estilos lado de la data*/
     .u-date-new {
       display: flex;
-      flex-direction: column;
       background-color: var(--u-userregister-databydata-bg-menu);
-      width: 100%;
       height: 100%;
       border-bottom-right-radius: 0.5rem;
       border-top-right-radius: 0.5rem;
       border: 1px solid var(--u-userregister-mydata-title);
+      flex-direction: column;
     }
     .u-header {
       color: black;
@@ -1330,20 +1314,20 @@
     }
 
     .u-button-control {
-      display: flex;
+      /*display: flex;
       justify-content: center;
       align-items: center;
-      width: 100%;
+      width: 100%;*/
     }
     .u-button {
-      width: 90%;
+      width: -webkit-fill-available;
       border: none;
-      height: 2rem;
+      height: 2.25rem;
       border-radius: 0.2rem;
       background-color: white;
-      color: black;
       font-weight: 700;
       cursor: pointer;
+      margin: 1rem;
     }
     .u-active-button {
       background-color: #f1bf00;
@@ -1374,13 +1358,11 @@
       background-color: rgb(231, 238, 28);
     }
     .u-back {
-      width: 10%;
       background-color: transparent;
       border: none;
-      margin-top: 0.5rem;
-      margin-left: 0.3rem;
-      border-radius: 50%;
       cursor: pointer;
+      padding: 0.5rem;
+      width: max-content;
     }
   }
 </style>
