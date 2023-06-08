@@ -34,10 +34,10 @@ $env:NODE_OPTIONS = "--openssl-legacy-provider"
 luego npm run storybook nuevamente y levantara la vista de storybook.
 
 Ya puedes empezar!
-
+-----"ESTO AUN NO SE USARA ahorita actualizamos en cada plataforma con npm y la ruta de github"
 para publicar en NPM
 npm publish
-
+-------------
 Tambien se puede instalar usando directamente de github, usar esto para verificar.
 npm i https://github.com/UNIVERSALSOFTPROJECTS/ULibraryFrontEnd.git
 Si en el cliente sale error al abrir la pagina debe:
