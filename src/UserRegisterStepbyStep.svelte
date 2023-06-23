@@ -153,7 +153,7 @@
       }
       active_section = "welcome";
     } catch (e) {
-      console.log("registermsg", e);
+      console.log("registermsg", e, e.response.data.errorCode);
       if(e.response.data.errorCode == "SMS_CODE_INVALID"){active_section = "validateSMS"}
       return showNotify("error", "Error al crear usuario");
     }
