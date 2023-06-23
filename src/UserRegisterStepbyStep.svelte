@@ -128,7 +128,7 @@
       active_section = "welcome";
     } catch (e) {
       console.log("registermsg", e);
-      if(e.errorCode == "SMS_CODE_INVALID"){active_section = "validateSMS"; return showNotify("error", "Código sms incorrecto")};
+      if(e.data.errorCode == "SMS_CODE_INVALID"){active_section = "validateSMS"; return showNotify("error", "Código sms incorrecto")};
       if(e.message == "{resp=Err, Id=2, Msg=El correo o el Usuario ya Exite}" || e.message == "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}"){active_section = "email"; return showNotify("error", "El correo ingresado ya esxiste")};
       if(e.message == "{resp=Err, Id=1, Msg=Usuario ya Exite}" || e.message == "{resp=Err, Id=2, Msg=Usuario ya Exite}"){active_section = "user"; return showNotify("error", "El nombre de usuario ingresado ya existe")};
       if(e.message == "{resp=Err, Id=21, Msg=No existe ese id de grupo}"){active_section = "codeAgent"; return showNotify("error", "Código de agente incorrecto")};
