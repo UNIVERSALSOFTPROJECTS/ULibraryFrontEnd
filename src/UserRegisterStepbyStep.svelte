@@ -154,8 +154,8 @@
       active_section = "welcome";
     } catch (e) {
       console.log("registermsg", e);
-      console.log(e.response.data.errorCode);
-      if(e.data.errorCode == "SMS_CODE_INVALID"){active_section = "validateSMS"}
+      console.log(e.response);
+      if(e.errorCode == "SMS_CODE_INVALID"){active_section = "validateSMS"}
       return showNotify("error", "Error al crear usuario");
     }
   };
