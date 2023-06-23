@@ -104,15 +104,12 @@
 
   const register = async () => {
     if (currencies.length == 1) active_currency = currencies[0].code;
-    //if( userType=="W" && !codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
     try {
-      //if(userType=="W") user.codeAgent=codeAgent;
       if (userType == "W") {
         user.codeAgent = currencies.find(
           (e) => e.code == active_currency
         ).codeAgent;
       }
-
       if (!user.codeAgent) return alert("CODIGO AGENTE OBLOGATIRO");
       let { data } = await ServerConnection.user.register(
         user.username,
@@ -128,34 +125,13 @@
         platform,
         CURRENCIES_[active_currency]
       );
-      console.log("DATAAAAA: ",data)
-      if (
-        data.message ==
-          "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}" ||
-        data.message == "{resp=Err, Id=2, Msg=El correo o el Usuario ya Exite}"
-      ) {
-        active_section = "email";
-        return showNotify("error", "Este correo ya esta en uso");
-      } else if (
-        data.message == "{resp=Err, Id=1, Msg=Usuario ya Exite}" ||
-        data.message == "{resp=Err, Id=2, Msg=Usuario ya Exite}"
-      ) {
-        active_section = "user";
-        return showNotify("error", "Este nombre de usuario ay existe");
-      } else if (e.response.data.errorCode == "SMS_CODE_INVALID") {
-        active_section = "validateSMS";
-        return showNotify("error", "Código SMS incorrecto");
-      } else if (
-        data.message == "{resp=Err, Id=21, Msg=No existe ese id de grupo}"
-      ) {
-        active_section = "codeAgent";
-        return showNotify("error", "Código de agente incorrecto");
-      }
       active_section = "welcome";
     } catch (e) {
       console.log("registermsg", e);
-      console.log(e.response);
-      if(e.errorCode == "SMS_CODE_INVALID"){active_section = "validateSMS"}
+      if(e.errorCode == "SMS_CODE_INVALID"){active_section = "validateSMS"; return showNotify("error", "Código sms incorrecto")};
+      if(e.message == "{resp=Err, Id=2, Msg=El correo o el Usuario ya Exite}" || e.message == "{resp=Err, Id=1, Msg=El correo o el Usuario ya Exite}"){active_section = "email"; return showNotify("error", "El correo ingresado ya esxiste")};
+      if(e.message == "{resp=Err, Id=1, Msg=Usuario ya Exite}" || e.message == "{resp=Err, Id=2, Msg=Usuario ya Exite}"){active_section = "user"; return showNotify("error", "El nombre de usuario ingresado ya existe")};
+      if(e.message == "{resp=Err, Id=21, Msg=No existe ese id de grupo}"){active_section = "codeAgent"; return showNotify("error", "Código de agente incorrecto")};
       return showNotify("error", "Error al crear usuario");
     }
   };
