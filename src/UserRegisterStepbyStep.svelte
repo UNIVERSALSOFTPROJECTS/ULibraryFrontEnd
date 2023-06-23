@@ -141,7 +141,7 @@
       ) {
         active_section = "user";
         return showNotify("error", "Este nombre de usuario ay existe");
-      } else if (data.errorCode == "SMS_CODE_INVALID") {
+      } else if (data.errorCode == "SMS_CODE_INVALID" || data.message== "SMS invalid") {
         active_section = "validateSMS";
         return showNotify("error", "Código SMS incorrecto");
       } else if (
