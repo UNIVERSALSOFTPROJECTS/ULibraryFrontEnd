@@ -27,7 +27,7 @@
   let active_section = "user";
   let conditions = false;
   let days = [];
-  let months = [""];
+  let months = ["", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10","11","12"];
   let years = [];
   let monthSelected = 1;
   let yearSelected = null;
@@ -50,6 +50,8 @@
     for (let i = 1; i <= daysOfMonth; i++) {
       days.push(i);
     }
+    if (daySelected > days.length){daySelected = days.length};
+
     if (mode != "first") {
       dateString = moment(
         `${yearSelected}-${monthSelected}-${daySelected}`
@@ -62,7 +64,7 @@
 
   onMount(() => {
     currentYear = Number(moment().format("YYYY"));
-    adultYear = currentYear - 19;
+    adultYear = currentYear - 18;
     maxYear = currentYear - 80;
     for (let i = adultYear; i >= maxYear; i--) {
       //array de años
@@ -72,13 +74,13 @@
     yearSelected = years[0];
     onChangeDate("first");
 
-    for (let i = 0; i < 12; i++) {
+    /*for (let i = 0; i < 12; i++) {
       //array de meses
       let month = moment()
         .localeData("es")
         .months(moment([0, i]), "");
       months.push(month);
-    }
+    }*/
     if (dateString && dateString.indexOf("-")) {
       let dates = dateString.split("-");
       yearSelected = Number(dates[0]);

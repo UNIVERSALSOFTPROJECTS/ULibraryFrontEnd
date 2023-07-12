@@ -45,7 +45,7 @@
                 notify = util.getNotify("error",msg)
             }    
         }
-    }
+    }   
 
     const validateAmount = (event) => {
         let isNumber = /\d/.test(event.key);
