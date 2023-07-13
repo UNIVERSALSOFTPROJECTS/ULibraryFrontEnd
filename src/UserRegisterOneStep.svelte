@@ -3,6 +3,7 @@
   import Notifier from "./Notifier.svelte";
   import DateThreeSelect from "./Date3Select.svelte";
   import { onMount } from "svelte";
+
   export let user = {};
   export let currencies;
   export let platform;
@@ -18,7 +19,7 @@
   let agentCodeTwo = "";
   let notify = { display: false, message: "", type: "success" };
 
-  const CURRENCIES_ = { USD: 3, PEN: 9, ARS: 18 };
+  const CURRENCIES_ = { USD: 3, PEN: 9, ARS: 18 , VUSD:17 };
   const showNotify = (type, message) => {
     notify = { display: true, type, message };
     setTimeout(() => {

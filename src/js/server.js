@@ -6,10 +6,13 @@ let headers = {}
 
 const ServerConnection = (() => {
 
+    
+
     const setConfig=(config)=>{
         conf = config;
         headers = {"Content-Type":"application/json;charset=UTF-8", "clientAuth":conf.CLIENT_AUTH, "client":conf.CLIENT_CODE}
     }
+    
     
     const wallet = {
         checkPreviewWithdrawal:async(token)=>{
@@ -43,10 +46,9 @@ const ServerConnection = (() => {
         getPayLink:async (token, amount, type)=>{
             let url = conf.API+"/getpaylink/"
             return await axios.post( url,{token, amount, type},{headers} );
-
-        }
-         
+        }     
     }
+
     const user = {
         getBalance:(userToken)=>{
             let url = conf.API+`/balance/${userToken}`;
@@ -58,6 +60,12 @@ const ServerConnection = (() => {
             if(!conf.org) throw "ORG_MANDATORY";
             var payload = {username,email,phone, org:conf.org, platform}
             return axios.post( url,payload,{headers} );
+        },
+        login:(username,password)=>{
+            return new Promise( (result, reject)=>{
+                let payload = {username,password}
+                return axios.post(conf.API+"/login",payload,{headers});
+            })
         },
         register: (username, name,country, phone, email, password, date, operatorId,smscode,usertype, platform, currency=conf.currency)=>{
             if(!currency) throw "CURRENCY_MANDATORY";

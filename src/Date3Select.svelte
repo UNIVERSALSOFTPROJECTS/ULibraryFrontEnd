@@ -30,11 +30,12 @@
   let daySelected = 1;
 
   const currentYear = Number(moment().format("YYYY"));
-  const adultYear = currentYear - 19;
+  const adultYear = currentYear - 18;
   const maxYear = currentYear - 80;
 
   for (let i = adultYear; i >= maxYear; i--) {years.push(i);}
   yearSelected = years[0];
+
   
   
 
@@ -57,9 +58,12 @@
       yearSelected = dates[2];
       monthSelected = dates[1];
       daySelected = dates[0];
-    }
+    } 
     if(!dateString) dateString = moment(`${yearSelected}-${monthSelected}-${daySelected}`).format("YYYY-MM-DD");
   });
+
+
+
 </script>
 
 <div class="select-date">

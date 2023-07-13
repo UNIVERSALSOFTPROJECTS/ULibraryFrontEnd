@@ -11,6 +11,7 @@ let userType="W";
 let countryCode ="+51"
 let currencies1=[{code:"USD", codeAgent:5664},{code:"PEN", codeAgent:5263}];
 let currencies2=[{code:"PEN", codeAgent:5263}];
+let currencies3=[{code:"USD", codeAgent:5664},{code:"VUSD", codeAgent:5263}];
 let countryCodes1 = ["51"];
 let countryCodes2 = ["51","1","113"];
 let platform = "GoldenBet";
@@ -30,6 +31,11 @@ export const userWRegister1Currency = () => ({
 export const userWRegister2Currencies = () => ({
   Component: UserRegisterStepbyStep,
   props: {logoUrl, open, user, userType,currencies:currencies1, countryCodes:countryCodes1, onOk, platform}
+});
+
+export const userWRegisterPENVUSD = () => ({
+  Component: UserRegisterStepbyStep,
+  props: {logoUrl, open, user, userType,currencies:currencies3, countryCodes:countryCodes1, onOk, platform}
 });
 
 export const userWRegister1CountryCode = () => ({
