@@ -55,7 +55,7 @@
         if(!/\d/.test(event.key)) return;
         if(event.charCode === 45 || event.charCode === 43){ event.preventDefault(); return}
         if (amount.length < 4) amount += event.key;
-        else if(amount.length >= 4) return notify = util.getNotify("error","Alcanzó el limite de cifras" )
+       // else if(amount.length >= 4) return notify = util.getNotify("error","Alcanzó el limite de cifras" )
     };
 
     const copyCodeWhitdrawall = () => {
