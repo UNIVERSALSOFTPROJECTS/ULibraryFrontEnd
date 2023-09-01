@@ -12,7 +12,50 @@ const ServerConnection = (() => {
         conf = config;
         headers = {"Content-Type":"application/json;charset=UTF-8", "clientAuth":conf.CLIENT_AUTH, "client":conf.CLIENT_CODE}
     }
-    
+
+    /* PARA Universal User API */
+    const u_wallet={
+        checkPreviewWithdrawal:async(token)=>{
+            headers['Authorization'] = token;
+            var url=conf.API+`/checkPreviewWithdrawal`;
+            return await axios.get(url,{headers});
+        },
+         listBankAccounts:async( userToken)=>{   
+            if(!conf.platformId)throw("PLATFORM ID EMPTY");
+            headers['Authorization'] = userToken;         
+            let url = conf.API+"/bankAccounts?platformId="+conf.platformId;
+            return await axios.get(url,{headers});
+        },  
+    }
+
+    const u_user={
+        getBalance:(userToken)=>{
+            let url = conf.API+`/balance/${userToken}`;
+            return axios.get(url,{headers}) ;
+        },
+        preRegister:(username, email, phone)=>{
+            if(!conf.platformId) throw("PLATFORM ID EMPTY");
+            var url=conf.API+"/user/preRegister";
+            //console.log("conf here: ",conf)
+            if(!conf.org) throw "ORG_MANDATORY";
+            var payload = {username,email,phone, org:conf.org, platformId:conf.platformId}
+            return axios.post( url,payload,{headers} );
+        },
+        login:(username,password)=>{
+            let payload = {username,password}
+            return axios.post(conf.API+"/login",payload,{headers});
+   
+        },
+        register: (username, name,country, phone, email, password, date, operatorId,smscode,usertype, currency=conf.currency)=>{
+            if(!currency) throw "CURRENCY_MANDATORY";
+            if(!conf.domain) throw "DOMAIN_MANDATORY";
+            if(!conf.platformId) throw "PLATFORMID_EMPTY";
+            var url=conf.API+"/user";
+            var payload = {username, name, phone:phone, email, currency, password, date, smscode,country, operatorId, doctype:"", document:"", birthday:date, domain:conf.domain, usertype, platformId:conf.platformId, org:conf.org}
+            return axios.post( url,payload,{headers} );
+        }
+    }
+    /* */
     
     const wallet = {
         checkPreviewWithdrawal:async(token)=>{
@@ -46,7 +89,8 @@ const ServerConnection = (() => {
         getPayLink:async (token, amount, type)=>{
             let url = conf.API+"/getpaylink/"
             return await axios.post( url,{token, amount, type},{headers} );
-        }     
+        } ,
+         
     }
 
     const user = {
@@ -83,7 +127,7 @@ const ServerConnection = (() => {
             return axios.get(url,{headers}) ;
         }
     }
-    return {setConfig, wallet,user,game }
+    return {setConfig, wallet, user, game, u_wallet, u_user }
     
 })()
 
