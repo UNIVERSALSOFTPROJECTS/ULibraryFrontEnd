@@ -15,9 +15,9 @@ const ServerConnection = (() => {
 
     /* PARA Universal User API */
     const u_wallet={
-        checkPreviewWithdrawal:async(token)=>{
+        checkPendingWithdrawal:async(token)=>{
             headers['Authorization'] = token;
-            var url=conf.API+`/checkPreviewWithdrawal`;
+            var url=conf.API+`/checkPendingWithdrawal`;
             return await axios.get(url,{headers});
         },
          listBankAccounts:async( userToken)=>{   
@@ -26,6 +26,21 @@ const ServerConnection = (() => {
             let url = conf.API+"/bankAccounts?platformId="+conf.platformId;
             return await axios.get(url,{headers});
         },  
+        bankDeposit:async (token,bankDeposit )=>{
+            let payload = {...bankDeposit, token}
+            let url = conf.API+"/wallet/deposit";
+            return await axios.post( url,payload,{headers} );
+        },
+        withdrawalBank:async(token, amount, bank, account, info)=>{
+            let payload = {token, amount, bank, account, info}
+            let url = conf.API+"/withdrawalBank";
+            return await axios.post( url,payload,{headers} );
+        },
+        withdrawalCashier:async(token, amount, bank, account, info)=>{
+            let payload = {token, amount, bank, account, info}
+            let url = conf.API+"/withdrawalCashier";
+            return await axios.post( url,payload,{headers} );
+        },
     }
 
     const u_user={

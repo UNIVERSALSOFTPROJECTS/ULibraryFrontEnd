@@ -41,7 +41,7 @@
     
     const listBankAccounts = async () => {
       try {
-        let {data} = await ServerConnection.uwallet.listBankAccounts(user.token);
+        let {data} = await ServerConnection.u_wallet.listBankAccounts(user.token);
         bankPaymethods = data.filter((e) => e.type == 'BANK');
         appPaymethods = data.filter((e) => e.type == 'VIRTUAL');
       } catch (error) {
@@ -53,17 +53,7 @@
   
     const deposit = async () => {
       let amount_ = Number(bankDeposit.amount);
-      if (!bankDeposit.targetBankId || bankDeposit.targetBankId === "" ) return notify = util.getNotify("error","Seleccione el banco receptor");
-      if (!bankDeposit.date ) {console.log(bankDeposit.date); return notify = util.getNotify("error","Ingrese una fecha válida");}
-      if (!bankDeposit.reference || bankDeposit.reference === "") {return notify = util.getNotify("error","Ingrese el número de referencia");}
-      if (!amount_) return notify = util.getNotify("error","Ingrese el monto a depositar");
-      if (amount_ < minAmount || amount_ > maxAmount) return notify = util.getNotify("error",`El monto debe estar entre ${minAmount} y ${maxAmount}`);
-      if (!bankDeposit.account || bankDeposit.account === "") return notify = util.getNotify("error","Ingrese el número de cuenta");
-      
       try {
-        bankDeposit.originBank = bankDeposit.targetBankId;
-        bankDeposit.aditional = "empty";
-        bankDeposit.imageUrl = "";
         let {data} = await ServerConnection.u_wallet.bankDeposit(user.token, bankDeposit);
         closeModal();
         onOk(data)

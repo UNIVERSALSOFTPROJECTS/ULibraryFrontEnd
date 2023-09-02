@@ -16,10 +16,10 @@
 
 
 
-    const depositRetail = async () => {
+    const deposit = async () => {
         if(!depositRetailCode) {return notify = util.getNotify("error","Ingrese código")}
         try {
-            let { data } = await ServerConnection.wallet.depositRetail( user.token, depositRetailCode);
+            let { data } = await ServerConnection.u_wallet.depositRetail( user.token, depositRetailCode);
             if (data.resp == "ok") {
                 user.balance = data.saldo;
                 onOk(data);
@@ -51,7 +51,7 @@
                 <p class="u-wrapp-deposit-title"> Ingrese el código de recarga</p>
                 <div>
                     <input aria-label="charge-code-txt" class="u-wrapp-deposit-input" type="text" placeholder="Código de recarga" bind:value={depositRetailCode}/>
-                    <button class="u-wrapp-deposit-btn" on:click={depositRetail}> Activar</button>
+                    <button class="u-wrapp-deposit-btn" on:click={deposit}> Activar</button>
                 </div>
                 <div>
                     <p> Todos los depósitos serán acreditado a su cuenta en moneda local.</p>

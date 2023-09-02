@@ -25,7 +25,7 @@
         open = false;
     };
     const getPendingWithdrawal = async(token) => {
-        let resp_pending = await ServerConnection.wallet.checkPreviewWithdrawal(token);
+        let resp_pending = await ServerConnection.u_wallet.checkPendingWithdrawal(token);
         if(resp_pending.data.monto) pendingWhitdrawall = resp_pending.data; // si tiene monto quiere decir que tiene un retiro pendiente
     };
 
