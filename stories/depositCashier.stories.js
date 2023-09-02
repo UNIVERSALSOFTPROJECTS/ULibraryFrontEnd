@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions';
-import { DepositBank } from '../src/index';
+import { DepositCashier } from '../src/index';
 //import ServerConnection from '../src/js/server'
 //ServerConnection.setConfig({API:"https://lobby-bff.apiusoft.com",CLIENT_AUTH:"FORT2023FORTUNEUSOFFORTUNEBET12",CLIENT_CODE:"FORT"})
 
@@ -8,8 +8,8 @@ let assetsUrl ="https://assets.apiusoft.com";
 let maxAmount = 6000;
 let minAmount=50;
 export default {
-  title: 'Deposit Bank',
-  component: DepositBank,
+  title: 'Deposit W',
+  component: DepositCashier,
 };
 
 const onOk=()=>{
@@ -19,8 +19,8 @@ const onError=()=>{
   alert('Error');
 }
 
-export const DepositBank = () => ({
-  Component: Depositw,
+export const DepositW = () => ({
+  Component: DepositCashier,
   props: { user, open:true, onOk,onError,assetsUrl,maxAmount, minAmount }
 });
 
