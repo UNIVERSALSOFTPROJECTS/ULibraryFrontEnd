@@ -25,7 +25,7 @@
     bankDeposit.targetBankId;
   
     let paymentLink;
-    let bankPaymethods = [];
+    let bankAccounts = [];
     let appPaymethods = [];
     let yape_id = 200;
     let active_method = {};
@@ -34,6 +34,8 @@
     const closeModal = () => { open = false; };
     
     onMount(async () => {
+      bankDeposit={};
+      console.log("motando");
       await listBankAccounts();
       bankDeposit.operationDate = moment().format('YYYY-MM-DD');
 
@@ -42,9 +44,11 @@
     const listBankAccounts = async () => {
       try {
         let {data} = await ServerConnection.u_wallet.listBankAccounts(user.token);
-        bankPaymethods = data.filter((e) => e.type == 'BANK');
-        appPaymethods = data.filter((e) => e.type == 'VIRTUAL');
+        console.log(data.list);
+        bankAccounts = data.list.filter((e) => e.type == 'Bank');
+        appPaymethods = data.list.filter((e) => e.type == 'gateway');
       } catch (error) {
+        console.error(error);
         notify = util.getNotify("error","Error al conseguir metodos de pago")
       }
     }
@@ -52,8 +56,11 @@
  
   
     const deposit = async () => {
+
       let amount_ = Number(bankDeposit.amount);
       try {
+        bankDeposit.playerId=user.playerId;
+        bankDeposit.currency=user.currency;
         let {data} = await ServerConnection.u_wallet.bankDeposit(user.token, bankDeposit);
         closeModal();
         onOk(data)
@@ -78,49 +85,39 @@
           <div class="u-general-body">
             <div class="u-show-data">
               <div class="u-show-method">
-                <h4>BANCO</h4>
-                <div class="u-method-pay-dir">
-                  {#each bankPaymethods as method}
-                    <button>
-                      <div class="u-pay-pay">
-                        <span class="in-mobile">{method.nombre}</span>
-                      </div>
-                    </button>
+                <table style="width:100%">
+                  <tr>
+                    <th>BANCO</th>
+                    <th>CUENTA</th>
+                    <th>MIN</th>
+                    <th>MAX</th>
+                  </tr>
+                  {#each bankAccounts as account}
+                    <tr>
+                      <td>
+                        <button on:click={()=>{ bankDeposit.targetBankAccountId=account.bankId; } }>
+                          <div class="u-pay-pay">
+                            <span class="in-mobile">{account.bank}</span>
+                          </div>
+                        </button>
+                      </td>
+                      <td>
+                        {account.number}
+                      </td>
+                      <td>
+                        {account.amountMin}
+                      </td>
+                      <td>
+                        {account.amountMax}
+                      </td>
+                    </tr>
                   {/each}
-                </div>
-              </div>
-              <div class="in-desktop">
-                <h4>NOMBRE</h4>
-                <div class="u-name">
-                  {#each bankPaymethods as method}
-                    <span>{method.nombre}</span>
-                  {/each}
-                </div>
+                </table>
               </div>
               <div>
-                <h4>CUENTA</h4>
-                <div class="u-cta">
-                  {#each bankPaymethods as method}
-                    <span>{method.cta}</span>
-                  {/each}
-                </div>
+                
               </div>
-              <div>
-                <h4>MIN</h4>
-                <div class="u-min">
-                  {#each bankPaymethods as method}
-                    <span>{method.min}</span>
-                  {/each}
-                </div>
-              </div>
-              <div class="">
-                <h4>MAX</h4>
-                <div class="u-max">
-                  {#each bankPaymethods as method}
-                    <span>{method.max}</span>
-                  {/each}
-                </div>
-              </div>
+             
             </div>
             <div>
               <h4 class="gb-title-data-deposit">REGISTRO DE DATOS</h4>
@@ -149,7 +146,7 @@
                 <input
                   class="u-content-data"
                   type="text"
-                  bind:value={bankDeposit.totalMoney}
+                  bind:value={bankDeposit.amount}
                 />
               </div>
               

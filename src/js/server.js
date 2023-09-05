@@ -27,8 +27,11 @@ const ServerConnection = (() => {
             return await axios.get(url,{headers});
         },  
         bankDeposit:async (token,bankDeposit )=>{
+            if(!bankDeposit.playerId)throw("PLAYERID EMPTY");
+            if(!bankDeposit.currency)throw("CURRENCY EMPTY");
             let payload = {...bankDeposit, token}
-            let url = conf.API+"/wallet/deposit";
+            let url = conf.API+"/wallet/bankDeposit";
+            payload.platformId = conf.platformId;
             return await axios.post( url,payload,{headers} );
         },
         withdrawalBank:async(token, amount, bank, account, info)=>{
