@@ -54,7 +54,6 @@
     }
 
  
-  
     const deposit = async () => {
 
       let amount_ = Number(bankDeposit.amount);
@@ -85,33 +84,37 @@
           <div class="u-general-body">
             <div class="u-show-data">
               <div class="u-show-method">
-                <table style="width:100%">
-                  <tr>
-                    <th>BANCO</th>
-                    <th>CUENTA</th>
-                    <th>MIN</th>
-                    <th>MAX</th>
-                  </tr>
-                  {#each bankAccounts as account}
+                <table style="width:150vh">
+                 <thead>
                     <tr>
-                      <td>
-                        <button on:click={()=>{ bankDeposit.targetBankAccountId=account.bankId; } }>
-                          <div class="u-pay-pay">
-                            <span class="in-mobile">{account.bank}</span>
-                          </div>
-                        </button>
-                      </td>
-                      <td>
-                        {account.number}
-                      </td>
-                      <td>
-                        {account.amountMin}
-                      </td>
-                      <td>
-                        {account.amountMax}
-                      </td>
+                      <th style="width: 40%;">BANCO</th>
+                      <th style="width: 20%;">CUENTA</th>
+                      <th style="width: 20%;">MIN</th>
+                      <th style="width: 20%;">MAX</th>
                     </tr>
-                  {/each}
+                 </thead>
+                 <tbody>
+                  {#each bankAccounts as account}
+                  <tr>
+                    <td>
+                      <button on:click={()=>{ bankDeposit.targetBankAccountId=account.bankId; } }>
+                        <div class="u-pay-pay">
+                          <span class="in-mobile">{account.bank}</span>
+                        </div>
+                      </button>
+                    </td>
+                    <td>
+                      {account.number}
+                    </td>
+                    <td>
+                      {account.amountMin}
+                    </td>
+                    <td>
+                      {account.amountMax}
+                    </td>
+                  </tr>
+                {/each}
+                 </tbody>
                 </table>
               </div>
               <div>
