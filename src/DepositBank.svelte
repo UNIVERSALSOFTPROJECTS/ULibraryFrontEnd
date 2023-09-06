@@ -84,38 +84,40 @@
           <div class="u-general-body">
             <div class="u-show-data">
               <div class="u-show-method">
-                <table style="width:150vh">
-                 <thead>
-                    <tr>
-                      <th style="width: 40%;">BANCO</th>
-                      <th style="width: 20%;">CUENTA</th>
-                      <th style="width: 20%;">MIN</th>
-                      <th style="width: 20%;">MAX</th>
-                    </tr>
-                 </thead>
-                 <tbody>
-                  {#each bankAccounts as account}
-                  <tr>
-                    <td>
-                      <button on:click={()=>{ bankDeposit.targetBankAccountId=account.bankId; } }>
-                        <div class="u-pay-pay">
-                          <span class="in-mobile">{account.bank}</span>
-                        </div>
-                      </button>
-                    </td>
-                    <td>
-                      {account.number}
-                    </td>
-                    <td>
-                      {account.amountMin}
-                    </td>
-                    <td>
-                      {account.amountMax}
-                    </td>
-                  </tr>
-                {/each}
-                 </tbody>
-                </table>
+                <div style="margin-left: 170px;">
+                  <table style="width:100%">
+                    <thead>
+                        <tr>
+                          <th style="width: 40%;">BANCO</th>
+                          <th style="width: 20%;">CUENTA</th>
+                          <th style="width: 20%;">MIN</th>
+                          <th style="width: 20%;">MAX</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      {#each bankAccounts as account}
+                      <tr>
+                        <td>
+                          <button on:click={()=>{ bankDeposit.targetBankAccountId=account.bankId; } }>
+                            <div class="u-pay-pay">
+                              <span class="in-mobile">{account.bank}</span>
+                            </div>
+                          </button>
+                        </td>
+                        <td>
+                          {account.number}
+                        </td>
+                        <td>
+                          {account.amountMin}
+                        </td>
+                        <td>
+                          {account.amountMax}
+                        </td>
+                      </tr>
+                    {/each}
+                    </tbody>
+                  </table>
+                </div>
               </div>
               <div>
                 
