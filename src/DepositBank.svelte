@@ -14,21 +14,14 @@
     export let user;
     export let onOk;
     export let onError;
-    export let assetsUrl;
-    export let maxAmount;
-    export let minAmount;
-    let amount = "";
     let bankDeposit = {};
     bankDeposit.reference = "";
     bankDeposit.amount = "";
     bankDeposit.account = "";
     bankDeposit.targetBankId;
   
-    let paymentLink;
     let bankAccounts = [];
     let appPaymethods = [];
-    let yape_id = 200;
-    let active_method = {};
     let notify = {};
   
     const closeModal = () => { open = false; };
