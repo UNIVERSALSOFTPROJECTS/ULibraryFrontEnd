@@ -30,9 +30,8 @@
 
     const cashout = async()=>{  
         try {
-            let data = await ServerConnection.u_wallet.withdrawalBank(user.token, amount, bankName, accountNumber,info,user.playerId,user.trxType,user.platformId,user.currencyISO);
+            let data = await ServerConnection.u_wallet.withdrawalBank(user.token, amount, bankName, accountNumber,info,user.playerId,user.trxType,user.platformId,user.currency);
             notify = util.getNotify("success",data.MSG);
-            data = await ServerConnection.user.getBalance(user.agregatorToken);
             user.balance = data.balance;
             onOk(data);
         } catch (error) {
