@@ -121,7 +121,7 @@
                 <input
                   class="u-content-data"
                   type="date"
-                  bind:value={bankDeposit.date}
+                  bind:value={bankDeposit.operationDate}
                 />
               </div>
               <div class="u-sub-form">
@@ -130,7 +130,7 @@
                   class="u-content-data"
                   aria-label="refNumber"
                   type="text"
-                  bind:value={bankDeposit.reference}
+                  bind:value={bankDeposit.operation}
                 />
               </div>
               <div class="u-sub-form">
