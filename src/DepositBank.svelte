@@ -37,7 +37,7 @@
       bankDeposit={};
       console.log("motando");
       await listBankAccounts();
-      bankDeposit.operationDate = moment().format('YYYY-MM-DD');
+      bankDeposit.date = moment().format('YYYY-MM-DD');
 
     })
     
@@ -45,8 +45,8 @@
       try {
         let {data} = await ServerConnection.u_wallet.listBankAccounts(user.token);
         console.log(data.list);
-        bankAccounts = data.list.filter((e) => e.type == 'Bank');
-        appPaymethods = data.list.filter((e) => e.type == 'gateway');
+        bankAccounts = data.list.filter((e) => e.type == 'BANK');
+        appPaymethods = data.list.filter((e) => e.type == 'CASH');
       } catch (error) {
         console.error(error);
         notify = util.getNotify("error","Error al conseguir metodos de pago")
@@ -82,9 +82,8 @@
       <div class="u-wrapp-payments">
 
           <div class="u-general-body">
-            <div class="u-show-data">
-              <div class="u-show-method">
-                <div style="margin-left: 170px;">
+           <p>Envianos los datos del deposito bancario que realizaste para confirmarlo e ingresar el dinero del deposito a tu cuenta.</p>
+                <div>
                   <table style="width:100%">
                     <thead>
                         <tr>
@@ -96,21 +95,21 @@
                     </thead>
                     <tbody>
                       {#each bankAccounts as account}
-                      <tr>
+                      <tr style={ bankDeposit.targetBankAccountId==account.bankId?'background:#ccc':''}>
                         <td>
-                          <button on:click={()=>{ bankDeposit.targetBankAccountId=account.bankId; } }>
+                          <button on:click={()=>{ bankDeposit.targetBankAccountId=account.bankId; } } >
                             <div class="u-pay-pay">
-                              <span class="in-mobile">{account.bank}</span>
+                              <span>{account.bank}</span>
                             </div>
                           </button>
                         </td>
-                        <td>
+                        <td style="text-align: center;">
                           {account.number}
                         </td>
-                        <td>
+                        <td style="text-align: center;">
                           {account.amountMin}
                         </td>
-                        <td>
+                        <td style="text-align: center;">
                           {account.amountMax}
                         </td>
                       </tr>
@@ -118,12 +117,7 @@
                     </tbody>
                   </table>
                 </div>
-              </div>
-              <div>
-                
-              </div>
              
-            </div>
             <div>
               <h4 class="gb-title-data-deposit">REGISTRO DE DATOS</h4>
             </div>

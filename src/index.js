@@ -6,6 +6,7 @@ export { default as  utils } from './js/util.js';
 export { default as  Depositx } from './Depositx.svelte';
 export { default as  Depositw } from './Depositw.svelte';
 export { default as  DepositBank } from './DepositBank.svelte';
+export { default as  WithdrawalBank } from './WithdrawalBank.svelte';
 export { default as  Withdrawalx } from './Withdrawalx.svelte';
 export { default as  Withdrawalw } from './Withdrawalw.svelte';
 export { default as  BrandsDropDown } from './BrandsDropDown.svelte'

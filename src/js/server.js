@@ -34,9 +34,11 @@ const ServerConnection = (() => {
             payload.platformId = conf.platformId;
             return await axios.post( url,payload,{headers} );
         },
-        withdrawalBank:async(token, amount, bank, account, info)=>{
-            let payload = {token, amount, bank, account, info}
-            let url = conf.API+"/withdrawalBank";
+        withdrawalBank:async(token, amount, bank, account, info, playerId,trxType,platformId,currencyISO)=>{
+            headers['Authorization'] = token;
+            let payload = {amount, bank, account, info, playerId,trxType,platformId,currencyISO}
+            console.log(payload);
+            let url = conf.API+"/wallet/withdrawalBank";
             return await axios.post( url,payload,{headers} );
         },
         withdrawalCashier:async(token, amount, bank, account, info)=>{

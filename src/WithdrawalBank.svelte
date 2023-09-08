@@ -10,6 +10,7 @@
     export let maxAmount;
     export let onOk;
     export let onError;
+    export let playerId;
 
     let amount = "";
     let accountNumber="";
@@ -27,9 +28,9 @@
     onMount(()=>{
     })
 
-    const cashout = async()=>{
+    const cashout = async()=>{  
         try {
-            let data = await ServerConnection.u_wallet.withdrawal_w(user.token, amount, bankName, accountNumber, info );
+            let data = await ServerConnection.u_wallet.withdrawalBank(user.token, amount, bankName, accountNumber,info,user.playerId,user.trxType,user.platformId,user.currencyISO);
             notify = util.getNotify("success",data.MSG);
             data = await ServerConnection.user.getBalance(user.agregatorToken);
             user.balance = data.balance;
@@ -44,7 +45,34 @@
             }    
         }
     }    
+    const validateAmount = (event) => {
+        let isNumber = /\d/.test(event.key);
+        if(event.charCode === 45 || event.charCode === 43){ event.preventDefault(); return}
+        if (isNumber && amount.length < 4) amount += event.key;
+        else if(isNumber && amount.length >= 4) return notify = util.getNotify("error","Alcanzó el límite de cifras");
+    }
 
+    const validateName = (e) => {
+        let validatePatternName = /^[A-Za-zúéáíóüÜÑñÓÍÚÁÉ ]*$/.test(e.key);
+        if(!validatePatternName) e.preventDefault();
+        if(name.length >= 40) return notify = util.getNotify("error","Máximo 40 caracteres");
+    }
+    const validateDocument = (event) => {
+        let isNumber = /\d/.test(event.key);
+        if (isNumber && document.length < 12) document += event.key;
+        else if (isNumber && document.length >= 12) return notify = util.getNotify("error","12 dígitos como máximo");
+    }
+    const validateBankName = (e) => {
+        let validatePatternBankName = /^[A-Za-zúéáíóüÜÑñÓÍÚÁÉ ]*$/.test(e.key);
+        if(! validatePatternBankName) e.preventDefault();
+        if(bankName.length >= 40) return notify = util.getNotify("error","40 caracteres como máximo");
+    }
+
+    const validateAccountNumber = (event) => {
+        let isNumber = /\d/.test(event.key);
+        if (isNumber && accountNumber.length < 20) accountNumber += event.key;
+        else if(isNumber && accountNumber.length >= 20) return notify = util.getNotify("error","40 caracteres como máximo");
+    }
 </script>
 
 <Notifier
