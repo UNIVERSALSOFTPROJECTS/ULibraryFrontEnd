@@ -118,7 +118,8 @@
         <span class="u-title">RETIRAR SU SALDO</span>
         <div class="u-content-info">
             <span>INGRESE EL MONTO A RETIRAR:</span>
-            <input aria-label="amount" class="u-input-pay" bind:value={amount} type="text" on:keypress|preventDefault={(e)=>validateAmount(e)} placeholder="Ingrese el monto a retirar">
+            <input aria-label="amount" class="u-input-pay" bind:value={amount} type="number" min="1" placeholder="Ingrese el monto a retirar">
+            <!-- on:keypress|preventDefault={(e)=>validateAmount(e)} -->
 
         </div>
         <div class="gb-process">
